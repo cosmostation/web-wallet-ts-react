@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { routes } from './routes';
 
-import './index.scss';
+import './normalize.scss';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -17,3 +18,17 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Switch>
+          {routes.map((route) =>
+            route.component ? <Route exact key={route.path} component={route.component} path={route.path} /> : '',
+          )}
+        </Switch>
+      </Switch>
+    </BrowserRouter>
+  );
+}
