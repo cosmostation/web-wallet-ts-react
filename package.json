@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "git config --local core.hooksPath ./git-hooks",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "eslint": "eslint --max-warnings 0 ./src"
   },
   "dependencies": {
     "@craco/craco": "^6.3.0",
