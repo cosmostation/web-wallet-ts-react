@@ -2,34 +2,21 @@
 
 - [Create React App](https://github.com/facebook/create-react-app).
 - [craco](https://github.com/gsoft-inc/craco).
-  - CRA 설정 오버라이드하기 위해 사용
-- [css modules](https://github.com/css-modules/css-modules) 을 기본으로 하고 scss 를 사용
+- Sass with [CSS modules](https://github.com/css-modules/css-modules).
+- [react-i18next](https://react.i18next.com/)
 
-## Available Scripts
-
-In the project directory, you can run:
+## 스크립트
 
 ### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+개발자 모드로 실행\
+[http://localhost:3000](http://localhost:3000) 로 접근
 
 ### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+프로젝트 빌드
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### `yarn i18next-scanner`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
+번역이 필요한 `t('')` 코드를 key, value 형태로 json 으로 자동으로 만들어주는 역할
+관련 `config` 는 `i18next-scanner.config.js` 에서 수정하면 된다.

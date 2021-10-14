@@ -1,3 +1,5 @@
+import './i18n/i18n';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -23,11 +25,9 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Switch>
-          {routes.map((route) =>
-            route.component ? <Route exact key={route.path} component={route.component} path={route.path} /> : '',
-          )}
-        </Switch>
+        {routes.map((route) =>
+          route.component ? <Route exact key={route.path} component={route.component} path={route.path} /> : '',
+        )}
       </Switch>
     </BrowserRouter>
   );
