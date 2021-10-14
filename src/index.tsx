@@ -3,15 +3,18 @@ import './i18n/i18n';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 
 import reportWebVitals from './reportWebVitals';
 import { routes } from './routes';
 
-import './normalize.scss';
+import '~/styles/normalize.scss';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root'),
 );

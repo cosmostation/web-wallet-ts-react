@@ -1,3 +1,5 @@
+@import '~/styles/index';
+
 .container {
   height: 6rem;
 
@@ -6,8 +8,17 @@
   justify-content: space-between;
   align-items: center;
 
-  margin-left: 4rem;
-  margin-right: 4rem;
+  padding: 0 3rem;
+
+  border-bottom: 0.1rem solid $gray500;
+
+  &.black {
+    background-color: #000000;
+  }
+
+  &.transparent {
+    background-color: transparent;
+  }
 }
 
 .left {
@@ -20,8 +31,69 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+
+  color: $white;
 }
 
 .accountButton {
-  text-transform: none;
+  all: unset;
+
+  margin-left: 1.6rem;
+
+  color: $gray500;
+
+  display: flex;
+  align-items: center;
+
+  @include size14;
+
+  &:hover {
+    cursor: pointer;
+    color: $white;
+  }
+
+  & > svg {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  & .accountButtonText {
+    margin-left: 0.6rem;
+  }
+}
+
+.chainButton {
+  all: unset;
+
+  cursor: pointer;
+
+  padding-left: 0.5rem;
+  padding-right: 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border: 0.1rem solid $gray500;
+  border-radius: 1rem;
+
+  width: 15rem;
+  height: 3rem;
+}
+
+.chainButtonLeft {
+  display: flex;
+  align-items: center;
+
+  @include size14;
+
+  & .chainImgContainer {
+    width: 2.5rem;
+    height: 2.5rem;
+
+    & > img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
