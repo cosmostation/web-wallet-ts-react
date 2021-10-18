@@ -1,4 +1,4 @@
-export const CHAIN = {
+export const CHAINS = {
   AKASH: 'akash',
   BAND: 'band',
   CERTIK: 'certik',
@@ -18,3 +18,5 @@ export const CHAIN = {
   SIFCHAIN: 'sifchain',
   STARNAME: 'starname',
 } as const;
+
+export const DRAWER_WIDTH = '28.5rem';

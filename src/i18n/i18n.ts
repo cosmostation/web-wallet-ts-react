@@ -2,12 +2,8 @@ import { initReactI18next } from 'react-i18next';
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-import enCommon from './en/common.json';
-import enComponent from './en/component.json';
-import enPage from './en/page.json';
-import koCommon from './ko/common.json';
-import koComponent from './ko/component.json';
-import koPage from './ko/page.json';
+import enTranslation from './en/translation.json';
+import koTranslation from './ko/translation.json';
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 i18n
@@ -15,10 +11,10 @@ i18n
   .use(initReactI18next)
   .init({
     resources: {
-      ko: { common: koCommon, page: koPage, component: koComponent },
-      en: { common: enCommon, page: enPage, component: enComponent },
+      ko: { translation: koTranslation },
+      en: { translation: enTranslation },
     },
-    defaultNS: 'common',
+    defaultNS: 'translation',
     fallbackLng: 'en',
     debug: true,
     interpolation: {

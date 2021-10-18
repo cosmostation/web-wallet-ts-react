@@ -1,0 +1,220 @@
+@import '~/styles/index';
+
+.container {
+  padding: 0 1.6rem 2rem;
+
+  overflow: hidden;
+  word-wrap: break-word;
+
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  background-color: $black;
+
+  color: $white;
+
+  border-right: 0.1rem solid $gray800;
+}
+
+.logoContainer {
+  height: 6rem;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  border-bottom: 0.1rem solid $gray800;
+}
+
+.logoImg {
+  width: 17rem;
+  height: 3rem;
+
+  & img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.logoVersion {
+  margin-left: 0.4rem;
+
+  margin-top: 0.2rem;
+
+  font-size: 1.1rem;
+}
+
+.menuContainer {
+  font-size: 1.3rem;
+
+  padding: 2rem 0;
+}
+
+.buttonContainer {
+  padding: 0.8rem 0;
+}
+
+.button {
+  all: unset;
+
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  color: $white;
+  opacity: 0.6;
+
+  & .imgContainer {
+    width: 2.4rem;
+    height: 2.4rem;
+
+    & > img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  & .text {
+    display: flex;
+    align-items: center;
+
+    font-size: 1.4rem;
+
+    line-height: 1.2;
+
+    margin-left: 1rem;
+  }
+
+  &:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
+}
+
+.itemSelected {
+  opacity: 1;
+}
+
+.guideButton {
+  all: unset;
+
+  width: 100%;
+  height: 4.5rem;
+
+  border: 0.1rem solid $gray700;
+
+  color: $gray300;
+
+  font-size: 1.4rem;
+
+  text-align: center;
+
+  &:hover {
+    background-color: $white;
+    color: $black;
+
+    cursor: pointer;
+  }
+}
+
+.downloadText {
+  font-size: 1.3rem;
+  color: $gray600;
+
+  text-align: center;
+}
+
+.storeContainer {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 0.8rem;
+
+  & a {
+    width: 49.5%;
+
+    background-color: $gray800;
+
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.googlePlay {
+  background-image: url('assets/playstore.png');
+  background-size: 7.9rem;
+  background-repeat: no-repeat;
+  background-position-x: 50%;
+  background-position-y: 50%;
+
+  height: 4.5rem;
+}
+
+.appStore {
+  background-image: url('assets/appstore.png');
+  background-size: 7.9rem;
+  background-repeat: no-repeat;
+  background-position-x: 50%;
+  background-position-y: 50%;
+
+  height: 4.5rem;
+}
+
+.socialLinkContainer {
+  margin-top: 4.5rem;
+}
+
+.socialLink {
+  opacity: 0.6;
+
+  &:nth-child(n + 2) {
+    margin-left: 2rem;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  & svg {
+    fill: $white;
+
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.descriptionContainer {
+  font-size: 1.3rem;
+  font-weight: 400;
+
+  color: $gray600;
+
+  margin-top: 1.4rem;
+
+  & > div {
+    padding: 0.4rem 0;
+  }
+}
+
+.descriptionLink {
+  all: unset;
+
+  cursor: pointer;
+
+  &:hover {
+    color: $white;
+  }
+}
+
+.descriptionLinkUnderLine {
+  text-decoration: underline;
+}

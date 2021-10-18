@@ -32,9 +32,9 @@ module.exports = {
       },
     },
     lngs: ['en', 'ko'],
-    ns: ['component', 'page'],
+    ns: [],
     defaultLng: 'en',
-    defaultNs: 'common',
+    defaultNs: 'translation',
     defaultValue: '__STRING_NOT_TRANSLATED__',
     resource: {
       loadPath: 'src/i18n/{{lng}}/{{ns}}.json',

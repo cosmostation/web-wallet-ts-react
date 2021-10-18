@@ -1,5 +1,10 @@
 @import '~/styles/index';
 
+.fixed {
+  position: fixed;
+  width: 100%;
+}
+
 .container {
   height: 6rem;
 
@@ -45,6 +50,8 @@
   display: flex;
   align-items: center;
 
+  flex-shrink: 0;
+
   @include size14;
 
   &:hover {
@@ -79,6 +86,8 @@
 
   width: 15rem;
   height: 3rem;
+
+  flex-shrink: 0;
 }
 
 .chainButtonLeft {
@@ -96,4 +105,9 @@
       height: 100%;
     }
   }
+}
+
+.menuIcon {
+  width: 2.4rem;
+  height: 2.4rem;
 }
