@@ -27,8 +27,12 @@
 
   justify-content: center;
   align-items: center;
+}
 
+.divider {
   border-bottom: 0.1rem solid $gray800;
+
+  margin: 0 -2rem;
 }
 
 .logoImg {

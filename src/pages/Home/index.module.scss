@@ -1,0 +1,46 @@
+@import '~/styles/index';
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+
+  height: 90%;
+  width: 100%;
+}
+
+.mainImg {
+  background-image: url('assets/main_text.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  width: 42.4rem;
+  height: 7.7rem;
+}
+
+.connectButton {
+  all: unset;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 3.5rem;
+
+  width: 42rem;
+  height: 4.5rem;
+
+  font-size: 1.5rem;
+
+  border: 0.1rem solid $gray600;
+  color: $gray200;
+
+  &:hover {
+    cursor: pointer;
+
+    background-color: $gray200;
+    color: $gray800;
+  }
+}

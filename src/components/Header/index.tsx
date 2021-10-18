@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import cx from 'clsx';
+import { useRecoilState } from 'recoil';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import WidgetsIcon from '@mui/icons-material/Widgets';
@@ -9,6 +10,7 @@ import DialogChainSelect from '~/components/Dialog/DialogChainSelect';
 import DialogWalletConnect from '~/components/Dialog/DialogWalletConnect';
 import Drawer from '~/components/Drawer';
 import { DRAWER_WIDTH } from '~/constants/common';
+import { connectState } from '~/stores/wallet';
 import { getSymbolURL } from '~/utils/urls';
 
 import styles from './index.module.scss';
@@ -19,8 +21,8 @@ type HeaderProps = {
 };
 
 export default function Header({ className, backgroundColor }: HeaderProps) {
+  const [isOpenedConnect, setIsOpenedConnect] = useRecoilState(connectState);
   const [isOpenedSelect, setIsOpenedSelect] = useState(false);
-  const [isOpenedConnect, setIsOpenedConnect] = useState(false);
   const [isOpenedDrawer, setIsOpenedDrawer] = useState(false);
 
   return (

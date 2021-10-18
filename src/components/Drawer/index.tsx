@@ -68,6 +68,7 @@ function DrawerContent() {
           </div>
           <div className={styles.logoVersion}>v5.26.0</div>
         </div>
+        <div className={styles.divider} />
         <div className={styles.menuContainer}>
           <ItemButton name={t('component.drawer.wallet')} imgURL="/images/common/icon_wallet.png" />
           <ItemButton name={t('component.drawer.delegate')} imgURL="/images/common/icon_delegate.png" />

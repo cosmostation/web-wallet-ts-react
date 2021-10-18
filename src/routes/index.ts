@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 
-import Home from '~/pages/Home/Home';
+import Home from '~/pages/Home';
 
 interface IRountItem {
   name: string;
