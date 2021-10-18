@@ -2,11 +2,10 @@ import './i18n/i18n';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import reportWebVitals from './reportWebVitals';
-import { routes } from './routes';
+import Routes from './Routes';
 
 import '~/styles/normalize.scss';
 import styles from './index.module.scss';
@@ -27,14 +26,8 @@ reportWebVitals();
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className={styles.container}>
-        <Switch>
-          {routes.map((route) =>
-            route.component ? <Route exact key={route.path} component={route.component} path={route.path} /> : '',
-          )}
-        </Switch>
-      </div>
-    </BrowserRouter>
+    <div className={styles.container}>
+      <Routes />
+    </div>
   );
 }

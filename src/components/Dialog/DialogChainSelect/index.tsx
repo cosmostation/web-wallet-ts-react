@@ -1,5 +1,5 @@
 import Dialog from '~/components/Dialog';
-import { CHAINS } from '~/constants/common';
+import { chainNames } from '~/constants/chain';
 import { getSymbolURL } from '~/utils/urls';
 
 import styles from './index.module.scss';
@@ -10,12 +10,10 @@ type DialogChainSelectProps = {
 };
 
 export default function DialogChainSelect({ open, onClose }: DialogChainSelectProps) {
-  const chains = Object.values(CHAINS);
-
   return (
     <Dialog open={open} onClose={onClose} title="Select a Chain" maxWidth="lg">
       <div className={styles.container}>
-        {chains.map((chain) => (
+        {chainNames.map((chain) => (
           <ChainButton key={chain} name={chain} imgURL={getSymbolURL(chain)} />
         ))}
       </div>

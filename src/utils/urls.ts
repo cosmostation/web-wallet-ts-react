@@ -1,7 +1,10 @@
-import type { CHAINS } from '~/constants/common';
+import type { chainNames } from '~/constants/chain';
+import { chains } from '~/constants/chain';
 
-export const getSymbolURL = (chain: ValueOf<typeof CHAINS>) => {
-  const baseURL = '/images/symbol';
+const chainImgURLs = chains.map((chain) => chain.imgURL);
 
-  return `${baseURL}/${chain}.png`;
+export const getSymbolURL = (chain: typeof chainNames[number]): typeof chainImgURLs[number] => {
+  const chainInfo = chains.find((item) => item.name === chain);
+
+  return chainInfo!.imgURL;
 };

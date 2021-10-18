@@ -24,7 +24,7 @@ export default function Drawer({ open, onClose }: DrawerProps) {
       <BaseDrawer
         variant="permanent"
         sx={{
-          display: { md: 'none', lg: 'block' },
+          display: { xs: 'none', sm: 'none', md: 'none', lg: 'block' },
           '& .MuiDrawer-paper': {
             boxSizing: 'border-box',
             width: DRAWER_WIDTH,
@@ -45,7 +45,7 @@ export default function Drawer({ open, onClose }: DrawerProps) {
           keepMounted: true, // Better open performance on mobile.
         }}
         sx={{
-          display: { md: 'block', lg: 'none' },
+          display: { xs: 'block', sm: 'block', md: 'block', lg: 'none' },
           '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH, backgroundColor: 'black' },
         }}
       >
