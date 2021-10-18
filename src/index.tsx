@@ -9,6 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import { routes } from './routes';
 
 import '~/styles/normalize.scss';
+import styles from './index.module.scss';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -27,11 +28,13 @@ reportWebVitals();
 function App() {
   return (
     <BrowserRouter>
-      <Switch>
-        {routes.map((route) =>
-          route.component ? <Route exact key={route.path} component={route.component} path={route.path} /> : '',
-        )}
-      </Switch>
+      <div className={styles.container}>
+        <Switch>
+          {routes.map((route) =>
+            route.component ? <Route exact key={route.path} component={route.component} path={route.path} /> : '',
+          )}
+        </Switch>
+      </div>
     </BrowserRouter>
   );
 }

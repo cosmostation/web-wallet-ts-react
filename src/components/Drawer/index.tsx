@@ -25,7 +25,12 @@ export default function Drawer({ open, onClose }: DrawerProps) {
         variant="permanent"
         sx={{
           display: { md: 'none', lg: 'block' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH, border: 0 },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: DRAWER_WIDTH,
+            border: 0,
+            backgroundColor: 'transparent',
+          },
         }}
         open
       >
@@ -41,7 +46,7 @@ export default function Drawer({ open, onClose }: DrawerProps) {
         }}
         sx={{
           display: { md: 'block', lg: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH, backgroundColor: 'black' },
         }}
       >
         <DrawerContent />

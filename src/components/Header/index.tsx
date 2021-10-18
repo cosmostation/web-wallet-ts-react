@@ -30,6 +30,7 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
         sx={{
           width: { lg: `calc(100% - ${DRAWER_WIDTH})` },
           ml: { lg: DRAWER_WIDTH },
+          backgroundColor: 'transparent',
         }}
       >
         <div className={cx(styles.container, styles[backgroundColor ?? 'black'], className)}>
