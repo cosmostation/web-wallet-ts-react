@@ -103,3 +103,34 @@
   width: 2.4rem;
   height: 2.4rem;
 }
+
+.popoverContainer {
+  box-sizing: border-box;
+
+  width: 46rem;
+  height: 13.6rem;
+
+  padding: 1.5rem 2.3rem;
+
+  font-size: 1.4rem;
+}
+
+.popoverTitle {
+  font-weight: bold;
+}
+
+.popoverAddressContainer {
+  margin-top: 0.8rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.popoverButtonContainer {
+  margin-top: 1.6rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

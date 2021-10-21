@@ -1,8 +1,13 @@
 import { atom } from 'recoil';
 
-import type { chainNames } from '~/constants/chain';
+import type { chainPaths } from '~/constants/chain';
 
-export const chainState = atom<typeof chainNames[number]>({
+export const chainState = atom<typeof chainPaths[number] | null>({
   key: 'chainState',
-  default: 'cosmos',
+  default: null,
+});
+
+export const chainSelectState = atom({
+  key: 'chainSelectState',
+  default: false,
 });

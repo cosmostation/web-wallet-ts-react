@@ -1,17 +1,20 @@
 import { useState } from 'react';
 import cx from 'clsx';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MenuIcon from '@mui/icons-material/Menu';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import WidgetsIcon from '@mui/icons-material/Widgets';
-import { AppBar, IconButton } from '@mui/material';
+import { AppBar, Button, IconButton, Popover } from '@mui/material';
 
-import DialogChainSelect from '~/components/Dialog/DialogChainSelect';
-import DialogWalletConnect from '~/components/Dialog/DialogWalletConnect';
 import Drawer from '~/components/Drawer';
+import { chains } from '~/constants/chain';
 import { DRAWER_WIDTH } from '~/constants/common';
-import { connectState } from '~/stores/wallet';
-import { getSymbolURL } from '~/utils/urls';
+import { useCurrentChain } from '~/hooks/useCurrentChain';
+import { useCurrentWallet } from '~/hooks/useCurrentWallet';
+import { chainSelectState } from '~/stores/chain';
+import { walletConnectState, walletInfoState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
 
@@ -21,9 +24,18 @@ type HeaderProps = {
 };
 
 export default function Header({ className, backgroundColor }: HeaderProps) {
-  const [isOpenedConnect, setIsOpenedConnect] = useRecoilState(connectState);
-  const [isOpenedSelect, setIsOpenedSelect] = useState(false);
+  const setIsOpenedConnect = useSetRecoilState(walletConnectState);
+  const setIsOpenedSelect = useSetRecoilState(chainSelectState);
   const [isOpenedDrawer, setIsOpenedDrawer] = useState(false);
+
+  const setWalletInfo = useSetRecoilState(walletInfoState);
+
+  const currentChain = useCurrentChain();
+  const currentWallet = useCurrentWallet();
+
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const isOpenPopover = Boolean(anchorEl);
 
   return (
     <>
@@ -52,21 +64,116 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
             <button type="button" className={styles.chainButton} onClick={() => setIsOpenedSelect(true)}>
               <div className={styles.chainButtonLeft}>
                 <div className={styles.chainImgContainer}>
-                  <img src={getSymbolURL('akash')} alt="akash" />
+                  <img src={chains[currentChain].imgURL} alt={chains[currentChain].name} />
                 </div>
-                <div className={styles.accountButtonText}>akash</div>
+                <div className={styles.accountButtonText}>{chains[currentChain].name}</div>
               </div>
               <WidgetsIcon />
             </button>
-            <button type="button" className={styles.accountButton} onClick={() => setIsOpenedConnect(true)}>
-              <AccountCircleOutlinedIcon />
-              <div className={styles.accountButtonText}>Connect Wallet</div>
-            </button>
+            {currentWallet.address ? (
+              <>
+                <button
+                  type="button"
+                  className={styles.accountButton}
+                  onClick={(event) => {
+                    setAnchorEl(event.currentTarget);
+                  }}
+                >
+                  <AccountCircleOutlinedIcon />
+                </button>
+                <Popover
+                  anchorEl={anchorEl}
+                  open={isOpenPopover}
+                  onClose={() => setAnchorEl(null)}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  sx={{ marginTop: '1rem' }}
+                >
+                  <div className={styles.popoverContainer}>
+                    <div className={styles.popoverTitle}>
+                      Address {currentWallet.keystationAccount && `(${currentWallet.keystationAccount})`}
+                    </div>
+                    <div className={styles.popoverAddressContainer}>
+                      <div>{currentWallet.address}</div>
+                      <div>
+                        <IconButton>
+                          <ContentCopyIcon />
+                        </IconButton>
+                        <IconButton>
+                          <OpenInNewIcon />
+                        </IconButton>
+                      </div>
+                    </div>
+                    <div className={styles.popoverButtonContainer}>
+                      <Button
+                        type="button"
+                        variant="outlined"
+                        sx={{
+                          fontSize: '1.2rem',
+                          textTransform: 'none',
+                          flex: 1,
+                          backgroundColor: '#FFFFFF',
+                          color: '#000000',
+                          borderColor: '#000000',
+                          '&:hover': {
+                            backgroundColor: '#000000',
+                            color: '#FFFFFF',
+                            borderColor: '#000000',
+                          },
+                        }}
+                        onClick={() => setIsOpenedConnect(true)}
+                      >
+                        Change Wallet
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outlined"
+                        sx={{
+                          fontSize: '1.2rem',
+                          textTransform: 'none',
+                          flex: 1,
+                          marginLeft: '0.8rem',
+                          backgroundColor: '#000000',
+                          color: '#FFFFFF',
+                          borderColor: '#000000',
+                          '&:hover': {
+                            backgroundColor: '#FFFFFF',
+                            color: '#000000',
+                            borderColor: '#000000',
+                          },
+                        }}
+                        onClick={() => {
+                          const defaultWallet = {
+                            chain: null,
+                            walletType: null,
+                            ledgerHDPath: null,
+                            keystationAccount: null,
+                            address: null,
+                            url: null,
+                          };
+
+                          setWalletInfo(defaultWallet);
+                          setAnchorEl(null);
+                          sessionStorage.setItem('wallet', JSON.stringify(defaultWallet));
+                        }}
+                      >
+                        Close Wallet
+                      </Button>
+                    </div>
+                  </div>
+                </Popover>
+              </>
+            ) : (
+              <button type="button" className={styles.accountButton} onClick={() => setIsOpenedConnect(true)}>
+                <AccountCircleOutlinedIcon />
+                <div className={styles.accountButtonText}>Connect Wallet</div>
+              </button>
+            )}
           </div>
         </div>
       </AppBar>
-      <DialogChainSelect open={isOpenedSelect} onClose={() => setIsOpenedSelect(false)} />
-      <DialogWalletConnect open={isOpenedConnect} onClose={() => setIsOpenedConnect(false)} />
       <Drawer open={isOpenedDrawer} onClose={() => setIsOpenedDrawer(false)} />
     </>
   );

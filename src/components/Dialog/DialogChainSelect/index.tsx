@@ -1,23 +1,118 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useCallback, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+
 import Dialog from '~/components/Dialog';
-import { chainNames } from '~/constants/chain';
-import { getSymbolURL } from '~/utils/urls';
+import type { ChainPath } from '~/constants/chain';
+import { chains } from '~/constants/chain';
+import { useCurrentChain } from '~/hooks/useCurrentChain';
+import { useCurrentPath } from '~/hooks/useCurrentPath';
+import { useCurrentWallet } from '~/hooks/useCurrentWallet';
+import { chainSelectState } from '~/stores/chain';
+import { loaderState } from '~/stores/loader';
+import type { WalletInfo } from '~/stores/wallet';
+import { keystationRequestTypeState, walletInfoState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
 
-type DialogChainSelectProps = {
-  open: boolean;
-  onClose?: () => void;
-};
+export default function DialogChainSelect() {
+  const [keystationRequestType, setKeystationRequestType] = useRecoilState(keystationRequestTypeState);
+  const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
+  const setIsShowLoader = useSetRecoilState(loaderState);
+  const currentChain = useCurrentChain();
+  const history = useHistory();
 
-export default function DialogChainSelect({ open, onClose }: DialogChainSelectProps) {
+  const { getPathWithDepth } = useCurrentPath();
+  const wallet = useCurrentWallet();
+
+  const [opened, setOpened] = useRecoilState(chainSelectState);
+
+  const chainInfos = Object.values(chains);
+
+  const handleOnClick = (chain: ChainPath) => {
+    if (currentChain === chain) {
+      setOpened(false);
+      return;
+    }
+
+    if (wallet.address || !!getPathWithDepth(2)) {
+      setIsShowLoader(true);
+      setOpened(false);
+
+      const chainInfo = chains[chain];
+      setKeystationRequestType('chainSelectSignIn');
+
+      const myKeystation = new Keystation('http://localhost:3000', chainInfo.lcdURL, chainInfo.wallet.hdPath);
+
+      const popup = myKeystation.openWindow('signin', chainInfo.wallet.prefix);
+
+      const timer = setInterval(() => {
+        if (popup.closed) {
+          setIsShowLoader(false);
+          clearInterval(timer);
+        }
+      }, 500);
+      return;
+    }
+
+    history.push(`/${chain}`);
+    setOpened(false);
+  };
+
+  const messageHandler = useCallback(
+    (e: MessageEvent) => {
+      if (e.origin === 'https://keystation.cosmostation.io' && keystationRequestType === 'chainSelectSignIn') {
+        if (e.data) {
+          const chainInfo = Object.values(chains).find((chain) =>
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            (e.data.address as string).startsWith(chain.wallet.prefix),
+          )!;
+
+          const next: WalletInfo = {
+            ...walletInfo,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            keystationAccount: e.data.account as string,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            address: e.data.address as string,
+            walletType: 'keystation',
+            chain: chainInfo.path,
+          };
+
+          setWalletInfo(next);
+          setKeystationRequestType(null);
+
+          sessionStorage.setItem('wallet', JSON.stringify(next));
+          history.push(`/${chainInfo.path}${getPathWithDepth(2) || `/${getPathWithDepth(2)}`}`);
+        }
+      }
+    },
+    [getPathWithDepth, history, keystationRequestType, setKeystationRequestType, setWalletInfo, walletInfo],
+  );
+
+  useEffect(() => {
+    window.addEventListener('message', messageHandler);
+
+    return () => {
+      window.removeEventListener('message', messageHandler);
+    };
+  }, [messageHandler]);
+
   return (
-    <Dialog open={open} onClose={onClose} title="Select a Chain" maxWidth="lg">
-      <div className={styles.container}>
-        {chainNames.map((chain) => (
-          <ChainButton key={chain} name={chain} imgURL={getSymbolURL(chain)} />
-        ))}
-      </div>
-    </Dialog>
+    <>
+      <Dialog open={opened} onClose={() => setOpened(false)} title="Select a Chain" maxWidth="lg">
+        <div className={styles.container}>
+          {chainInfos.map((chaininfo) => (
+            <ChainButton
+              key={chaininfo.name}
+              name={chaininfo.name}
+              imgURL={chaininfo.imgURL}
+              onClick={() => handleOnClick(chaininfo.path)}
+            />
+          ))}
+        </div>
+      </Dialog>
+    </>
   );
 }
 

@@ -1,14 +1,20 @@
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import Layout from '~/components/Layout';
-import { connectState } from '~/stores/wallet';
+import Loader from '~/components/Loader';
+import { chainState } from '~/stores/chain';
+import { walletConnectState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
 
 export default function Home() {
-  const setIsConnected = useSetRecoilState(connectState);
+  const setIsConnected = useSetRecoilState(walletConnectState);
+  const chain = useRecoilValue(chainState);
+
   return (
     <Layout>
+      {chain}
+      <Loader />
       <div className={styles.container}>
         <div className={styles.mainImg} />
         <button type="button" onClick={() => setIsConnected(true)} className={styles.connectButton}>
