@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
 import { Box } from '@mui/material';
 
-import DialogChainSelect from '~/components/Dialog/DialogChainSelect';
-import DialogWalletConnect from '~/components/Dialog/DialogWalletConnect';
 import Header from '~/components/Header';
+import Loader from '~/components/Loader';
 import Wrapper from '~/components/Wrapper';
 import { DRAWER_WIDTH } from '~/constants/common';
 
@@ -23,8 +22,8 @@ export default function Layout({ children }: LayoutProps) {
           >
             {children}
           </Box>
-          <DialogWalletConnect />
-          <DialogChainSelect />
+
+          <Loader />
         </>
       </Wrapper>
     </div>

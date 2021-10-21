@@ -9,14 +9,18 @@ import { chains } from '~/constants/chain';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentPath } from '~/hooks/useCurrentPath';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { chainSelectState } from '~/stores/chain';
 import { loaderState } from '~/stores/loader';
 import type { WalletInfo } from '~/stores/wallet';
 import { keystationRequestTypeState, walletInfoState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
 
-export default function DialogChainSelect() {
+type DialogChainSelectProps = {
+  open: boolean;
+  onClose?: () => void;
+};
+
+export default function DialogChainSelect({ open, onClose }: DialogChainSelectProps) {
   const [keystationRequestType, setKeystationRequestType] = useRecoilState(keystationRequestTypeState);
   const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
   const setIsShowLoader = useSetRecoilState(loaderState);
@@ -26,19 +30,17 @@ export default function DialogChainSelect() {
   const { getPathWithDepth } = useCurrentPath();
   const wallet = useCurrentWallet();
 
-  const [opened, setOpened] = useRecoilState(chainSelectState);
-
   const chainInfos = Object.values(chains);
 
   const handleOnClick = (chain: ChainPath) => {
     if (currentChain === chain) {
-      setOpened(false);
+      onClose?.();
       return;
     }
 
     if (wallet.address || !!getPathWithDepth(2)) {
       setIsShowLoader(true);
-      setOpened(false);
+      onClose?.();
 
       const chainInfo = chains[chain];
       setKeystationRequestType('chainSelectSignIn');
@@ -57,7 +59,7 @@ export default function DialogChainSelect() {
     }
 
     history.push(`/${chain}`);
-    setOpened(false);
+    onClose?.();
   };
 
   const messageHandler = useCallback(
@@ -83,7 +85,8 @@ export default function DialogChainSelect() {
           setKeystationRequestType(null);
 
           sessionStorage.setItem('wallet', JSON.stringify(next));
-          history.push(`/${chainInfo.path}${getPathWithDepth(2) || `/${getPathWithDepth(2)}`}`);
+
+          history.push(`/${chainInfo.path}${getPathWithDepth(2) ? `/${getPathWithDepth(2)}` : ''}`);
         }
       }
     },
@@ -100,7 +103,7 @@ export default function DialogChainSelect() {
 
   return (
     <>
-      <Dialog open={opened} onClose={() => setOpened(false)} title="Select a Chain" maxWidth="lg">
+      <Dialog open={open} onClose={onClose} title="Select a Chain" maxWidth="lg">
         <div className={styles.container}>
           {chainInfos.map((chaininfo) => (
             <ChainButton

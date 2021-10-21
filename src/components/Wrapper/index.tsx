@@ -11,7 +11,7 @@ type WrapperProps = {
   children: JSX.Element;
 };
 
-export default function Chained({ children }: WrapperProps) {
+export default function Wrapper({ children }: WrapperProps) {
   const [recoilChain, setRecoilChain] = useRecoilState(chainState);
   const setWalletInfo = useSetRecoilState(walletInfoState);
 

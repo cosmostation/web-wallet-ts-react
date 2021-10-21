@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import cx from 'clsx';
 import { useSetRecoilState } from 'recoil';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
@@ -8,13 +9,15 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 import { AppBar, Button, IconButton, Popover } from '@mui/material';
 
+import DialogChainSelect from '~/components/Dialog/DialogChainSelect';
+import DialogWalletConnect from '~/components/Dialog/DialogWalletConnect';
 import Drawer from '~/components/Drawer';
 import { chains } from '~/constants/chain';
 import { DRAWER_WIDTH } from '~/constants/common';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
+import { useCurrentPath } from '~/hooks/useCurrentPath';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { chainSelectState } from '~/stores/chain';
-import { walletConnectState, walletInfoState } from '~/stores/wallet';
+import { keystationRequestTypeState, walletInfoState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
 
@@ -24,11 +27,16 @@ type HeaderProps = {
 };
 
 export default function Header({ className, backgroundColor }: HeaderProps) {
-  const setIsOpenedConnect = useSetRecoilState(walletConnectState);
-  const setIsOpenedSelect = useSetRecoilState(chainSelectState);
+  const [isOpenedConnect, setIsOpenedConnect] = useState(false);
+  const [isOpenedSelect, setIsOpenedSelect] = useState(false);
   const [isOpenedDrawer, setIsOpenedDrawer] = useState(false);
 
   const setWalletInfo = useSetRecoilState(walletInfoState);
+  const setKeystationRequestType = useSetRecoilState(keystationRequestTypeState);
+
+  const history = useHistory();
+
+  const { getPathWithDepth } = useCurrentPath();
 
   const currentChain = useCurrentChain();
   const currentWallet = useCurrentWallet();
@@ -36,6 +44,17 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const isOpenPopover = Boolean(anchorEl);
+
+  const keystationRequestType = 'headerSignin';
+
+  const handleOnOpenConnect = () => {
+    setKeystationRequestType(keystationRequestType);
+    setIsOpenedConnect(true);
+  };
+
+  const handleOnSuccessConnect = () => {
+    if (!getPathWithDepth(2)) history.push(`/${currentChain}/wallet`);
+  };
 
   return (
     <>
@@ -97,7 +116,7 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
                     </div>
                     <div className={styles.popoverAddressContainer}>
                       <div>{currentWallet.address}</div>
-                      <div>
+                      <div className={styles.popoverAddressToolButtonContainer}>
                         <IconButton>
                           <ContentCopyIcon />
                         </IconButton>
@@ -123,7 +142,7 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
                             borderColor: '#000000',
                           },
                         }}
-                        onClick={() => setIsOpenedConnect(true)}
+                        onClick={handleOnOpenConnect}
                       >
                         Change Wallet
                       </Button>
@@ -157,6 +176,7 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
                           setWalletInfo(defaultWallet);
                           setAnchorEl(null);
                           sessionStorage.setItem('wallet', JSON.stringify(defaultWallet));
+                          history.push(`/${currentChain}`);
                         }}
                       >
                         Close Wallet
@@ -166,7 +186,7 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
                 </Popover>
               </>
             ) : (
-              <button type="button" className={styles.accountButton} onClick={() => setIsOpenedConnect(true)}>
+              <button type="button" className={styles.accountButton} onClick={handleOnOpenConnect}>
                 <AccountCircleOutlinedIcon />
                 <div className={styles.accountButtonText}>Connect Wallet</div>
               </button>
@@ -175,6 +195,15 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
         </div>
       </AppBar>
       <Drawer open={isOpenedDrawer} onClose={() => setIsOpenedDrawer(false)} />
+      {isOpenedSelect && <DialogChainSelect open={isOpenedSelect} onClose={() => setIsOpenedSelect(false)} />}
+      {isOpenedConnect && (
+        <DialogWalletConnect
+          open={isOpenedConnect}
+          onClose={() => setIsOpenedConnect(false)}
+          onSuccess={handleOnSuccessConnect}
+          requestType={keystationRequestType}
+        />
+      )}
     </>
   );
 }

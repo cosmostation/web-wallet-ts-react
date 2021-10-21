@@ -1,9 +1,16 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import cx from 'clsx';
+import { useSetRecoilState } from 'recoil';
 import { Drawer as BaseDrawer } from '@mui/material';
 
+import DialogWalletConnect from '~/components/Dialog/DialogWalletConnect';
+import type { Menu } from '~/constants/common';
 import { DRAWER_WIDTH } from '~/constants/common';
+import { useCurrentChain } from '~/hooks/useCurrentChain';
+import { useCurrentWallet } from '~/hooks/useCurrentWallet';
+import { keystationRequestTypeState } from '~/stores/wallet';
 
 import { ReactComponent as GithubIcon } from './assets/icon_github.svg';
 import { ReactComponent as MailIcon } from './assets/icon_mail.svg';
@@ -57,82 +64,132 @@ export default function Drawer({ open, onClose }: DrawerProps) {
 
 function DrawerContent() {
   const { t } = useTranslation();
-  return (
-    <div className={styles.container}>
-      <div>
-        <div className={styles.logoContainer}>
-          <div className={styles.logoImg}>
-            <Link to="/">
-              <img src="/images/common/logo.png" alt="logo" />
-            </Link>
-          </div>
-          <div className={styles.logoVersion}>v5.26.0</div>
-        </div>
-        <div className={styles.divider} />
-        <div className={styles.menuContainer}>
-          <ItemButton name={t('component.drawer.wallet')} imgURL="/images/common/icon_wallet.png" />
-          <ItemButton name={t('component.drawer.delegate')} imgURL="/images/common/icon_delegate.png" />
-          <ItemButton name="Broadcast Tx" imgURL="/images/common/icon_broadcast.png" />
-          <ItemButton name="Explorer" imgURL="/images/common/icon_explorer.png" />
-        </div>
-        <button type="button" className={styles.guideButton}>
-          {t('component.drawer.web_wallet_guide')} <sup>PDF</sup>
-        </button>
-      </div>
-      <div>
-        <div className={styles.downloadText}>Download Cosmostation App Wallet!</div>
-        <div className={styles.storeContainer}>
-          <a href="h">
-            <div className={styles.googlePlay} />
-          </a>
-          <a href="h">
-            <div className={styles.appStore} />
-          </a>
-        </div>
 
-        <div className={styles.socialLinkContainer}>
-          <a href="https://github.com/cosmostation" target="_blank" className={styles.socialLink} rel="noreferrer">
-            <GithubIcon />
-          </a>
-          <a href="https://medium.com/cosmostation" target="_blank" className={styles.socialLink} rel="noreferrer">
-            <MediumIcon />
-          </a>
-          <a href="https://t.me/cosmostation" target="_blank" className={styles.socialLink} rel="noreferrer">
-            <TelegramIcon />
-          </a>
-          <a href="https://twitter.com/CosmostationVD" target="_blank" className={styles.socialLink} rel="noreferrer">
-            <TwitterIcon />
-          </a>
-          <a href="mailto:support@cosmostation.io" className={styles.socialLink}>
-            <MailIcon />
-          </a>
+  const [isOpenedConnect, setIsOpenedConnect] = useState(false);
+  const [clickedMenu, setClickedMenu] = useState<Menu | null>(null);
+
+  const setKeystationRequestType = useSetRecoilState(keystationRequestTypeState);
+
+  const currentChain = useCurrentChain();
+  const currentWallet = useCurrentWallet();
+
+  const history = useHistory();
+
+  const keystationRequestType = 'drawerSignin';
+
+  const handleOnOpenConnect = (menu: Menu) => {
+    if (currentWallet.address) {
+      history.push(`/${currentChain}/${menu}`);
+      return;
+    }
+
+    setKeystationRequestType(keystationRequestType);
+    setClickedMenu(menu);
+    setIsOpenedConnect(true);
+  };
+
+  const handleOnSuccess = () => {
+    history.push(`/${currentChain}/${clickedMenu!}`);
+  };
+
+  return (
+    <>
+      <div className={styles.container}>
+        <div>
+          <div className={styles.logoContainer}>
+            <div className={styles.logoImg}>
+              <Link to="/">
+                <img src="/images/common/logo.png" alt="logo" />
+              </Link>
+            </div>
+            <div className={styles.logoVersion}>v5.26.0</div>
+          </div>
+          <div className={styles.divider} />
+          <div className={styles.menuContainer}>
+            <ItemButton
+              name={t('component.drawer.wallet')}
+              imgURL="/images/common/icon_wallet.png"
+              onClick={() => handleOnOpenConnect('wallet')}
+            />
+            <ItemButton
+              name={t('component.drawer.delegate')}
+              imgURL="/images/common/icon_delegate.png"
+              onClick={() => handleOnOpenConnect('delegate')}
+            />
+            <ItemButton
+              name="Broadcast Tx"
+              imgURL="/images/common/icon_broadcast.png"
+              onClick={() => handleOnOpenConnect('broadcast')}
+            />
+            <ItemButton name="Explorer" imgURL="/images/common/icon_explorer.png" />
+          </div>
+          <button type="button" className={styles.guideButton}>
+            {t('component.drawer.web_wallet_guide')} <sup>PDF</sup>
+          </button>
         </div>
-        <div className={styles.descriptionContainer}>
-          <div>
-            <a
-              href="https://www.cosmostation.io/service_ko.html"
-              target="_blank"
-              className={styles.descriptionLink}
-              rel="noreferrer"
-            >
-              {t('component.drawer.terms')}
+        <div>
+          <div className={styles.downloadText}>Download Cosmostation App Wallet!</div>
+          <div className={styles.storeContainer}>
+            <a href="h">
+              <div className={styles.googlePlay} />
+            </a>
+            <a href="h">
+              <div className={styles.appStore} />
             </a>
           </div>
-          <div>
-            Powered By{' '}
-            <a
-              href="https://www.cosmostation.io/"
-              target="_blank"
-              className={cx(styles.descriptionLink, styles.descriptionLinkUnderLine)}
-              rel="noreferrer"
-            >
-              Cosmostation
+
+          <div className={styles.socialLinkContainer}>
+            <a href="https://github.com/cosmostation" target="_blank" className={styles.socialLink} rel="noreferrer">
+              <GithubIcon />
+            </a>
+            <a href="https://medium.com/cosmostation" target="_blank" className={styles.socialLink} rel="noreferrer">
+              <MediumIcon />
+            </a>
+            <a href="https://t.me/cosmostation" target="_blank" className={styles.socialLink} rel="noreferrer">
+              <TelegramIcon />
+            </a>
+            <a href="https://twitter.com/CosmostationVD" target="_blank" className={styles.socialLink} rel="noreferrer">
+              <TwitterIcon />
+            </a>
+            <a href="mailto:support@cosmostation.io" className={styles.socialLink}>
+              <MailIcon />
             </a>
           </div>
-          <div>© 2021 COSMOSTATION</div>
+          <div className={styles.descriptionContainer}>
+            <div>
+              <a
+                href="https://www.cosmostation.io/service_ko.html"
+                target="_blank"
+                className={styles.descriptionLink}
+                rel="noreferrer"
+              >
+                {t('component.drawer.terms')}
+              </a>
+            </div>
+            <div>
+              Powered By{' '}
+              <a
+                href="https://www.cosmostation.io/"
+                target="_blank"
+                className={cx(styles.descriptionLink, styles.descriptionLinkUnderLine)}
+                rel="noreferrer"
+              >
+                Cosmostation
+              </a>
+            </div>
+            <div>© 2021 COSMOSTATION</div>
+          </div>
         </div>
       </div>
-    </div>
+      {isOpenedConnect && (
+        <DialogWalletConnect
+          open={isOpenedConnect}
+          onClose={() => setIsOpenedConnect(false)}
+          onSuccess={handleOnSuccess}
+          requestType={keystationRequestType}
+        />
+      )}
+    </>
   );
 }
 

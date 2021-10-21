@@ -107,7 +107,7 @@
 .popoverContainer {
   box-sizing: border-box;
 
-  width: 46rem;
+  width: 47rem;
   height: 13.6rem;
 
   padding: 1.5rem 2.3rem;
@@ -125,6 +125,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.popoverAddressToolButtonContainer {
+  flex-shrink: 0;
 }
 
 .popoverButtonContainer {

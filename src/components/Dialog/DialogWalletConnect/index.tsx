@@ -3,16 +3,28 @@ import cx from 'clsx';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Dialog from '~/components/Dialog';
+import type { ChainPath } from '~/constants/chain';
 import { chains } from '~/constants/chain';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { loaderState } from '~/stores/loader';
 import type { WalletInfo } from '~/stores/wallet';
-import { keystationRequestTypeState, walletConnectState, walletInfoState } from '~/stores/wallet';
+import { keystationRequestTypeState, walletInfoState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
 
-export default function DialogWalletConnect() {
-  const [opened, setOpened] = useRecoilState(walletConnectState);
+type DialogWalletConnectProps = {
+  open: boolean;
+  onClose?: () => void;
+  onSuccess?: (chain: ChainPath) => void;
+  requestType?: string;
+};
+
+export default function DialogWalletConnect({
+  open,
+  onClose,
+  onSuccess,
+  requestType = 'signin',
+}: DialogWalletConnectProps) {
   const setIsShowLoader = useSetRecoilState(loaderState);
   const [keystationRequestType, setKeystationRequestType] = useRecoilState(keystationRequestTypeState);
   const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
@@ -24,7 +36,7 @@ export default function DialogWalletConnect() {
 
   const messageHandler = useCallback(
     (e: MessageEvent) => {
-      if (e.origin === 'https://keystation.cosmostation.io' && keystationRequestType === 'signin') {
+      if (e.origin === 'https://keystation.cosmostation.io' && keystationRequestType === requestType) {
         if (e.data) {
           const next: WalletInfo = {
             ...walletInfo,
@@ -38,11 +50,11 @@ export default function DialogWalletConnect() {
           sessionStorage.setItem('wallet', JSON.stringify(next));
           setWalletInfo(next);
           setKeystationRequestType(null);
-          setOpened(false);
+          onSuccess?.(currentChain);
         }
       }
     },
-    [currentChain, keystationRequestType, setKeystationRequestType, setWalletInfo, walletInfo, setOpened],
+    [currentChain, keystationRequestType, setKeystationRequestType, setWalletInfo, walletInfo, onSuccess, requestType],
   );
 
   useEffect(() => {
@@ -54,7 +66,6 @@ export default function DialogWalletConnect() {
   }, [messageHandler]);
 
   const handleOnClick = () => {
-    setKeystationRequestType('signin');
     setIsShowLoader(true);
 
     const popup = myKeystation.openWindow('signin', currentChainInfo.wallet.prefix);
@@ -68,7 +79,7 @@ export default function DialogWalletConnect() {
   };
 
   return (
-    <Dialog open={opened} onClose={() => setOpened(false)} maxWidth="lg">
+    <Dialog open={open} onClose={onClose} maxWidth="lg">
       <div className={styles.container}>
         <div className={styles.connectContainer}>
           <ConnectButton name="Connect To Ledger" imgURL="/images/signIn/ledger.png" disabled />

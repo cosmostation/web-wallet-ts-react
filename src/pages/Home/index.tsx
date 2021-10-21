@@ -1,26 +1,52 @@
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 
+import DialogWalletConnect from '~/components/Dialog/DialogWalletConnect';
 import Layout from '~/components/Layout';
-import Loader from '~/components/Loader';
-import { chainState } from '~/stores/chain';
-import { walletConnectState } from '~/stores/wallet';
+import { useCurrentChain } from '~/hooks/useCurrentChain';
+import { keystationRequestTypeState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
 
 export default function Home() {
-  const setIsConnected = useSetRecoilState(walletConnectState);
-  const chain = useRecoilValue(chainState);
+  const [open, setOpen] = useState(false);
+
+  const setKeystationRequestType = useSetRecoilState(keystationRequestTypeState);
+
+  const currentChain = useCurrentChain();
+
+  const history = useHistory();
+
+  const keystationRequestType = 'homeSignin';
+
+  const handleOnOpenConnect = () => {
+    setKeystationRequestType(keystationRequestType);
+    setOpen(true);
+  };
+
+  const handleOnSuccess = () => {
+    history.push(`${currentChain}/wallet`);
+  };
 
   return (
     <Layout>
-      {chain}
-      <Loader />
-      <div className={styles.container}>
-        <div className={styles.mainImg} />
-        <button type="button" onClick={() => setIsConnected(true)} className={styles.connectButton}>
-          Connect Wallet
-        </button>
-      </div>
+      <>
+        <div className={styles.container}>
+          <div className={styles.mainImg} />
+          <button type="button" onClick={handleOnOpenConnect} className={styles.connectButton}>
+            Connect Wallet
+          </button>
+        </div>
+        {open && (
+          <DialogWalletConnect
+            open={open}
+            onClose={() => setOpen(false)}
+            onSuccess={handleOnSuccess}
+            requestType={keystationRequestType}
+          />
+        )}
+      </>
     </Layout>
   );
 }
