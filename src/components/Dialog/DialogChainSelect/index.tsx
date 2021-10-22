@@ -11,7 +11,7 @@ import { useCurrentPath } from '~/hooks/useCurrentPath';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import { loaderState } from '~/stores/loader';
 import type { WalletInfo } from '~/stores/wallet';
-import { keystationRequestTypeState, walletInfoState } from '~/stores/wallet';
+import { walletInfoState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
 
@@ -21,7 +21,6 @@ type DialogChainSelectProps = {
 };
 
 export default function DialogChainSelect({ open, onClose }: DialogChainSelectProps) {
-  const [keystationRequestType, setKeystationRequestType] = useRecoilState(keystationRequestTypeState);
   const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
   const setIsShowLoader = useSetRecoilState(loaderState);
   const currentChain = useCurrentChain();
@@ -40,10 +39,8 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
 
     if (wallet.address || !!getPathWithDepth(2)) {
       setIsShowLoader(true);
-      onClose?.();
 
       const chainInfo = chains[chain];
-      setKeystationRequestType('chainSelectSignIn');
 
       const myKeystation = new Keystation('http://localhost:3000', chainInfo.lcdURL, chainInfo.wallet.hdPath);
 
@@ -59,12 +56,11 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
     }
 
     history.push(`/${chain}`);
-    onClose?.();
   };
 
   const messageHandler = useCallback(
     (e: MessageEvent) => {
-      if (e.origin === 'https://keystation.cosmostation.io' && keystationRequestType === 'chainSelectSignIn') {
+      if (e.origin === 'https://keystation.cosmostation.io') {
         if (e.data) {
           const chainInfo = Object.values(chains).find((chain) =>
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -82,15 +78,16 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
           };
 
           setWalletInfo(next);
-          setKeystationRequestType(null);
 
           sessionStorage.setItem('wallet', JSON.stringify(next));
 
           history.push(`/${chainInfo.path}${getPathWithDepth(2) ? `/${getPathWithDepth(2)}` : ''}`);
+
+          onClose?.();
         }
       }
     },
-    [getPathWithDepth, history, keystationRequestType, setKeystationRequestType, setWalletInfo, walletInfo],
+    [getPathWithDepth, history, setWalletInfo, walletInfo, onClose],
   );
 
   useEffect(() => {

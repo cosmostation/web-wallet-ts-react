@@ -17,7 +17,7 @@ import { DRAWER_WIDTH } from '~/constants/common';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentPath } from '~/hooks/useCurrentPath';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { keystationRequestTypeState, walletInfoState } from '~/stores/wallet';
+import { walletInfoState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
 
@@ -32,7 +32,6 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
   const [isOpenedDrawer, setIsOpenedDrawer] = useState(false);
 
   const setWalletInfo = useSetRecoilState(walletInfoState);
-  const setKeystationRequestType = useSetRecoilState(keystationRequestTypeState);
 
   const history = useHistory();
 
@@ -45,12 +44,7 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
 
   const isOpenPopover = Boolean(anchorEl);
 
-  const keystationRequestType = 'headerSignin';
-
-  const handleOnOpenConnect = () => {
-    setKeystationRequestType(keystationRequestType);
-    setIsOpenedConnect(true);
-  };
+  const handleOnOpenConnect = () => setIsOpenedConnect(true);
 
   const handleOnSuccessConnect = () => {
     if (!getPathWithDepth(2)) history.push(`/${currentChain}/wallet`);
@@ -201,7 +195,6 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
           open={isOpenedConnect}
           onClose={() => setIsOpenedConnect(false)}
           onSuccess={handleOnSuccessConnect}
-          requestType={keystationRequestType}
         />
       )}
     </>

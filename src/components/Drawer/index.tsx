@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import cx from 'clsx';
-import { useSetRecoilState } from 'recoil';
 import { Drawer as BaseDrawer } from '@mui/material';
 
 import DialogWalletConnect from '~/components/Dialog/DialogWalletConnect';
@@ -10,7 +9,6 @@ import type { Menu } from '~/constants/common';
 import { DRAWER_WIDTH } from '~/constants/common';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { keystationRequestTypeState } from '~/stores/wallet';
 
 import { ReactComponent as GithubIcon } from './assets/icon_github.svg';
 import { ReactComponent as MailIcon } from './assets/icon_mail.svg';
@@ -68,14 +66,10 @@ function DrawerContent() {
   const [isOpenedConnect, setIsOpenedConnect] = useState(false);
   const [clickedMenu, setClickedMenu] = useState<Menu | null>(null);
 
-  const setKeystationRequestType = useSetRecoilState(keystationRequestTypeState);
-
   const currentChain = useCurrentChain();
   const currentWallet = useCurrentWallet();
 
   const history = useHistory();
-
-  const keystationRequestType = 'drawerSignin';
 
   const handleOnOpenConnect = (menu: Menu) => {
     if (currentWallet.address) {
@@ -83,7 +77,6 @@ function DrawerContent() {
       return;
     }
 
-    setKeystationRequestType(keystationRequestType);
     setClickedMenu(menu);
     setIsOpenedConnect(true);
   };
@@ -186,7 +179,6 @@ function DrawerContent() {
           open={isOpenedConnect}
           onClose={() => setIsOpenedConnect(false)}
           onSuccess={handleOnSuccess}
-          requestType={keystationRequestType}
         />
       )}
     </>

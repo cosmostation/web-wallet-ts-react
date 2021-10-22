@@ -1,29 +1,20 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
 
 import DialogWalletConnect from '~/components/Dialog/DialogWalletConnect';
 import Layout from '~/components/Layout';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
-import { keystationRequestTypeState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
 
 export default function Home() {
   const [open, setOpen] = useState(false);
 
-  const setKeystationRequestType = useSetRecoilState(keystationRequestTypeState);
-
   const currentChain = useCurrentChain();
 
   const history = useHistory();
 
-  const keystationRequestType = 'homeSignin';
-
-  const handleOnOpenConnect = () => {
-    setKeystationRequestType(keystationRequestType);
-    setOpen(true);
-  };
+  const handleOnOpenConnect = () => setOpen(true);
 
   const handleOnSuccess = () => {
     history.push(`${currentChain}/wallet`);
@@ -38,14 +29,7 @@ export default function Home() {
             Connect Wallet
           </button>
         </div>
-        {open && (
-          <DialogWalletConnect
-            open={open}
-            onClose={() => setOpen(false)}
-            onSuccess={handleOnSuccess}
-            requestType={keystationRequestType}
-          />
-        )}
+        {open && <DialogWalletConnect open={open} onClose={() => setOpen(false)} onSuccess={handleOnSuccess} />}
       </>
     </Layout>
   );

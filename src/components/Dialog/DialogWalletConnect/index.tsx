@@ -8,7 +8,7 @@ import { chains } from '~/constants/chain';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { loaderState } from '~/stores/loader';
 import type { WalletInfo } from '~/stores/wallet';
-import { keystationRequestTypeState, walletInfoState } from '~/stores/wallet';
+import { walletInfoState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
 
@@ -16,17 +16,10 @@ type DialogWalletConnectProps = {
   open: boolean;
   onClose?: () => void;
   onSuccess?: (chain: ChainPath) => void;
-  requestType?: string;
 };
 
-export default function DialogWalletConnect({
-  open,
-  onClose,
-  onSuccess,
-  requestType = 'signin',
-}: DialogWalletConnectProps) {
+export default function DialogWalletConnect({ open, onClose, onSuccess }: DialogWalletConnectProps) {
   const setIsShowLoader = useSetRecoilState(loaderState);
-  const [keystationRequestType, setKeystationRequestType] = useRecoilState(keystationRequestTypeState);
   const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
   const currentChain = useCurrentChain();
 
@@ -36,7 +29,7 @@ export default function DialogWalletConnect({
 
   const messageHandler = useCallback(
     (e: MessageEvent) => {
-      if (e.origin === 'https://keystation.cosmostation.io' && keystationRequestType === requestType) {
+      if (e.origin === 'https://keystation.cosmostation.io') {
         if (e.data) {
           const next: WalletInfo = {
             ...walletInfo,
@@ -49,12 +42,11 @@ export default function DialogWalletConnect({
           };
           sessionStorage.setItem('wallet', JSON.stringify(next));
           setWalletInfo(next);
-          setKeystationRequestType(null);
           onSuccess?.(currentChain);
         }
       }
     },
-    [currentChain, keystationRequestType, setKeystationRequestType, setWalletInfo, walletInfo, onSuccess, requestType],
+    [currentChain, setWalletInfo, walletInfo, onSuccess],
   );
 
   useEffect(() => {
