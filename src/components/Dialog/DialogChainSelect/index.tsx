@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Dialog from '~/components/Dialog';
@@ -12,6 +13,7 @@ import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import { loaderState } from '~/stores/loader';
 import type { WalletInfo } from '~/stores/wallet';
 import { walletInfoState } from '~/stores/wallet';
+import Ledger, { getBech32FromPK } from '~/utils/ledger';
 
 import styles from './index.module.scss';
 
@@ -24,6 +26,7 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
   const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
   const setIsShowLoader = useSetRecoilState(loaderState);
   const currentChain = useCurrentChain();
+  const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
 
   const { getPathWithDepth } = useCurrentPath();
@@ -31,27 +34,68 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
 
   const chainInfos = Object.values(chains);
 
-  const handleOnClick = (chain: ChainPath) => {
-    if (currentChain === chain) {
+  const handleOnClick = async (chain: ChainPath) => {
+    if (currentChain.path === chain) {
       onClose?.();
       return;
     }
 
     if (wallet.address || !!getPathWithDepth(2)) {
-      setIsShowLoader(true);
+      try {
+        const chainInfo = chains[chain];
+        if (wallet.walletType === 'keystation') {
+          setIsShowLoader(true);
 
-      const chainInfo = chains[chain];
+          const myKeystation = new Keystation('http://localhost:3000', chainInfo.lcdURL, chainInfo.wallet.hdPath);
 
-      const myKeystation = new Keystation('http://localhost:3000', chainInfo.lcdURL, chainInfo.wallet.hdPath);
+          const popup = myKeystation.openWindow('signin', chainInfo.wallet.prefix);
 
-      const popup = myKeystation.openWindow('signin', chainInfo.wallet.prefix);
-
-      const timer = setInterval(() => {
-        if (popup.closed) {
-          setIsShowLoader(false);
-          clearInterval(timer);
+          const timer = setInterval(() => {
+            if (popup.closed) {
+              setIsShowLoader(false);
+              clearInterval(timer);
+            }
+          }, 500);
         }
-      }, 500);
+
+        if (wallet.walletType === 'ledger') {
+          const ledger = await Ledger();
+
+          if (!ledger) {
+            throw new Error('check the connection of ledger');
+          }
+
+          setIsShowLoader(true);
+
+          if (await ledger.isLocked()) {
+            throw new Error(`ledger's status is screen saver`);
+          }
+
+          const hdPathArray = chainInfo.wallet.hdPath.split('/').map((item) => Number(item));
+
+          const publicKey = await ledger.getPublicKey(hdPathArray);
+
+          const address = getBech32FromPK(chainInfo.wallet.prefix, Buffer.from(publicKey.buffer));
+
+          const nextWalletInfo: WalletInfo = {
+            ...walletInfo,
+            keystationAccount: null,
+            address,
+            HDPath: chainInfo.wallet.hdPath,
+            walletType: 'ledger',
+          };
+          sessionStorage.setItem('wallet', JSON.stringify(nextWalletInfo));
+          setWalletInfo(nextWalletInfo);
+        }
+
+        history.push(`/${chainInfo.path}${getPathWithDepth(2) ? `/${getPathWithDepth(2)}` : '/wallet'}`);
+
+        onClose?.();
+      } catch (e) {
+        enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
+      } finally {
+        setIsShowLoader(false);
+      }
       return;
     }
 
@@ -73,8 +117,8 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
             keystationAccount: e.data.account as string,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             address: e.data.address as string,
+            HDPath: chainInfo.wallet.hdPath,
             walletType: 'keystation',
-            chain: chainInfo.path,
           };
 
           setWalletInfo(next);

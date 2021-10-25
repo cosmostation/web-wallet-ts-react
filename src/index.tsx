@@ -2,6 +2,7 @@ import './i18n/i18n';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { SnackbarProvider } from 'notistack';
 import { RecoilRoot } from 'recoil';
 
 import reportWebVitals from './reportWebVitals';
@@ -13,7 +14,9 @@ import styles from './index.module.scss';
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
-      <App />
+      <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <App />
+      </SnackbarProvider>
     </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root'),

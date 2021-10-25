@@ -6,8 +6,3 @@ export const chainState = atom<typeof chainPaths[number] | null>({
   key: 'chainState',
   default: null,
 });
-
-export const chainSelectState = atom({
-  key: 'chainSelectState',
-  default: false,
-});

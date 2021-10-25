@@ -12,7 +12,6 @@ import { AppBar, Button, IconButton, Popover } from '@mui/material';
 import DialogChainSelect from '~/components/Dialog/DialogChainSelect';
 import DialogWalletConnect from '~/components/Dialog/DialogWalletConnect';
 import Drawer from '~/components/Drawer';
-import { chains } from '~/constants/chain';
 import { DRAWER_WIDTH } from '~/constants/common';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentPath } from '~/hooks/useCurrentPath';
@@ -47,7 +46,10 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
   const handleOnOpenConnect = () => setIsOpenedConnect(true);
 
   const handleOnSuccessConnect = () => {
-    if (!getPathWithDepth(2)) history.push(`/${currentChain}/wallet`);
+    if (!getPathWithDepth(2)) history.push(`/${currentChain.path}/wallet`);
+    else {
+      setIsOpenedConnect(false);
+    }
   };
 
   return (
@@ -77,9 +79,9 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
             <button type="button" className={styles.chainButton} onClick={() => setIsOpenedSelect(true)}>
               <div className={styles.chainButtonLeft}>
                 <div className={styles.chainImgContainer}>
-                  <img src={chains[currentChain].imgURL} alt={chains[currentChain].name} />
+                  <img src={currentChain.imgURL} alt={currentChain.name} />
                 </div>
-                <div className={styles.accountButtonText}>{chains[currentChain].name}</div>
+                <div className={styles.accountButtonText}>{currentChain.name}</div>
               </div>
               <WidgetsIcon />
             </button>
@@ -159,9 +161,8 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
                         }}
                         onClick={() => {
                           const defaultWallet = {
-                            chain: null,
                             walletType: null,
-                            ledgerHDPath: null,
+                            HDPath: null,
                             keystationAccount: null,
                             address: null,
                             url: null,
@@ -170,7 +171,7 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
                           setWalletInfo(defaultWallet);
                           setAnchorEl(null);
                           sessionStorage.setItem('wallet', JSON.stringify(defaultWallet));
-                          history.push(`/${currentChain}`);
+                          history.push(`/${currentChain.path}`);
                         }}
                       >
                         Close Wallet

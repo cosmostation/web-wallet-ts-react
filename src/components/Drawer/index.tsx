@@ -73,7 +73,7 @@ function DrawerContent() {
 
   const handleOnOpenConnect = (menu: Menu) => {
     if (currentWallet.address) {
-      history.push(`/${currentChain}/${menu}`);
+      history.push(`/${currentChain.path}/${menu}`);
       return;
     }
 
@@ -82,7 +82,7 @@ function DrawerContent() {
   };
 
   const handleOnSuccess = () => {
-    history.push(`/${currentChain}/${clickedMenu!}`);
+    history.push(`/${currentChain.path}/${clickedMenu!}`);
   };
 
   return (

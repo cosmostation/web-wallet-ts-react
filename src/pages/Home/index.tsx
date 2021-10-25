@@ -17,7 +17,7 @@ export default function Home() {
   const handleOnOpenConnect = () => setOpen(true);
 
   const handleOnSuccess = () => {
-    history.push(`${currentChain}/wallet`);
+    history.push(`${currentChain.path}/wallet`);
   };
 
   return (
