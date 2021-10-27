@@ -12,6 +12,7 @@ export default function LcdURL(chain: ChainPath) {
       return `${chainInfo.lcdURL}${path}${address}`;
     },
     getDelegations: (address: string) => `${chainInfo.lcdURL}/staking/delegators/${address}/delegations`,
+    getRewards: (address: string) => `${chainInfo.lcdURL}/distribution/delegators/${address}/rewards`,
     getUnbondingDelegations: (address: string) =>
       `${chainInfo.lcdURL}/staking/delegators/${address}/unbonding_delegations`,
     getValidators: () => {
