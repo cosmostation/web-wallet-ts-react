@@ -1,0 +1,129 @@
+@import '~/styles/index';
+
+.container {
+  box-sizing: border-box;
+  width: 100%;
+
+  padding: 2.6rem;
+
+  border: 0.1rem solid $gray200;
+  border-radius: 0.6rem;
+}
+
+.keystation {
+  background: no-repeat url('assets/icon_keystation.png');
+  background-size: cover;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.ledger {
+  background: no-repeat url('assets/icon_ledger.png');
+  background-size: cover;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.firstContentContainer {
+  display: flex;
+  align-items: center;
+}
+
+.firstContentQRContainer {
+  width: 7rem;
+  height: 7rem;
+  padding: 1rem 1rem;
+}
+
+.firstContentInfoContainer {
+  margin-left: 2rem;
+}
+
+.firstContentInfoFirstLineContainer {
+  display: flex;
+  align-items: center;
+}
+
+.firstContentInfoFirstLineTitle {
+  margin-left: 1rem;
+
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.firstContentInfoFirstLineHdPath {
+  margin-left: 1rem;
+
+  font-size: 1.2rem;
+  color: $gray600;
+}
+
+.firstContentInfoSecondLineContainer {
+  margin-top: 0.6rem;
+  display: flex;
+  align-items: center;
+
+  font-size: 1.5rem;
+}
+
+.firstContentInfoThirdLineContainer {
+  margin-top: 0.6rem;
+}
+
+.secondContentContainer {
+  display: flex;
+}
+
+.secondContentTotalContainer {
+  width: 30%;
+  display: flex;
+  align-items: flex-start;
+}
+
+.secondContentTotalSymbolContainer {
+  width: 40%;
+  display: flex;
+  align-items: center;
+
+  font-size: 1.5rem;
+
+  & > img {
+    width: 2.2rem;
+    height: 2.2rem;
+    margin-right: 0.4rem;
+  }
+}
+
+.secondContentTotalContentContainer {
+  font-size: 1.4rem;
+}
+
+.secondContentCalContentContainer {
+  margin-top: 1rem;
+}
+
+.secondContentTotalContentBold {
+  font-weight: bold;
+}
+
+.secondContentDelegateContainer {
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  font-size: 1.4rem;
+}
+
+.delegateInfoContainer {
+  box-sizing: border-box;
+
+  padding: 0 3rem;
+  width: 50%;
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+}

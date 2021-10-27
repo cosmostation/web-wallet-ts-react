@@ -86,15 +86,15 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
           };
           sessionStorage.setItem('wallet', JSON.stringify(nextWalletInfo));
           setWalletInfo(nextWalletInfo);
+
+          history.push(`/${chainInfo.path}${getPathWithDepth(2) ? `/${getPathWithDepth(2)}` : '/wallet'}`);
+
+          onClose?.();
+
+          setIsShowLoader(false);
         }
-
-        history.push(`/${chainInfo.path}${getPathWithDepth(2) ? `/${getPathWithDepth(2)}` : '/wallet'}`);
-
-        onClose?.();
       } catch (e) {
         enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
-      } finally {
-        setIsShowLoader(false);
       }
       return;
     }

@@ -3,4 +3,75 @@
 .container {
   width: 100%;
   height: 100%;
+
+  box-sizing: border-box;
+
+  color: $black;
+  font-size: 1.3rem;
+
+  background-color: $white;
+
+  padding: 2rem 1.3rem;
+
+  display: flex;
+  justify-content: center;
+}
+
+.contentContainer {
+  max-width: 114rem;
+
+  width: 100%;
+}
+
+.titleContainer {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  .title {
+    font-size: 1.9rem;
+  }
+}
+
+.adContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.aditem {
+  display: flex;
+  height: 3rem;
+  align-items: center;
+
+  justify-content: flex-end;
+}
+
+.cosmosImage {
+  background-image: url('assets/cosmos.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 8rem;
+  height: 2rem;
+}
+
+.defiImage {
+  background-image: url('assets/defistation.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top;
+  width: 10rem;
+  height: 3rem;
+  margin-top: -1.5rem;
+}
+
+.hdPath {
+  margin-top: 1rem;
+}
+
+.walletInfo {
+  margin-top: 3rem;
 }

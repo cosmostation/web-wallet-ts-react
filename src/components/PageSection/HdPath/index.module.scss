@@ -1,0 +1,36 @@
+@import '~/styles/index';
+
+.container {
+  box-sizing: border-box;
+  width: 100%;
+
+  padding: 2.6rem;
+
+  border: 0.1rem solid $gray200;
+  border-radius: 0.6rem;
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.titleQuestion {
+  margin-left: 0.8rem;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+
+  margin-top: 1rem;
+
+  & > :nth-child(n + 2) {
+    margin-left: 0.8rem;
+  }
+}

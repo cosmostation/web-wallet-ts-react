@@ -33,9 +33,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-cosmos.cosmostation.io',
     symbolName: 'ATOM',
-    denomName: 'uatom',
+    denom: 'uatom',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'cosmos',
   },
   [CHAIN.IRIS]: {
     name: 'iris',
@@ -47,9 +48,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-iris.cosmostation.io',
     symbolName: 'IRIS',
-    denomName: 'uiris',
+    denom: 'uiris',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'iris-network',
   },
   [CHAIN.KAVA]: {
     name: 'kava',
@@ -62,9 +64,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-kava.cosmostation.io',
     symbolName: 'KAVA',
-    denomName: 'ukava',
+    denom: 'ukava',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'kava',
   },
   [CHAIN.BAND]: {
     name: 'band',
@@ -77,9 +80,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-band.cosmostation.io',
     symbolName: 'BAND',
-    denomName: 'uband',
+    denom: 'uband',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'band-protocol',
   },
   [CHAIN.AKASH]: {
     name: 'akash',
@@ -91,9 +95,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-akash.cosmostation.io',
     symbolName: 'AKT',
-    denomName: 'uakt',
+    denom: 'uakt',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'akash-network',
   },
   [CHAIN.CERTIK]: {
     name: 'certik',
@@ -105,9 +110,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-certik.cosmostation.io',
     symbolName: 'CTK',
-    denomName: 'uctk',
+    denom: 'uctk',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'certik',
   },
   [CHAIN.SENTINEL]: {
     name: 'sentinel',
@@ -119,9 +125,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-sentinel.cosmostation.io',
     symbolName: 'DVPN',
-    denomName: 'udvpn',
+    denom: 'udvpn',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'sentinel-group',
   },
   [CHAIN.PERSISTENCE]: {
     name: 'persistence',
@@ -133,9 +140,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-persistence.cosmostation.io',
     symbolName: 'XPRT',
-    denomName: 'uxprt',
+    denom: 'uxprt',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'persistence',
   },
   [CHAIN.FETCH_AI]: {
     name: 'fetch.ai',
@@ -147,9 +155,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-fetchai.cosmostation.io',
     symbolName: 'FET',
-    denomName: 'afet',
+    denom: 'afet',
     decimal: 0.000000000000000001,
     decimalLength: 18,
+    coingeckoId: 'fetch-ai',
   },
   [CHAIN.SIFCHAIN]: {
     name: 'sifchain',
@@ -161,9 +170,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-sifchain.cosmostation.io',
     symbolName: 'ROWAN',
-    denomName: 'rowan',
+    denom: 'rowan',
     decimal: 0.000000000000000001,
     decimalLength: 18,
+    coingeckoId: 'sifchain',
   },
   [CHAIN.CRYPTO_ORG]: {
     name: 'crypto.org',
@@ -175,9 +185,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-cryptocom.cosmostation.io',
     symbolName: 'CRO',
-    denomName: 'basecro',
+    denom: 'basecro',
     decimal: 0.00000001,
     decimalLength: 8,
+    coingeckoId: 'crypto-com-chain',
   },
   [CHAIN.KICHAIN]: {
     name: 'kichain',
@@ -189,9 +200,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-kichain.cosmostation.io',
     symbolName: 'XKI',
-    denomName: 'uxki',
+    denom: 'uxki',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'ki',
   },
   [CHAIN.STARNAME]: {
     name: 'starname',
@@ -203,9 +215,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-iov.cosmostation.io',
     symbolName: 'IOV',
-    denomName: 'uiov',
+    denom: 'uiov',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'starname',
   },
   [CHAIN.MEDIBLOC]: {
     name: 'medibloc',
@@ -217,9 +230,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-medibloc.cosmostation.io',
     symbolName: 'MED',
-    denomName: 'umed',
+    denom: 'umed',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'medibloc',
   },
   [CHAIN.EMONEY]: {
     name: 'emoney',
@@ -231,9 +245,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-emoney.cosmostation.io',
     symbolName: 'NGM',
-    denomName: 'ungm',
+    denom: 'ungm',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'e-money',
   },
   [CHAIN.RIZON]: {
     name: 'rizon',
@@ -245,9 +260,10 @@ export const chains = {
     },
     lcdURL: 'https://lcd-rizon.cosmostation.io',
     symbolName: 'ATOLO',
-    denomName: 'uatolo',
+    denom: 'uatolo',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'hdac',
   },
   [CHAIN.JUNO]: {
     name: 'juno',
@@ -259,37 +275,17 @@ export const chains = {
     },
     lcdURL: 'https://lcd-juno.cosmostation.io',
     symbolName: 'JUNO',
-    denomName: 'ujuno',
+    denom: 'ujuno',
     decimal: 0.000001,
     decimalLength: 6,
+    coingeckoId: 'juno-network',
   },
 } as const;
 
 export const chainNames = Object.values(chains).map((chain) => chain.name);
+export const chainGeckoIds = Object.values(chains).map((chain) => chain.coingeckoId);
 
 export const chainPaths = Object.values(CHAIN);
 
 export type ChainPath = typeof chainPaths[number];
-
-/**
- * 
- * 
-COSMOS_LCD_URL = 'https://lcd-cosmos.cosmostation.io';
-IRIS_LCD_URL = 'https://lcd-iris.cosmostation.io';
-KAVA_LCD_URL = 'https://lcd-kava.cosmostation.io';
-BAND_LCD_URL = 'https://lcd-band.cosmostation.io'; // 44
-AKASH_LCD_URL = 'https://lcd-akash.cosmostation.io';
-CERTIK_LCD_URL = 'https://lcd-certik.cosmostation.io'; // 42
-PERSISTENCE_LCD_URL = 'https://lcd-persistence.cosmostation.io';
-SENTINEL_LCD_URL = 'https://lcd-sentinel.cosmostation.io'; // 37 -> 42
-FETCHAI_LCD_URL = 'https://lcd-fetchai.cosmostation.io'; // 38 -> 42
-SIFCHAIN_LCD_URL = 'https://lcd-sifchain.cosmostation.io'; // 39 -> 42
-CRYPTOORG_LCD_URL = 'https://lcd-cryptocom.cosmostation.io'; // 40
-KICHAIN_LCD_URL = 'https://lcd-kichain.cosmostation.io'; // 38
-STARNAME_LCD_URL = 'https://lcd-iov.cosmostation.io'; // 42
-MEDIBLOC_LCD_URL = 'https://lcd-medibloc.cosmostation.io'; // 42
-EMONEY_LCD_URL = 'https://lcd-emoney.cosmostation.io'; // 42
-RIZON_LCD_URL = 'https://lcd-rizon.cosmostation.io'; // 42
-JUNO_LCD_URL = 'https://lcd-juno.cosmostation.io'; // 44
-BITCANNA_LCD_URL = 'https://lcd-bitcanna.cosmostation.io'; // 44
- */
+export type ChainGeckoId = typeof chainGeckoIds[number];
