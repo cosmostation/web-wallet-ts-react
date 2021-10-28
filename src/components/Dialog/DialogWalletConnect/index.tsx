@@ -1,9 +1,10 @@
-import { useCallback, useEffect } from 'react';
+import { useState } from 'react';
 import cx from 'clsx';
 import { useSnackbar } from 'notistack';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Dialog from '~/components/Dialog';
+import Signin from '~/components/Keystation/Signin';
 import type { ChainPath } from '~/constants/chain';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { loaderState } from '~/stores/loader';
@@ -20,45 +21,18 @@ type DialogWalletConnectProps = {
 };
 
 export default function DialogWalletConnect({ open, onClose, onSuccess }: DialogWalletConnectProps) {
+  const [isOpenedSignin, setIsOpenedSignin] = useState(false);
+
   const setIsShowLoader = useSetRecoilState(loaderState);
   const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
   const currentChain = useCurrentChain();
   const { enqueueSnackbar } = useSnackbar();
 
-  const myKeystation = new Keystation('http://localhost:3000', currentChain.lcdURL, currentChain.wallet.hdPath);
-
-  const messageHandler = useCallback(
-    (e: MessageEvent) => {
-      if (e.origin === 'https://keystation.cosmostation.io') {
-        if (e.data) {
-          const nextWalletInfo: WalletInfo = {
-            ...walletInfo,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            keystationAccount: e.data.account as string,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            address: e.data.address as string,
-            HDPath: currentChain.wallet.hdPath,
-            walletType: 'keystation',
-          };
-          sessionStorage.setItem('wallet', JSON.stringify(nextWalletInfo));
-          setWalletInfo(nextWalletInfo);
-          onSuccess?.(currentChain.path);
-        }
-      }
-    },
-    [currentChain, setWalletInfo, walletInfo, onSuccess],
-  );
-
-  useEffect(() => {
-    window.addEventListener('message', messageHandler);
-
-    return () => {
-      window.removeEventListener('message', messageHandler);
-    };
-  }, [messageHandler]);
-
   const handleOnClickKeystation = () => {
     setIsShowLoader(true);
+    setIsOpenedSignin(true);
+
+    const myKeystation = new Keystation('http://localhost:3000', currentChain.lcdURL, currentChain.wallet.hdPath);
 
     const popup = myKeystation.openWindow('signin', currentChain.wallet.prefix);
 
@@ -73,10 +47,6 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
   const handleOnClickLedger = async () => {
     try {
       const ledger = await Ledger();
-
-      if (!ledger) {
-        throw new Error('check the connection of ledger');
-      }
 
       setIsShowLoader(true);
 
@@ -111,21 +81,31 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="lg">
-      <div className={styles.container}>
-        <div className={styles.connectContainer}>
-          <ConnectButton name="Connect To Ledger" imgURL="/images/signIn/ledger.png" onClick={handleOnClickLedger} />
-          <div className={styles.verticalDivider} />
-          <ConnectButton
-            name="Connect To Keystation"
-            imgURL="/images/signIn/keystation.png"
-            onClick={handleOnClickKeystation}
-          />
+    <>
+      <Dialog open={open} onClose={onClose} maxWidth="lg">
+        <div className={styles.container}>
+          <div className={styles.connectContainer}>
+            <ConnectButton name="Connect To Ledger" imgURL="/images/signIn/ledger.png" onClick={handleOnClickLedger} />
+            <div className={styles.verticalDivider} />
+            <ConnectButton
+              name="Connect To Keystation"
+              imgURL="/images/signIn/keystation.png"
+              onClick={handleOnClickKeystation}
+            />
+          </div>
+          <div>지갑 설치 및 사용법</div>
+          <div>추후 지원 예정</div>
         </div>
-        <div>지갑 설치 및 사용법</div>
-        <div>추후 지원 예정</div>
-      </div>
-    </Dialog>
+      </Dialog>
+      {isOpenedSignin && (
+        <Signin
+          onSuccess={({ chainInfo }) => {
+            setIsOpenedSignin(false);
+            onSuccess?.(chainInfo.path);
+          }}
+        />
+      )}
+    </>
   );
 }
 

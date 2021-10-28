@@ -2,6 +2,7 @@ import { bech32 } from 'bech32';
 import crypto from 'crypto';
 import CosmosApp from 'ledger-cosmos-js';
 import Ripemd160 from 'ripemd160';
+import sortKeys from 'sort-keys';
 import TransportWebHID from '@ledgerhq/hw-transport-webhid';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 
@@ -18,7 +19,7 @@ export default async function Ledger() {
   const transportInfo = await getTransport();
 
   if (!transportInfo) {
-    return null;
+    throw new Error('check the connection of ledger');
   }
 
   const { transport } = transportInfo;
@@ -99,4 +100,36 @@ export function getBech32FromPK(prefix: string, publicKey: Buffer) {
   const hashSha256 = crypto.createHash('sha256').update(publicKey).digest();
   const hashRip = new Ripemd160().update(hashSha256).digest();
   return bech32.encode(prefix, bech32.toWords(hashRip));
+}
+
+type Message = {
+  fee: Record<string, unknown>;
+  msg: Record<string, unknown>[];
+  signatures: null;
+  memo?: string;
+};
+
+type MsgForLedgerParams = {
+  message: Message;
+  chainId: string;
+  accountNumber: string;
+  sequence: string;
+};
+
+export function createMsgForLedger({ message, chainId, accountNumber, sequence }: MsgForLedgerParams) {
+  return Buffer.from(
+    JSON.stringify(
+      sortKeys(
+        {
+          chain_id: chainId,
+          fee: message.fee,
+          memo: message.memo || '',
+          msgs: message.msg,
+          sequence,
+          account_number: accountNumber,
+        },
+        { deep: true },
+      ),
+    ),
+  );
 }

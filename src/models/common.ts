@@ -26,9 +26,40 @@ export type DelegationsPayload = {
   result: { delegation: Delegation; balance: Amount }[];
 };
 
-// export type DelegationPayload = {
-//     result
-// }
+export type Account = {
+  '@type': string;
+  address: string;
+  pub_key: {
+    '@type': string;
+    key: string;
+  };
+  account_number: string;
+  sequence: string;
+  base_vesting_account: {
+    base_account: {
+      account_number: string;
+      sequence: string;
+    };
+  };
+};
+
+export type AccountPayload = {
+  result: {
+    value: {
+      account_number: string;
+      sequence: string;
+      PeriodicVestingAccount: {
+        BaseVestingAccount: {
+          BaseAccount: {
+            account_number: string;
+            sequence: string;
+          };
+        };
+      };
+    };
+  };
+  account: Account;
+};
 
 export type Uptime = {
   address: string;

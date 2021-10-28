@@ -10,12 +10,14 @@ import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentLanguage } from '~/hooks/useCurrentLanguage';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import type {
+  AccountPayload,
   BalancePayload,
   DelegationsPayload,
   RewardPayload,
   UnbondingPayload,
   ValidatorPayload,
 } from '~/models/common';
+import { pow, times } from '~/utils/calculator';
 import LcdURL from '~/utils/lcdURL';
 
 async function get<T>(path: string): Promise<T> {
@@ -145,6 +147,42 @@ export function useValidatorsSWR() {
   };
 }
 
+export function useAccountSWR() {
+  const currentChain = useCurrentChain();
+  const currentWallet = useCurrentWallet();
+
+  const lcdURL = LcdURL(currentChain.path);
+
+  const requestURL = lcdURL.getAccount(currentWallet.address!);
+
+  const fetcher = (fetchUrl: string) => get<AccountPayload>(fetchUrl);
+
+  const { data, error, mutate } = useSWR<AccountPayload, AxiosError>(requestURL, fetcher, {
+    refreshInterval: 0,
+    revalidateOnFocus: false,
+    errorRetryCount: 0,
+    isPaused: () => !currentWallet.address?.startsWith(currentChain.wallet.prefix),
+  });
+
+  const account1 = data?.account?.base_vesting_account?.base_account;
+  const account2 =
+    data?.account?.account_number && data?.account?.sequence
+      ? { account_number: data.account.account_number, sequence: data.account.sequence }
+      : undefined;
+  const account3 = data?.result?.value?.PeriodicVestingAccount?.BaseVestingAccount?.BaseAccount;
+  const account4 =
+    data?.result?.value?.account_number && data?.result?.value?.sequence
+      ? { account_number: data.result.value.account_number, sequence: data.result.value.sequence }
+      : undefined;
+
+  const account = account1 || account2 || account3 || account4;
+
+  return {
+    data: account,
+    error,
+    mutate,
+  };
+}
 type ChainPricePayload = Record<ChainGeckoId, { usd: number; krw: number }>;
 
 export function useChainPriceSWR() {
@@ -177,6 +215,7 @@ export function useChainSWR() {
   const chainPrice = useChainPriceSWR();
   const rewards = useRewardsSWR();
   const validator = useValidatorsSWR();
+  const account = useAccountSWR();
 
   const isLoading =
     (balance.data || balance.error) &&
@@ -184,41 +223,42 @@ export function useChainSWR() {
     (unbondingDelegation.data || unbondingDelegation.error) &&
     (chainPrice.data || chainPrice.error) &&
     (rewards.data || rewards.error) &&
-    (validator.data || validator.error);
+    (validator.data || validator.error) &&
+    (account.data || account.error);
 
-  const availableAmount = new Big(
+  const availableAmount = times(
     balance.data?.balance?.find((item) => item.denom === currentChain.denom)?.amount || '0',
-  )
-    .times(currentChain.decimal)
-    .toFixed(currentChain.decimalLength);
+    pow(10, currentChain.decimal * -1),
+    currentChain.decimal,
+  );
 
   const price = (chainPrice.data?.[currentChain.coingeckoId] || { usd: 0, krw: 0 })[
     currentLanguage === 'ko' ? 'krw' : 'usd'
   ].toFixed(currentLanguage === 'ko' ? 0 : 4);
 
-  const delegationAmount = new Big(
+  const delegationAmount = times(
     delegations.data?.result
       ?.filter((item) => item.balance?.denom === currentChain.denom)
       ?.reduce((ac, cu) => ac.plus(cu.balance.amount), new Big('0'))
       .toString() || '0',
-  )
-    .times(currentChain.decimal)
-    .toFixed(currentChain.decimalLength);
+    pow(10, currentChain.decimal * -1),
+    currentChain.decimal,
+  );
 
-  const unbondingAmount = new Big(
+  const unbondingAmount = times(
     unbondingDelegation.data?.result
       ?.map((item) => item.entries.reduce((ac, cu) => ac.plus(cu.balance), new Big('0')))
       ?.reduce((ac, cu) => ac.plus(cu), new Big('0'))
       .toString() || '0',
-  )
-    .times(currentChain.decimal)
-    .toFixed(currentChain.decimalLength);
+    pow(10, currentChain.decimal * -1),
+    currentChain.decimal,
+  );
 
-  const rewardAmount = new Big(
+  const rewardAmount = times(
     rewards.data?.result?.total?.find((item) => item.denom === currentChain.denom)?.amount || '0',
-  )
-    .times(currentChain.decimal)
-    .toFixed(currentChain.decimalLength);
+    pow(10, currentChain.decimal * -1),
+    currentChain.decimal,
+  );
 
   const totalAmount = new Big(availableAmount)
     .plus(delegationAmount)
@@ -237,6 +277,7 @@ export function useChainSWR() {
       chainPrice,
       rewards,
       validator,
+      account,
     },
     data: {
       availableAmount,
@@ -246,6 +287,7 @@ export function useChainSWR() {
       totalAmount,
       price,
       totalPrice,
+      account: account.data,
     },
   };
 }

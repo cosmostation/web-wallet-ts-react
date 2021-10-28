@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useCallback, useEffect } from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Dialog from '~/components/Dialog';
+import Signin from '~/components/Keystation/Signin';
 import type { ChainPath } from '~/constants/chain';
 import { chains } from '~/constants/chain';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
@@ -23,6 +23,8 @@ type DialogChainSelectProps = {
 };
 
 export default function DialogChainSelect({ open, onClose }: DialogChainSelectProps) {
+  const [isOpenedSignin, setIsOpenedSignin] = useState(false);
+
   const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
   const setIsShowLoader = useSetRecoilState(loaderState);
   const currentChain = useCurrentChain();
@@ -45,6 +47,7 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
         const chainInfo = chains[chain];
         if (wallet.walletType === 'keystation') {
           setIsShowLoader(true);
+          setIsOpenedSignin(true);
 
           const myKeystation = new Keystation('http://localhost:3000', chainInfo.lcdURL, chainInfo.wallet.hdPath);
 
@@ -60,10 +63,6 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
 
         if (wallet.walletType === 'ledger') {
           const ledger = await Ledger();
-
-          if (!ledger) {
-            throw new Error('check the connection of ledger');
-          }
 
           setIsShowLoader(true);
 
@@ -95,52 +94,13 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
         }
       } catch (e) {
         enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
+        setIsShowLoader(false);
       }
       return;
     }
 
     history.push(`/${chain}`);
   };
-
-  const messageHandler = useCallback(
-    (e: MessageEvent) => {
-      if (e.origin === 'https://keystation.cosmostation.io') {
-        if (e.data) {
-          const chainInfo = Object.values(chains).find((chain) =>
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            (e.data.address as string).startsWith(chain.wallet.prefix),
-          )!;
-
-          const next: WalletInfo = {
-            ...walletInfo,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            keystationAccount: e.data.account as string,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            address: e.data.address as string,
-            HDPath: chainInfo.wallet.hdPath,
-            walletType: 'keystation',
-          };
-
-          setWalletInfo(next);
-
-          sessionStorage.setItem('wallet', JSON.stringify(next));
-
-          history.push(`/${chainInfo.path}${getPathWithDepth(2) ? `/${getPathWithDepth(2)}` : ''}`);
-
-          onClose?.();
-        }
-      }
-    },
-    [getPathWithDepth, history, setWalletInfo, walletInfo, onClose],
-  );
-
-  useEffect(() => {
-    window.addEventListener('message', messageHandler);
-
-    return () => {
-      window.removeEventListener('message', messageHandler);
-    };
-  }, [messageHandler]);
 
   return (
     <>
@@ -156,6 +116,16 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
           ))}
         </div>
       </Dialog>
+      {isOpenedSignin && (
+        <Signin
+          onSuccess={({ chainInfo }) => {
+            history.push(`/${chainInfo.path}${getPathWithDepth(2) ? `/${getPathWithDepth(2)}` : '/wallet'}`);
+            setIsShowLoader(false);
+            setIsOpenedSignin(false);
+            onClose?.();
+          }}
+        />
+      )}
     </>
   );
 }

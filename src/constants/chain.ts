@@ -24,6 +24,7 @@ export const CHAIN = {
 // chain info key === path
 export const chains = {
   [CHAIN.COSMOS]: {
+    chainId: 'cosmoshub-4',
     name: 'cosmos',
     path: CHAIN.COSMOS,
     imgURL: `${baseURL}/cosmos.png`,
@@ -34,8 +35,7 @@ export const chains = {
     lcdURL: 'https://lcd-cosmos.cosmostation.io',
     symbolName: 'ATOM',
     denom: 'uatom',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'cosmos',
     fee: {
       default: '0.005',
@@ -53,6 +53,7 @@ export const chains = {
     },
   },
   [CHAIN.IRIS]: {
+    chainId: 'irishub-1',
     name: 'iris',
     path: CHAIN.IRIS,
     imgURL: `${baseURL}/iris.png`,
@@ -63,8 +64,7 @@ export const chains = {
     lcdURL: 'https://lcd-iris.cosmostation.io',
     symbolName: 'IRIS',
     denom: 'uiris',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'iris-network',
     fee: {
       default: '0.2',
@@ -82,6 +82,7 @@ export const chains = {
     },
   },
   [CHAIN.KAVA]: {
+    chainId: 'kava-8',
     name: 'kava',
     path: CHAIN.KAVA,
     imgURL: `${baseURL}/kava.png`,
@@ -93,8 +94,7 @@ export const chains = {
     lcdURL: 'https://lcd-kava.cosmostation.io',
     symbolName: 'KAVA',
     denom: 'ukava',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'kava',
     fee: {
       default: '0.005',
@@ -115,6 +115,7 @@ export const chains = {
     },
   },
   [CHAIN.BAND]: {
+    chainId: 'laozi-mainnet',
     name: 'band',
     path: CHAIN.BAND,
     imgURL: `${baseURL}/band.png`,
@@ -126,8 +127,7 @@ export const chains = {
     lcdURL: 'https://lcd-band.cosmostation.io',
     symbolName: 'BAND',
     denom: 'uband',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'band-protocol',
     fee: {
       default: '0.005',
@@ -148,6 +148,7 @@ export const chains = {
     },
   },
   [CHAIN.AKASH]: {
+    chainId: 'akashnet-2',
     name: 'akash',
     path: CHAIN.AKASH,
     imgURL: `${baseURL}/akash.png`,
@@ -158,8 +159,7 @@ export const chains = {
     lcdURL: 'https://lcd-akash.cosmostation.io',
     symbolName: 'AKT',
     denom: 'uakt',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'akash-network',
     fee: {
       default: '0.005',
@@ -180,6 +180,7 @@ export const chains = {
     },
   },
   [CHAIN.CERTIK]: {
+    chainId: 'shentu-2.2',
     name: 'certik',
     path: CHAIN.CERTIK,
     imgURL: `${baseURL}/certik.png`,
@@ -190,8 +191,7 @@ export const chains = {
     lcdURL: 'https://lcd-certik.cosmostation.io',
     symbolName: 'CTK',
     denom: 'uctk',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'certik',
     fee: {
       default: '0.005',
@@ -212,6 +212,7 @@ export const chains = {
     },
   },
   [CHAIN.SENTINEL]: {
+    chainId: 'sentinelhub-2',
     name: 'sentinel',
     path: CHAIN.SENTINEL,
     imgURL: `${baseURL}/sentinel.png`,
@@ -222,8 +223,7 @@ export const chains = {
     lcdURL: 'https://lcd-sentinel.cosmostation.io',
     symbolName: 'DVPN',
     denom: 'udvpn',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'sentinel-group',
     fee: {
       default: '0.02',
@@ -244,6 +244,7 @@ export const chains = {
     },
   },
   [CHAIN.PERSISTENCE]: {
+    chainId: 'core-1',
     name: 'persistence',
     path: CHAIN.PERSISTENCE,
     imgURL: `${baseURL}/persistence.png`,
@@ -254,8 +255,7 @@ export const chains = {
     lcdURL: 'https://lcd-persistence.cosmostation.io',
     symbolName: 'XPRT',
     denom: 'uxprt',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'persistence',
     fee: {
       default: '0.005',
@@ -276,6 +276,7 @@ export const chains = {
     },
   },
   [CHAIN.FETCH_AI]: {
+    chainId: 'fetchhub-2',
     name: 'fetch.ai',
     path: CHAIN.FETCH_AI,
     imgURL: `${baseURL}/fetch-ai.png`,
@@ -286,8 +287,7 @@ export const chains = {
     lcdURL: 'https://lcd-fetchai.cosmostation.io',
     symbolName: 'FET',
     denom: 'afet',
-    decimal: 0.000000000000000001,
-    decimalLength: 18,
+    decimal: 18,
     coingeckoId: 'fetch-ai',
     fee: {
       default: '0.005',
@@ -308,6 +308,7 @@ export const chains = {
     },
   },
   [CHAIN.SIFCHAIN]: {
+    chainId: 'sifchain-1',
     name: 'sifchain',
     path: CHAIN.SIFCHAIN,
     imgURL: `${baseURL}/sifchain.png`,
@@ -318,8 +319,7 @@ export const chains = {
     lcdURL: 'https://lcd-sifchain.cosmostation.io',
     symbolName: 'ROWAN',
     denom: 'rowan',
-    decimal: 0.000000000000000001,
-    decimalLength: 18,
+    decimal: 18,
     coingeckoId: 'sifchain',
     fee: {
       default: '0.000005',
@@ -343,6 +343,7 @@ export const chains = {
     },
   },
   [CHAIN.CRYPTO_ORG]: {
+    chainId: 'crypto-org-chain-mainnet-1',
     name: 'crypto.org',
     path: CHAIN.CRYPTO_ORG,
     imgURL: `${baseURL}/crypto-org.png`,
@@ -353,8 +354,7 @@ export const chains = {
     lcdURL: 'https://lcd-cryptocom.cosmostation.io',
     symbolName: 'CRO',
     denom: 'basecro',
-    decimal: 0.00000001,
-    decimalLength: 8,
+    decimal: 8,
     coingeckoId: 'crypto-com-chain',
     fee: {
       default: '0.00005',
@@ -375,6 +375,7 @@ export const chains = {
     },
   },
   [CHAIN.KICHAIN]: {
+    chainId: 'kichain-1',
     name: 'kichain',
     path: CHAIN.KICHAIN,
     imgURL: `${baseURL}/kichain.png`,
@@ -385,8 +386,7 @@ export const chains = {
     lcdURL: 'https://lcd-kichain.cosmostation.io',
     symbolName: 'XKI',
     denom: 'uxki',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'ki',
     fee: {
       default: '0.005',
@@ -407,6 +407,7 @@ export const chains = {
     },
   },
   [CHAIN.STARNAME]: {
+    chainId: 'iov-mainnet-ibc',
     name: 'starname',
     path: CHAIN.STARNAME,
     imgURL: `${baseURL}/starname.png`,
@@ -417,8 +418,7 @@ export const chains = {
     lcdURL: 'https://lcd-iov.cosmostation.io',
     symbolName: 'IOV',
     denom: 'uiov',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'starname',
     fee: {
       default: '0.2',
@@ -439,6 +439,7 @@ export const chains = {
     },
   },
   [CHAIN.MEDIBLOC]: {
+    chainId: 'panacea-3',
     name: 'medibloc',
     path: CHAIN.MEDIBLOC,
     imgURL: `${baseURL}/medibloc.png`,
@@ -449,8 +450,7 @@ export const chains = {
     lcdURL: 'https://lcd-medibloc.cosmostation.io',
     symbolName: 'MED',
     denom: 'umed',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'medibloc',
     fee: {
       default: '1',
@@ -471,6 +471,7 @@ export const chains = {
     },
   },
   [CHAIN.EMONEY]: {
+    chainId: 'emoney-3',
     name: 'emoney',
     path: CHAIN.EMONEY,
     imgURL: `${baseURL}/emoney.png`,
@@ -481,8 +482,7 @@ export const chains = {
     lcdURL: 'https://lcd-emoney.cosmostation.io',
     symbolName: 'NGM',
     denom: 'ungm',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'e-money',
     fee: {
       default: '0.25',
@@ -503,6 +503,7 @@ export const chains = {
     },
   },
   [CHAIN.RIZON]: {
+    chainId: 'titan-1',
     name: 'rizon',
     path: CHAIN.RIZON,
     imgURL: `${baseURL}/rizon.png`,
@@ -513,8 +514,7 @@ export const chains = {
     lcdURL: 'https://lcd-rizon.cosmostation.io',
     symbolName: 'ATOLO',
     denom: 'uatolo',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'hdac',
     fee: {
       default: '0.005',
@@ -535,6 +535,7 @@ export const chains = {
     },
   },
   [CHAIN.JUNO]: {
+    chainId: 'juno-1',
     name: 'juno',
     path: CHAIN.JUNO,
     imgURL: `${baseURL}/juno.png`,
@@ -545,8 +546,7 @@ export const chains = {
     lcdURL: 'https://lcd-juno.cosmostation.io',
     symbolName: 'JUNO',
     denom: 'ujuno',
-    decimal: 0.000001,
-    decimalLength: 6,
+    decimal: 6,
     coingeckoId: 'juno-network',
     fee: {
       default: '0.005',
@@ -568,10 +568,13 @@ export const chains = {
   },
 } as const;
 
-export const chainNames = Object.values(chains).map((chain) => chain.name);
-export const chainGeckoIds = Object.values(chains).map((chain) => chain.coingeckoId);
+export const chainValues = Object.values(chains);
+
+export const chainNames = chainValues.map((chain) => chain.name);
+export const chainGeckoIds = chainValues.map((chain) => chain.coingeckoId);
 
 export const chainPaths = Object.values(CHAIN);
 
 export type ChainPath = typeof chainPaths[number];
 export type ChainGeckoId = typeof chainGeckoIds[number];
+export type ChainValue = typeof chainValues[number];

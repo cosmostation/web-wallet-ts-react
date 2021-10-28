@@ -1,30 +1,44 @@
+import type { ButtonBaseProps } from '@mui/material';
 import { Button as BaseButton } from '@mui/material';
 
-type ButtonProps = {
-  children: string;
-  onClick?: () => void;
-  fontSize?: string;
-  fontWeight?: string;
-};
+type ButtonProps = ButtonBaseProps & { colorVariant?: 'black' | 'white' };
 
-export default function Button({ children, onClick, fontSize = '1.2rem', fontWeight }: ButtonProps) {
+export default function Button(props: ButtonProps) {
+  const { sx, children, onClick, colorVariant } = props;
+
+  const color =
+    colorVariant === 'black'
+      ? {
+          backgroundColor: '#000000',
+          color: '#FFFFFF',
+          borderColor: '#ababab',
+          '&:hover': {
+            backgroundColor: '#FFFFFF',
+            color: '#000000',
+            borderColor: '#ababab',
+          },
+        }
+      : {
+          backgroundColor: '#FFFFFF',
+          color: '#000000',
+          borderColor: '#ababab',
+          '&:hover': {
+            backgroundColor: '#000000',
+            color: '#FFFFFF',
+            borderColor: '#ababab',
+          },
+        };
+
   return (
     <BaseButton
       type="button"
       variant="outlined"
       size="large"
       sx={{
-        fontSize,
-        fontWeight,
+        fontSize: '1.2rem',
         textTransform: 'none',
-        backgroundColor: '#FFFFFF',
-        color: '#000000',
-        borderColor: '#ababab',
-        '&:hover': {
-          backgroundColor: '#000000',
-          color: '#FFFFFF',
-          borderColor: '#ababab',
-        },
+        ...color,
+        ...sx,
       }}
       onClick={onClick}
     >

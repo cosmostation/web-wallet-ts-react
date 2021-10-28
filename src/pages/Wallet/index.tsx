@@ -5,6 +5,7 @@ import { Carousel } from 'react-responsive-carousel';
 import Layout from '~/components/Layout';
 import HdPath from '~/components/PageSection/HdPath';
 import WalletInfo from '~/components/PageSection/WalletInfo';
+import Withdraw from '~/components/PageSection/Withdraw';
 
 import styles from './index.module.scss';
 
@@ -19,7 +20,8 @@ export default function Home() {
           </div>
           <HdPath className={styles.hdPath} />
           <WalletInfo className={styles.walletInfo} />
-          <div>send</div>
+          <div className={styles.withdrawTitle}>전송</div>
+          <Withdraw className={styles.withdraw} />
         </div>
       </div>
     </Layout>

@@ -54,9 +54,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
             </IconButton>
           </div>
           <div className={styles.firstContentInfoThirdLineContainer}>
-            <Button fontWeight="bold" fontSize="1.4rem">
-              지갑 상세정보
-            </Button>
+            <Button sx={{ fontWeight: 'bold', fontSize: '1.4rem' }}>지갑 상세정보</Button>
           </div>
         </div>
       </div>

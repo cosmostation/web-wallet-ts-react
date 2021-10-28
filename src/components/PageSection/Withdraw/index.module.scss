@@ -1,0 +1,44 @@
+@import '~/styles/index';
+
+.container {
+  box-sizing: border-box;
+  width: 100%;
+
+  padding: 2.6rem 5rem;
+
+  border: 0.1rem solid $gray200;
+  border-radius: 0.6rem;
+}
+
+.rowContainer {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 1.4rem;
+
+  min-height: 2.6rem;
+
+  margin-bottom: 1.3rem;
+
+  color: $gray700;
+}
+
+.column1 {
+  width: 30%;
+}
+
+.column2 {
+  width: 70%;
+}
+
+.textEnd {
+  text-align: end;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
