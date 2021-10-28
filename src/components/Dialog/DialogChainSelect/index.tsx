@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 
 import Dialog from '~/components/Dialog';
 import Signin from '~/components/Keystation/Signin';
@@ -13,7 +13,7 @@ import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import { loaderState } from '~/stores/loader';
 import type { WalletInfo } from '~/stores/wallet';
 import { walletInfoState } from '~/stores/wallet';
-import Ledger, { getBech32FromPK } from '~/utils/ledger';
+import Ledger, { getBech32FromPK, LedgerError } from '~/utils/ledger';
 
 import styles from './index.module.scss';
 
@@ -25,7 +25,7 @@ type DialogChainSelectProps = {
 export default function DialogChainSelect({ open, onClose }: DialogChainSelectProps) {
   const [isOpenedSignin, setIsOpenedSignin] = useState(false);
 
-  const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
+  const setWalletInfo = useSetRecoilState(walletInfoState);
   const setIsShowLoader = useSetRecoilState(loaderState);
   const currentChain = useCurrentChain();
   const { enqueueSnackbar } = useSnackbar();
@@ -76,15 +76,19 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
 
           const address = getBech32FromPK(chainInfo.wallet.prefix, Buffer.from(publicKey.buffer));
 
-          const nextWalletInfo: WalletInfo = {
-            ...walletInfo,
-            keystationAccount: null,
-            address,
-            HDPath: chainInfo.wallet.hdPath,
-            walletType: 'ledger',
-          };
-          sessionStorage.setItem('wallet', JSON.stringify(nextWalletInfo));
-          setWalletInfo(nextWalletInfo);
+          setWalletInfo((prev) => {
+            const next: WalletInfo = {
+              ...prev,
+              keystationAccount: null,
+              address,
+              HDPath: chainInfo.wallet.hdPath,
+              walletType: 'ledger',
+            };
+
+            sessionStorage.setItem('wallet', JSON.stringify(next));
+
+            return next;
+          });
 
           history.push(`/${chainInfo.path}${getPathWithDepth(2) ? `/${getPathWithDepth(2)}` : '/wallet'}`);
 
@@ -93,7 +97,11 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
           setIsShowLoader(false);
         }
       } catch (e) {
-        enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
+        if (e instanceof LedgerError) {
+          enqueueSnackbar('check ledger connection', { variant: 'error' });
+        } else {
+          enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
+        }
         setIsShowLoader(false);
       }
       return;
