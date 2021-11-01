@@ -31,7 +31,7 @@ export default function AvailableValidator({ className }: AvailableValidatorProp
   const delegationData = swr.delegations.data;
 
   if (!validatorData?.validators || !delegationData?.result) {
-    return <div>empty validators</div>;
+    return null;
   }
 
   const myValidators = delegationData.result.map((item) => item.delegation.validator_address);

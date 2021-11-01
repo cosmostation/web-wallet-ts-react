@@ -1,3 +1,4 @@
+import Big from 'big.js';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -6,26 +7,34 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
+import Button from '~/components/Button';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
-import { pow, times } from '~/utils/calculator';
+import { divide, gt, plus, pow, times } from '~/utils/calculator';
 
 import styles from './index.module.scss';
 
-type MyUndelegationProps = {
+type MyDelegationProps = {
   className?: string;
 };
 
-export default function MyUndelegation({ className }: MyUndelegationProps) {
+export default function MyDelegation({ className }: MyDelegationProps) {
   const { swr } = useChainSWR();
   const currentChain = useCurrentChain();
 
-  const undelegation = swr.unbondingDelegation.data;
+  const delegation = swr.delegations.data;
   const validator = swr.validator.data;
+  const reward = swr.rewards.data;
 
-  if (!undelegation?.result || !validator?.validators) {
+  if (!delegation?.result || !validator?.validators || !reward?.result) {
     return null;
   }
+
+  const validValidators = validator.validators
+    .filter((item) => item.status === 2 || item.status === 'BOND_STATUS_BONDED')
+    .sort((a, b) => (gt(b.tokens, a.tokens) ? 1 : -1));
+
+  const totalToken = validValidators.reduce((ac, cu) => plus(cu.tokens, ac, 0), '0');
 
   return (
     <div className={className}>
@@ -37,23 +46,33 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
                 검증인
               </TableCell>
               <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                블록높이
+                총 위임량
               </TableCell>
               <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                위임 철회 중 수량
+                검증인 수수료
               </TableCell>
               <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
-                완료 시간
+                내가 위임한 수량
+              </TableCell>
+              <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
+                이자
+              </TableCell>
+              <TableCell align="center" sx={{ fontSize: '1.4rem' }} width="20%">
+                위임
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {undelegation.result.map((item) => {
+            {delegation.result.map((item) => {
               const validatorInfo = validator.validators!.find(
-                (validatorItem) => validatorItem.operator_address === item.validator_address,
+                (validatorItem) => validatorItem.operator_address === item.delegation.validator_address,
               );
 
-              return item.entries.map((entryItem) => (
+              const rewardInfo = reward.result.rewards.find(
+                (rewardItem) => rewardItem.validator_address === item.delegation.validator_address,
+              );
+
+              return (
                 <TableRow
                   sx={{
                     '&:nth-of-type(even)': {
@@ -87,23 +106,32 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
                     </div>
                   </TableCell>
                   <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                    <a
-                      href={`https://www.mintscan.io/${currentChain.mintscanPath}/blocks/${entryItem.creation_height}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={styles.aElementStyle}
-                    >
-                      {entryItem.creation_height}
-                    </a>
+                    {times(validatorInfo!.tokens, pow(10, -currentChain.decimal), 0)}
+                    <br />({times(divide(validatorInfo!.tokens, totalToken), '100', 2)}%)
                   </TableCell>
                   <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                    {times(entryItem.balance, pow(10, -currentChain.decimal), currentChain.decimal)}
+                    {times(validatorInfo!.commission.commission_rates.rate, '100', 2)}%
                   </TableCell>
                   <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
-                    {new Date(entryItem.completion_time).toLocaleString()}
+                    {times(item.balance.amount, pow(10, -currentChain.decimal), currentChain.decimal)}
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
+                    {times(
+                      rewardInfo?.reward.reduce((ac, cu) => ac.plus(cu.amount), new Big('0')).toString() || '0',
+                      pow(10, -currentChain.decimal),
+                      currentChain.decimal,
+                    )}
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
+                    <div className={styles.buttonContainer}>
+                      <Button>위임</Button>
+                      <Button>위임 철회</Button>
+                      <Button>재위임</Button>
+                      <Button>이자 받기</Button>
+                    </div>
                   </TableCell>
                 </TableRow>
-              ));
+              );
             })}
           </TableBody>
         </Table>

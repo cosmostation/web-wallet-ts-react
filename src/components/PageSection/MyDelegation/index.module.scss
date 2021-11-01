@@ -1,0 +1,39 @@
+.validatorContainer {
+  display: flex;
+
+  justify-content: flex-start;
+
+  align-items: center;
+}
+
+.validatorImgContainer {
+  margin-right: 1rem;
+  & > img {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.aElementStyle {
+  color: #4a90e2;
+
+  &:hover {
+    color: #2275d7;
+  }
+
+  &:visited {
+    color: #4a90e2;
+  }
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  & > button {
+    margin: 0.2rem;
+    padding: 0.5rem 0;
+    width: calc(50% - 0.4rem);
+  }
+}
