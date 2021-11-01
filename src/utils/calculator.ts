@@ -12,6 +12,14 @@ export function times(num1: number | string, num2: number | string, toFix?: numb
   return new Big(num1).times(num2).toString();
 }
 
+export function plus(num1: number | string, num2: number | string, toFix?: number) {
+  if (toFix !== undefined) {
+    return new Big(num1).plus(num2).toFixed(toFix);
+  }
+
+  return new Big(num1).plus(num2).toString();
+}
+
 export function divide(num1: number | string, num2: number | string, toFix?: number) {
   if (toFix !== undefined) {
     return new Big(num1).div(num2).toFixed(toFix);

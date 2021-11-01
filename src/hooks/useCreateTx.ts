@@ -35,7 +35,7 @@ export function useCreateTx() {
       return txMsg;
     },
     getDelegateTxMsg: (validatorAddress: string, amount: string, memo?: string) => {
-      const msgType = 'cosmos-sdk/MsgUndelegate';
+      const msgType = 'cosmos-sdk/MsgDelegate';
 
       const txMsg = {
         msg: [

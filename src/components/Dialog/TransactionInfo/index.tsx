@@ -3,6 +3,7 @@ import CheckIcon from '@mui/icons-material/Check';
 
 import Button from '~/components/Button';
 import Dialog from '~/components/Dialog';
+import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 
 import styles from './index.module.scss';
@@ -27,6 +28,7 @@ type TransactionInfoProps = {
 
 export default function TransactionInfo({ open, onClose, data }: TransactionInfoProps) {
   const currentWallet = useCurrentWallet();
+  const currentChain = useCurrentChain();
 
   const isLedger = currentWallet.walletType === 'ledger';
   return (
@@ -119,7 +121,12 @@ export default function TransactionInfo({ open, onClose, data }: TransactionInfo
               </div>
               <div className={styles.detailLinkContainer}>
                 <div>
-                  <a href="https://" className={styles.link} target="_blank" rel="noreferrer">
+                  <a
+                    href={`https://www.mintscan.io/${currentChain.mintscanPath}/txs/${data?.txHash || ''}`}
+                    className={styles.link}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     익스플로러에서 상세 확인
                   </a>
                 </div>

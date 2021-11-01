@@ -37,6 +37,8 @@ export const chains = {
     denom: 'uatom',
     decimal: 6,
     coingeckoId: 'cosmos',
+    validatorIconDirectory: 'cosmoshub',
+    mintscanPath: 'cosmos',
     fee: {
       default: '0.005',
       delegate: '0.005',
@@ -66,6 +68,8 @@ export const chains = {
     denom: 'uiris',
     decimal: 6,
     coingeckoId: 'iris-network',
+    validatorIconDirectory: 'irishub',
+    mintscanPath: 'iris',
     fee: {
       default: '0.2',
       delegate: '0.6',
@@ -96,6 +100,8 @@ export const chains = {
     denom: 'ukava',
     decimal: 6,
     coingeckoId: 'kava',
+    validatorIconDirectory: 'kava/kava-2',
+    mintscanPath: 'kava',
     fee: {
       default: '0.005',
       delegate: '0.005',
@@ -129,6 +135,8 @@ export const chains = {
     denom: 'uband',
     decimal: 6,
     coingeckoId: 'band-protocol',
+    validatorIconDirectory: 'bandprotocol',
+    mintscanPath: 'band',
     fee: {
       default: '0.005',
       delegate: '0.005',
@@ -161,6 +169,8 @@ export const chains = {
     denom: 'uakt',
     decimal: 6,
     coingeckoId: 'akash-network',
+    validatorIconDirectory: 'akash',
+    mintscanPath: 'akash',
     fee: {
       default: '0.005',
       delegate: '0.005',
@@ -193,6 +203,8 @@ export const chains = {
     denom: 'uctk',
     decimal: 6,
     coingeckoId: 'certik',
+    validatorIconDirectory: 'certik',
+    mintscanPath: 'certik',
     fee: {
       default: '0.005',
       delegate: '0.005',
@@ -225,6 +237,8 @@ export const chains = {
     denom: 'udvpn',
     decimal: 6,
     coingeckoId: 'sentinel-group',
+    validatorIconDirectory: 'sentinel',
+    mintscanPath: 'sentinel',
     fee: {
       default: '0.02',
       delegate: '0.02',
@@ -257,6 +271,8 @@ export const chains = {
     denom: 'uxprt',
     decimal: 6,
     coingeckoId: 'persistence',
+    validatorIconDirectory: 'persistence',
+    mintscanPath: 'persistence',
     fee: {
       default: '0.005',
       delegate: '0.005',
@@ -289,6 +305,8 @@ export const chains = {
     denom: 'afet',
     decimal: 18,
     coingeckoId: 'fetch-ai',
+    validatorIconDirectory: 'fetchai',
+    mintscanPath: 'fetchai',
     fee: {
       default: '0.005',
       delegate: '0.005',
@@ -321,6 +339,8 @@ export const chains = {
     denom: 'rowan',
     decimal: 18,
     coingeckoId: 'sifchain',
+    validatorIconDirectory: 'sif',
+    mintscanPath: 'sifchain',
     fee: {
       default: '0.000005',
       delegate: '0.000005',
@@ -356,6 +376,8 @@ export const chains = {
     denom: 'basecro',
     decimal: 8,
     coingeckoId: 'crypto-com-chain',
+    validatorIconDirectory: 'cryto',
+    mintscanPath: 'crypto-org',
     fee: {
       default: '0.00005',
       delegate: '0.00005',
@@ -388,6 +410,8 @@ export const chains = {
     denom: 'uxki',
     decimal: 6,
     coingeckoId: 'ki',
+    validatorIconDirectory: 'ki',
+    mintscanPath: 'ki-chain',
     fee: {
       default: '0.005',
       delegate: '0.005',
@@ -420,6 +444,8 @@ export const chains = {
     denom: 'uiov',
     decimal: 6,
     coingeckoId: 'starname',
+    validatorIconDirectory: 'iov',
+    mintscanPath: 'starname',
     fee: {
       default: '0.2',
       delegate: '0.2',
@@ -452,6 +478,8 @@ export const chains = {
     denom: 'umed',
     decimal: 6,
     coingeckoId: 'medibloc',
+    validatorIconDirectory: 'medibloc',
+    mintscanPath: 'medibloc',
     fee: {
       default: '1',
       delegate: '1',
@@ -484,6 +512,8 @@ export const chains = {
     denom: 'ungm',
     decimal: 6,
     coingeckoId: 'e-money',
+    validatorIconDirectory: 'emoney',
+    mintscanPath: 'emoney',
     fee: {
       default: '0.25',
       delegate: '0.25',
@@ -516,6 +546,8 @@ export const chains = {
     denom: 'uatolo',
     decimal: 6,
     coingeckoId: 'hdac',
+    validatorIconDirectory: 'rizon',
+    mintscanPath: 'rizon',
     fee: {
       default: '0.005',
       delegate: '0.005',
@@ -548,6 +580,8 @@ export const chains = {
     denom: 'ujuno',
     decimal: 6,
     coingeckoId: 'juno-network',
+    validatorIconDirectory: 'juno',
+    mintscanPath: 'juno',
     fee: {
       default: '0.005',
       delegate: '0.005',

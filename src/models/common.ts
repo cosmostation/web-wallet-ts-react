@@ -128,7 +128,7 @@ export type Validator = {
   operator_address: string;
   consensus_pubkey: string;
   jailed: boolean;
-  status: number;
+  status: number | string;
   tokens: string;
   delegator_shares: string;
   description: {

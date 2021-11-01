@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import cx from 'clsx';
 import { useSnackbar } from 'notistack';
-import { useSetRecoilState } from 'recoil';
 import secp256k1 from 'secp256k1';
 
 import Button from '~/components/Button';
+import Dialog from '~/components/Dialog';
 import type { TransactionInfoData } from '~/components/Dialog/TransactionInfo';
 import TransactionInfo from '~/components/Dialog/TransactionInfo';
 import Input from '~/components/Input';
@@ -15,51 +15,38 @@ import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { loaderState } from '~/stores/loader';
 import { divide, getByte, gt, minus } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 
 import styles from './index.module.scss';
 
-type WalletInfoProps = {
-  className?: string;
+type DelegationProps = {
+  open: boolean;
+  onClose?: () => void;
+  validatorAddress: string;
 };
 
-export default function WalletInfo({ className }: WalletInfoProps) {
+export default function Delegation({ open, onClose, validatorAddress }: DelegationProps) {
+  const currentWallet = useCurrentWallet();
+  const currentChain = useCurrentChain();
+  const createTx = useCreateTx();
+  const { boardcastTx } = useAxios();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [isOpenedTransaction, setIsOpenedTransaction] = useState(false);
   const [transactionInfoData, setTransactionInfoData] = useState<TransactionInfoData & { open: boolean }>({
     step: 'doing',
-    title: '전송하기',
+    title: '위임하기',
     open: false,
   });
 
-  const [isOpenedTransaction, setIsOpenedTransaction] = useState(false);
-  const setLoader = useSetRecoilState(loaderState);
-  const { enqueueSnackbar } = useSnackbar();
-  const currentChain = useCurrentChain();
-  const currentWallet = useCurrentWallet();
-
-  const createTx = useCreateTx();
-
-  const { boardcastTx } = useAxios();
-
-  const [address, setAddress] = useState('');
   const [sendAmount, setSendAmount] = useState('');
   const [memo, setMemo] = useState('');
 
-  const { isLoading, data, swr } = useChainSWR();
+  const { data, swr } = useChainSWR();
 
   const { availableAmount, account } = data;
-
-  const handleOnSuccess = () => {
-    setAddress('');
-    setSendAmount('');
-    setMemo('');
-
-    setTimeout(() => {
-      void swr.balance.mutate();
-    }, 5000);
-  };
 
   const handleOnClick = async () => {
     try {
@@ -73,15 +60,11 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         throw new Error(`Path is invalid`);
       }
 
-      if (
-        !address.startsWith(currentChain.wallet.prefix) ||
-        currentWallet.address === address ||
-        currentWallet.address?.length !== address.length
-      ) {
+      if (!currentWallet.address || !validatorAddress) {
         throw new Error(`Address is invalid`);
       }
 
-      if (gt(sendAmount, minus(availableAmount, currentChain.fee.withdraw, currentChain.decimal))) {
+      if (gt(sendAmount, minus(availableAmount, currentChain.fee.delegate, currentChain.decimal))) {
         throw new Error(`sendAmount is invalid`);
       }
 
@@ -92,7 +75,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         throw new Error(`memo is invalid`);
       }
 
-      const txMsgOrigin = createTx.getSendTxMsg(address, sendAmount, memo);
+      const txMsgOrigin = createTx.getDelegateTxMsg(validatorAddress, sendAmount, memo);
 
       const txMsgForSign = createMsgForLedger({
         message: txMsgOrigin,
@@ -111,11 +94,11 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         setTransactionInfoData({
           open: true,
           step: 'doing',
-          title: '전송하기',
+          title: '위임하기',
           from: currentWallet.address,
-          to: address,
+          to: validatorAddress,
           amount: `${sendAmount} ${currentChain.symbolName}`,
-          fee: `${currentChain.fee.withdraw} ${currentChain.symbolName}`,
+          fee: `${currentChain.fee.delegate} ${currentChain.symbolName}`,
           memo,
           tx: JSON.stringify(txMsgOrigin, null, 4),
         });
@@ -136,8 +119,6 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         const result = await boardcastTx(txBody);
 
         setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: result.txhash }));
-
-        handleOnSuccess();
       }
 
       if (currentWallet.walletType === 'keystation') {
@@ -150,11 +131,11 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         setTransactionInfoData({
           open: true,
           step: 'doing',
-          title: '전송하기',
+          title: '위임하기',
           from: currentWallet.address,
-          to: address,
+          to: validatorAddress,
           amount: `${sendAmount} ${currentChain.symbolName}`,
-          fee: `${currentChain.fee.withdraw} ${currentChain.symbolName}`,
+          fee: `${currentChain.fee.delegate} ${currentChain.symbolName}`,
           memo,
           tx: JSON.stringify(txMsgOrigin, null, 4),
         });
@@ -169,7 +150,6 @@ export default function WalletInfo({ className }: WalletInfoProps) {
               return { ...prev, open: false };
             });
             setIsOpenedTransaction(false);
-            setLoader(false);
             clearInterval(timer);
           }
         }, 500);
@@ -182,105 +162,102 @@ export default function WalletInfo({ className }: WalletInfoProps) {
     }
   };
 
-  useEffect(() => {
-    setLoader(true);
-
-    if (isLoading) {
-      setLoader(false);
-    }
-  }, [isLoading, setLoader]);
-
-  useEffect(() => {
-    setAddress('');
+  const handleOnClose = () => {
     setSendAmount('');
     setMemo('');
-  }, [currentChain]);
 
+    onClose?.();
+  };
   return (
     <>
-      <div className={cx(styles.container, className)}>
-        <div className={styles.rowContainer}>
-          <div className={styles.column1}>사용 가능 수량</div>
-          <div className={cx(styles.column2, styles.textEnd)}>
-            {availableAmount} {currentChain.symbolName}
+      <Dialog open={open} onClose={handleOnClose} maxWidth="lg">
+        <div className={styles.container}>
+          <div className={styles.title}>위임하기</div>
+
+          <div className={styles.rowContainer}>
+            <div className={styles.column1}>사용 가능 수량</div>
+            <div className={cx(styles.column2, styles.textEnd)}>
+              {availableAmount} {currentChain.symbolName}
+            </div>
           </div>
-        </div>
-        <div className={styles.rowContainer}>
+          {/* <div className={styles.rowContainer}>
           <div className={styles.column1}>받을 지갑 주소</div>
           <div className={styles.column2}>
             <Input label="지갑 주소 입력" value={address} onChange={(event) => setAddress(event.currentTarget.value)} />
           </div>
-        </div>
-        <div className={styles.rowContainer}>
-          <div className={styles.column1}>전송 수량</div>
-          <div className={styles.column2}>
-            <Input
-              label="전송 수량 입력"
-              sx={{ width: 'calc(100% - 14.8rem)', fontSize: '1.4rem' }}
-              value={sendAmount}
-              onChange={(event) => setSendAmount(event.currentTarget.value)}
-            />
-            <Button
-              sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}
-              onClick={() => setSendAmount(divide(availableAmount, '2', currentChain.decimal))}
-            >
-              1/2
-            </Button>
-            <Button
-              sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}
-              onClick={() => setSendAmount(minus(availableAmount, currentChain.fee.withdraw, currentChain.decimal))}
-            >
-              MAX
+        </div> */}
+          <div className={styles.rowContainer}>
+            <div className={styles.column1}>전송 수량</div>
+            <div className={styles.column2}>
+              <Input
+                label="전송 수량 입력"
+                sx={{ width: 'calc(100% - 14.8rem)', fontSize: '1.4rem' }}
+                value={sendAmount}
+                onChange={(event) => setSendAmount(event.currentTarget.value)}
+              />
+              <Button
+                sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}
+                onClick={() => setSendAmount(divide(availableAmount, '2', currentChain.decimal))}
+              >
+                1/2
+              </Button>
+              <Button
+                sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}
+                onClick={() => setSendAmount(minus(availableAmount, currentChain.fee.delegate, currentChain.decimal))}
+              >
+                MAX
+              </Button>
+            </div>
+          </div>
+          <div className={styles.rowContainer}>
+            <div className={styles.column1}>메모 (선택 사항)</div>
+            <div className={styles.column2}>
+              <Input
+                label="메모 내용 입력"
+                multiline
+                size="medium"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    minHeight: '6rem',
+                  },
+                }}
+                value={memo}
+                onChange={(event) => setMemo(event.currentTarget.value)}
+              />
+            </div>
+          </div>
+          <div className={styles.rowContainer}>
+            <div className={styles.column1}>수수료</div>
+            <div className={cx(styles.column2, styles.textEnd)}>
+              {currentChain.fee.delegate} {currentChain.symbolName}
+            </div>
+          </div>
+          <div className={styles.buttonContainer}>
+            <Button sx={{ fontSize: '1.4rem', fontWeight: 'bold' }} colorVariant="black" onClick={handleOnClick}>
+              Generate & Sign Transaction
             </Button>
           </div>
-        </div>
-        <div className={styles.rowContainer}>
-          <div className={styles.column1}>메모 (선택 사항)</div>
-          <div className={styles.column2}>
-            <Input
-              label="메모 내용 입력"
-              multiline
-              size="medium"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  minHeight: '6rem',
-                },
+          {isOpenedTransaction && (
+            <Transaction
+              onSuccess={(e) => {
+                setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: e.data.txhash }));
               }}
-              value={memo}
-              onChange={(event) => setMemo(event.currentTarget.value)}
             />
-          </div>
+          )}
+          <TransactionInfo
+            open={transactionInfoData.open}
+            data={transactionInfoData}
+            onClose={
+              transactionInfoData.step === 'success'
+                ? () => {
+                    setTransactionInfoData((prev) => ({ ...prev, open: false }));
+                    handleOnClose();
+                  }
+                : undefined
+            }
+          />
         </div>
-        <div className={styles.rowContainer}>
-          <div className={styles.column1}>수수료</div>
-          <div className={cx(styles.column2, styles.textEnd)}>
-            {currentChain.fee.withdraw} {currentChain.symbolName}
-          </div>
-        </div>
-        <div className={styles.buttonContainer}>
-          <Button sx={{ fontSize: '1.4rem', fontWeight: 'bold' }} colorVariant="black" onClick={handleOnClick}>
-            Generate & Sign Transaction
-          </Button>
-        </div>
-      </div>
-      {isOpenedTransaction && (
-        <Transaction
-          onSuccess={(e) => {
-            setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: e.data.txhash }));
-
-            handleOnSuccess();
-          }}
-        />
-      )}
-      <TransactionInfo
-        open={transactionInfoData.open}
-        data={transactionInfoData}
-        onClose={
-          transactionInfoData.step === 'success'
-            ? () => setTransactionInfoData((prev) => ({ ...prev, open: false }))
-            : undefined
-        }
-      />
+      </Dialog>
     </>
   );
 }

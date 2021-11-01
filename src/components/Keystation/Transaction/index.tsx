@@ -14,6 +14,9 @@ export default function Transaction({ onSuccess }: TransactionProps) {
     (e: MessageEvent) => {
       if (e.origin === 'https://keystation.cosmostation.io') {
         if (e.data) {
+          if (e.data === 'deny') {
+            return;
+          }
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           onSuccess?.({ data: (e.data?.tx_response ? e.data?.tx_response : e.data) as { txhash: string } });
         }
