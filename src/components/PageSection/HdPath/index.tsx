@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import cx from 'clsx';
 import { useSnackbar } from 'notistack';
 import { useSetRecoilState } from 'recoil';
@@ -89,6 +89,9 @@ export default function HdPath({ className }: HdPathProps) {
     }
   };
 
+  useEffect(() => {
+    setPath(currentChain.wallet.hdPath);
+  }, [currentChain]);
   return (
     <>
       <div className={cx(styles.container, className)}>

@@ -31,3 +31,13 @@ export function minus(num1: number | string, num2: number | string, toFix?: numb
 
   return new Big(num1).minus(num2).toString();
 }
+
+export function getByte(str: string) {
+  return (
+    str
+      .split('')
+      .map((s) => s.charCodeAt(0))
+      // eslint-disable-next-line no-bitwise
+      .reduce((prev, c) => prev + (c === 10 ? 2 : c >> 7 ? 2 : 1), 0)
+  );
+}

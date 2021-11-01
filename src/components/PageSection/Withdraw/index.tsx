@@ -10,13 +10,14 @@ import Button from '~/components/Button';
 import type { TransactionInfoData } from '~/components/Dialog/TransactionInfo';
 import TransactionInfo from '~/components/Dialog/TransactionInfo';
 import Transaction from '~/components/Keystation/Transaction';
+import { CHAIN } from '~/constants/chain';
 import { useAxios } from '~/hooks/useAxios';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import { loaderState } from '~/stores/loader';
-import { divide, gt, minus } from '~/utils/calculator';
+import { divide, getByte, gt, minus } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 
@@ -49,21 +50,16 @@ export default function WalletInfo({ className }: WalletInfoProps) {
 
   const { isLoading, data, swr } = useChainSWR();
 
-  useEffect(() => {
-    setLoader(true);
-
-    if (isLoading) {
-      setLoader(false);
-    }
-  }, [isLoading, setLoader]);
-
   const { availableAmount, account } = data;
 
-  const handleOnSuccess = async () => {
-    await swr.balance.mutate();
+  const handleOnSuccess = () => {
     setAddress('');
     setSendAmount('');
     setMemo('');
+
+    setTimeout(() => {
+      void swr.balance.mutate();
+    }, 5000);
   };
 
   const handleOnClick = async () => {
@@ -89,6 +85,14 @@ export default function WalletInfo({ className }: WalletInfoProps) {
       if (gt(sendAmount, minus(availableAmount, currentChain.fee.withdraw, currentChain.decimal))) {
         throw new Error(`sendAmount is invalid`);
       }
+
+      if (
+        (currentChain.path === CHAIN.IRIS && getByte(memo) > 99) ||
+        (currentChain.path !== CHAIN.IRIS && getByte(memo) > 255)
+      ) {
+        throw new Error(`memo is invalid`);
+      }
+
       const txMsgOrigin = createTx.getSendTxMsg(address, sendAmount);
 
       const txMsgForSign = createMsgForLedger({
@@ -134,7 +138,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
 
         setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: result.txhash }));
 
-        await handleOnSuccess();
+        handleOnSuccess();
       }
 
       if (currentWallet.walletType === 'keystation') {
@@ -173,11 +177,25 @@ export default function WalletInfo({ className }: WalletInfoProps) {
       }
     } catch (e) {
       if (e instanceof LedgerError) {
-        enqueueSnackbar('check the ledger connection', { variant: 'error' });
+        enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
         setTransactionInfoData((prev) => ({ ...prev, open: false }));
       } else enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
     }
   };
+
+  useEffect(() => {
+    setLoader(true);
+
+    if (isLoading) {
+      setLoader(false);
+    }
+  }, [isLoading, setLoader]);
+
+  useEffect(() => {
+    setAddress('');
+    setSendAmount('');
+    setMemo('');
+  }, [currentChain]);
 
   return (
     <>
@@ -248,10 +266,10 @@ export default function WalletInfo({ className }: WalletInfoProps) {
       </div>
       {isOpenedTransaction && (
         <Transaction
-          onSuccess={async (e) => {
+          onSuccess={(e) => {
             setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: e.data.txhash }));
 
-            await handleOnSuccess();
+            handleOnSuccess();
           }}
         />
       )}
