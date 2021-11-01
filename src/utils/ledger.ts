@@ -117,19 +117,17 @@ type MsgForLedgerParams = {
 };
 
 export function createMsgForLedger({ message, chainId, accountNumber, sequence }: MsgForLedgerParams) {
-  return Buffer.from(
-    JSON.stringify(
-      sortKeys(
-        {
-          chain_id: chainId,
-          fee: message.fee,
-          memo: message.memo || '',
-          msgs: message.msg,
-          sequence,
-          account_number: accountNumber,
-        },
-        { deep: true },
-      ),
+  return JSON.stringify(
+    sortKeys(
+      {
+        chain_id: chainId,
+        fee: message.fee,
+        memo: message.memo || '',
+        msgs: message.msg,
+        sequence,
+        account_number: accountNumber,
+      },
+      { deep: true },
     ),
   );
 }

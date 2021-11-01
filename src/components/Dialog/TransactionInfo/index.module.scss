@@ -1,0 +1,143 @@
+@import '~/styles/index';
+
+.container {
+  box-sizing: border-box;
+  padding: 4rem;
+  max-width: 68.8rem;
+
+  width: 68.8rem;
+  font-size: 1.4rem;
+
+  color: $gray700;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.descContainer {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.imgContainer {
+  height: 6.8rem;
+
+  & > img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.description {
+  color: #f44336;
+  margin-top: 1.6rem;
+}
+
+.listContainer {
+  box-sizing: border-box;
+  margin-top: 4rem;
+
+  padding: 0 2rem;
+}
+
+.itemContainer {
+  height: 3.8rem;
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+}
+
+.memoContainer {
+  margin-top: 1rem;
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+}
+
+.memoContent {
+  box-sizing: border-box;
+
+  padding: 1rem;
+  background-color: $gray100;
+  border: 0.1rem solid $gray300;
+  border-radius: 0.6rem;
+  overflow: auto;
+
+  white-space: pre;
+  width: 42rem;
+  height: 6rem;
+}
+
+.txContainer {
+  margin-top: 1rem;
+}
+
+.txContent {
+  margin-top: 1rem;
+
+  box-sizing: border-box;
+
+  padding: 1rem;
+  background-color: #272930;
+  border-radius: 0.6rem;
+
+  color: $white;
+  overflow: auto;
+
+  white-space: pre;
+  width: 100%;
+  height: 17.5rem;
+}
+
+.successDesc {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1.5rem;
+}
+
+.fontSize11 {
+  font-size: 1.1rem;
+}
+
+.detailLinkContainer {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.link {
+  color: #4a90e2;
+
+  &:hover {
+    color: #2275d7;
+  }
+
+  &:visited {
+    color: #4a90e2;
+  }
+}
+
+.linkDescription {
+  margin-top: 1rem;
+}
+
+.buttonContainer {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

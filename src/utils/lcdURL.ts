@@ -29,5 +29,6 @@ export default function LcdURL(chain: ChainPath) {
 
       return `${chainInfo.lcdURL}${path}${address}`;
     },
+    postTx: () => `${chainInfo.lcdURL}/txs`,
   };
 }
