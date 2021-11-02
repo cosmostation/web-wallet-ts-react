@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Big from 'big.js';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -8,9 +9,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 import Button from '~/components/Button';
+import type { InputData } from '~/components/Dialog/Delegation';
+import Delegation from '~/components/Dialog/Delegation';
+import ValidatorList from '~/components/Dialog/ValidatorList';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
-import { divide, gt, plus, pow, times } from '~/utils/calculator';
+import { divide, pow, times } from '~/utils/calculator';
 
 import styles from './index.module.scss';
 
@@ -19,25 +23,31 @@ type MyDelegationProps = {
 };
 
 export default function MyDelegation({ className }: MyDelegationProps) {
-  const { swr } = useChainSWR();
+  const { data, swr } = useChainSWR();
   const currentChain = useCurrentChain();
 
+  const [delegationData, setDelegationData] = useState<{ open: boolean; inputData: InputData }>({
+    open: false,
+    inputData: {
+      type: 'delegate',
+      validatorAddress: '',
+    },
+  });
+
+  const [validatorListData, setValidatorListData] = useState({ open: false, validatorAddress: '' });
+
   const delegation = swr.delegations.data;
-  const validator = swr.validator.data;
   const reward = swr.rewards.data;
 
-  if (!delegation?.result || !validator?.validators || !reward?.result) {
+  const { validators, validValidatorsTotalToken } = data;
+
+  if (!delegation?.result?.length || !reward?.result || !validators.length) {
     return null;
   }
 
-  const validValidators = validator.validators
-    .filter((item) => item.status === 2 || item.status === 'BOND_STATUS_BONDED')
-    .sort((a, b) => (gt(b.tokens, a.tokens) ? 1 : -1));
-
-  const totalToken = validValidators.reduce((ac, cu) => plus(cu.tokens, ac, 0), '0');
-
   return (
     <div className={className}>
+      <div className={styles.title}>나의 위임내역</div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -63,8 +73,8 @@ export default function MyDelegation({ className }: MyDelegationProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {delegation.result.map((item) => {
-              const validatorInfo = validator.validators!.find(
+            {delegation.result.map((item, idx) => {
+              const validatorInfo = validators.find(
                 (validatorItem) => validatorItem.operator_address === item.delegation.validator_address,
               );
 
@@ -74,6 +84,8 @@ export default function MyDelegation({ className }: MyDelegationProps) {
 
               return (
                 <TableRow
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={idx}
                   sx={{
                     '&:nth-of-type(even)': {
                       backgroundColor: '#fafafa',
@@ -107,7 +119,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                   </TableCell>
                   <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
                     {times(validatorInfo!.tokens, pow(10, -currentChain.decimal), 0)}
-                    <br />({times(divide(validatorInfo!.tokens, totalToken), '100', 2)}%)
+                    <br />({times(divide(validatorInfo!.tokens, validValidatorsTotalToken), '100', 2)}%)
                   </TableCell>
                   <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
                     {times(validatorInfo!.commission.commission_rates.rate, '100', 2)}%
@@ -117,16 +129,48 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                   </TableCell>
                   <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
                     {times(
-                      rewardInfo?.reward.reduce((ac, cu) => ac.plus(cu.amount), new Big('0')).toString() || '0',
+                      rewardInfo?.reward?.reduce((ac, cu) => ac.plus(cu.amount), new Big('0')).toString() || '0',
                       pow(10, -currentChain.decimal),
                       currentChain.decimal,
                     )}
                   </TableCell>
                   <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
                     <div className={styles.buttonContainer}>
-                      <Button>위임</Button>
-                      <Button>위임 철회</Button>
-                      <Button>재위임</Button>
+                      <Button
+                        onClick={() => {
+                          setDelegationData({
+                            open: true,
+                            inputData: { type: 'delegate', validatorAddress: validatorInfo!.operator_address },
+                          });
+                        }}
+                      >
+                        위임
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setDelegationData({
+                            open: true,
+                            inputData: { type: 'undelegate', validatorAddress: validatorInfo!.operator_address },
+                          });
+                        }}
+                      >
+                        위임 철회
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setValidatorListData({ open: true, validatorAddress: validatorInfo!.operator_address });
+                          setDelegationData({
+                            open: false,
+                            inputData: {
+                              type: 'redelegate',
+                              validatorSrcAddress: validatorInfo!.operator_address,
+                              validatorDstAddress: '',
+                            },
+                          });
+                        }}
+                      >
+                        재위임
+                      </Button>
                       <Button>이자 받기</Button>
                     </div>
                   </TableCell>
@@ -136,6 +180,26 @@ export default function MyDelegation({ className }: MyDelegationProps) {
           </TableBody>
         </Table>
       </TableContainer>
+      <Delegation
+        open={delegationData.open}
+        inputData={delegationData.inputData}
+        onClose={() => setDelegationData((prev) => ({ ...prev, open: false }))}
+      />
+      <ValidatorList
+        open={validatorListData.open}
+        validatorAddress={validatorListData.validatorAddress}
+        onClose={() => setValidatorListData((prev) => ({ ...prev, open: false }))}
+        onClick={(validator) => {
+          setTimeout(() => {
+            setDelegationData((prev) => ({
+              open: true,
+              inputData: { ...prev.inputData, validatorDstAddress: validator },
+            }));
+          }, 200);
+        }}
+        title="재위임"
+        description="재위임할 검증인을 선택해주세요."
+      />
     </div>
   );
 }

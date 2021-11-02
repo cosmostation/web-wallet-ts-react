@@ -12,7 +12,7 @@ import Button from '~/components/Button';
 import Delegation from '~/components/Dialog/Delegation';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
-import { divide, gt, plus, pow, times } from '~/utils/calculator';
+import { divide, pow, times } from '~/utils/calculator';
 
 import styles from './index.module.scss';
 
@@ -21,31 +21,20 @@ type AvailableValidatorProps = {
 };
 
 export default function AvailableValidator({ className }: AvailableValidatorProps) {
-  const { swr } = useChainSWR();
+  const { data } = useChainSWR();
   const currentChain = useCurrentChain();
 
   const [delegation, setDelegation] = useState({ open: false, validatorAddress: '' });
 
-  const validatorData = swr.validator.data;
+  const { validValidators, validValidatorsTotalToken, myValidators } = data;
 
-  const delegationData = swr.delegations.data;
-
-  if (!validatorData?.validators || !delegationData?.result) {
+  if (!validValidators.length) {
     return null;
   }
 
-  const myValidators = delegationData.result.map((item) => item.delegation.validator_address);
-
-  // !item.jailed && !myValidators.includes(item.operator_address)
-
-  const validValidators = validatorData.validators
-    .filter((item) => item.status === 2 || item.status === 'BOND_STATUS_BONDED')
-    .sort((a, b) => (gt(b.tokens, a.tokens) ? 1 : -1));
-
-  const totalToken = validValidators.reduce((ac, cu) => plus(cu.tokens, ac, 0), '0');
-
   return (
     <div className={className}>
+      <div className={styles.title}>위임 가능한 검증인</div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -75,8 +64,10 @@ export default function AvailableValidator({ className }: AvailableValidatorProp
               ...validValidators.filter(
                 (item) => item.description.moniker !== 'Cosmostation' && !myValidators.includes(item.operator_address),
               ),
-            ].map((item) => (
+            ].map((item, idx) => (
               <TableRow
+                // eslint-disable-next-line react/no-array-index-key
+                key={idx}
                 sx={{
                   '&:nth-of-type(even)': {
                     backgroundColor: '#fafafa',
@@ -105,7 +96,7 @@ export default function AvailableValidator({ className }: AvailableValidatorProp
                 </TableCell>
                 <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
                   {times(item.tokens, pow(10, -currentChain.decimal), 0)}
-                  <br />({times(divide(item.tokens, totalToken), '100', 2)}%)
+                  <br />({times(divide(item.tokens, validValidatorsTotalToken), '100', 2)}%)
                 </TableCell>
                 <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
                   {times(item.commission.commission_rates.rate, '100', 2)}%
@@ -127,7 +118,11 @@ export default function AvailableValidator({ className }: AvailableValidatorProp
           </TableBody>
         </Table>
       </TableContainer>
-      <Delegation {...delegation} onClose={() => setDelegation((prev) => ({ ...prev, open: false }))} />
+      <Delegation
+        open={delegation.open}
+        inputData={{ type: 'delegate', validatorAddress: delegation.validatorAddress }}
+        onClose={() => setDelegation((prev) => ({ ...prev, open: false }))}
+      />
     </div>
   );
 }

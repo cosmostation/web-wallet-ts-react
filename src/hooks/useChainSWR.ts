@@ -17,7 +17,7 @@ import type {
   UnbondingPayload,
   ValidatorPayload,
 } from '~/models/common';
-import { pow, times } from '~/utils/calculator';
+import { gt, plus, pow, times } from '~/utils/calculator';
 import LcdURL from '~/utils/lcdURL';
 
 async function get<T>(path: string): Promise<T> {
@@ -268,6 +268,17 @@ export function useChainSWR() {
 
   const totalPrice = new Big(totalAmount).times(price).toFixed(currentLanguage === 'ko' ? 0 : 4);
 
+  const validators = validator?.data?.validators || [];
+
+  const validValidators =
+    validator?.data?.validators
+      ?.filter((item) => item.status === 2 || item.status === 'BOND_STATUS_BONDED')
+      ?.sort((a, b) => (gt(b.tokens, a.tokens) ? 1 : -1)) || [];
+
+  const validValidatorsTotalToken = validValidators.reduce((ac, cu) => plus(cu.tokens, ac, 0), '0');
+
+  const myValidators = delegations?.data?.result.map((item) => item.delegation.validator_address) || [];
+
   return {
     isLoading,
     swr: {
@@ -288,6 +299,10 @@ export function useChainSWR() {
       price,
       totalPrice,
       account: account.data,
+      validators,
+      validValidators,
+      validValidatorsTotalToken,
+      myValidators,
     },
   };
 }

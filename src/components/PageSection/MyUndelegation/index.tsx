@@ -23,12 +23,13 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
   const undelegation = swr.unbondingDelegation.data;
   const validator = swr.validator.data;
 
-  if (!undelegation?.result || !validator?.validators) {
+  if (!undelegation?.result?.length || !validator?.validators) {
     return null;
   }
 
   return (
     <div className={className}>
+      <div className={styles.title}>나의 위임해제내역</div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -53,8 +54,10 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
                 (validatorItem) => validatorItem.operator_address === item.validator_address,
               );
 
-              return item.entries.map((entryItem) => (
+              return item.entries.map((entryItem, idx) => (
                 <TableRow
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={`${validatorInfo!.operator_address}_${idx}`}
                   sx={{
                     '&:nth-of-type(even)': {
                       backgroundColor: '#fafafa',

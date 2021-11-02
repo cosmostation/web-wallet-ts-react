@@ -20,11 +20,8 @@ export default function Delegate() {
             </div>
             <HdPath className={styles.hdPath} />
             <WalletInfo className={styles.walletInfo} />
-            <div className={styles.delegationTitle}>나의 위임 내역</div>
             <MyDelegation className={styles.delegationContent} />
-            <div className={styles.delegationTitle}>나의 위임해제내역</div>
             <MyUndelegation className={styles.delegationContent} />
-            <div className={styles.delegationTitle}>위임 가능한 검증인</div>
             <AvailableValidator className={styles.delegationContent} />
           </div>
         </div>

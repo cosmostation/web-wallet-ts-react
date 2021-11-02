@@ -75,7 +75,7 @@ export function useCreateTx() {
         ],
         fee: {
           amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryContant) }],
-          gas: currentChain.gas.delegate,
+          gas: currentChain.gas.redelegate,
         },
         signatures: null,
         memo,
@@ -100,7 +100,7 @@ export function useCreateTx() {
         ],
         fee: {
           amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryContant) }],
-          gas: currentChain.gas.delegate,
+          gas: currentChain.gas.unbond,
         },
         signatures: null,
         memo,
@@ -125,7 +125,7 @@ export function useCreateTx() {
         ],
         fee: {
           amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryContant) }],
-          gas: currentChain.gas.delegate,
+          gas: currentChain.gas.default,
         },
         signatures: null,
         memo,

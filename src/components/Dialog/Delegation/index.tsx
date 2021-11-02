@@ -15,29 +15,46 @@ import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { divide, getByte, gt, minus } from '~/utils/calculator';
+import { divide, getByte, gt, minus, pow, times } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 
 import styles from './index.module.scss';
 
+export type InputData =
+  | {
+      type: 'delegate' | 'undelegate';
+      validatorAddress: string;
+    }
+  | {
+      type: 'redelegate';
+      validatorSrcAddress: string;
+      validatorDstAddress: string;
+    };
+
 type DelegationProps = {
   open: boolean;
   onClose?: () => void;
-  validatorAddress: string;
+  inputData: InputData;
 };
 
-export default function Delegation({ open, onClose, validatorAddress }: DelegationProps) {
+export default function Delegation({ inputData, open, onClose }: DelegationProps) {
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
   const createTx = useCreateTx();
   const { boardcastTx } = useAxios();
   const { enqueueSnackbar } = useSnackbar();
 
+  const title = (() => {
+    if (inputData.type === 'redelegate') return '재위임하기';
+    if (inputData.type === 'undelegate') return '위임 해제하기';
+    return '위임하기';
+  })();
+
   const [isOpenedTransaction, setIsOpenedTransaction] = useState(false);
   const [transactionInfoData, setTransactionInfoData] = useState<TransactionInfoData & { open: boolean }>({
     step: 'doing',
-    title: '위임하기',
+    title,
     open: false,
   });
 
@@ -47,6 +64,40 @@ export default function Delegation({ open, onClose, validatorAddress }: Delegati
   const { data, swr } = useChainSWR();
 
   const { availableAmount, account } = data;
+
+  const amount = (() => {
+    if (inputData.type === 'redelegate') {
+      return times(
+        swr.delegations?.data?.result?.find(
+          (item) => item.delegation.validator_address === inputData.validatorSrcAddress,
+        )?.balance?.amount || '0',
+        pow(10, -currentChain.decimal),
+        currentChain.decimal,
+      );
+    }
+
+    if (inputData.type === 'undelegate') {
+      return times(
+        swr.delegations?.data?.result?.find((item) => item.delegation.validator_address === inputData.validatorAddress)
+          ?.balance?.amount || '0',
+        pow(10, -currentChain.decimal),
+        currentChain.decimal,
+      );
+    }
+
+    return availableAmount;
+  })();
+
+  const fee = (() => {
+    if (inputData.type === 'redelegate') return currentChain.fee.redelegate;
+    if (inputData.type === 'undelegate') return currentChain.fee.unbond;
+    return currentChain.fee.delegate;
+  })();
+
+  const toAddress = (() => {
+    if (inputData.type === 'redelegate') return inputData.validatorDstAddress;
+    return inputData.validatorAddress;
+  })();
 
   const handleOnClick = async () => {
     try {
@@ -60,11 +111,15 @@ export default function Delegation({ open, onClose, validatorAddress }: Delegati
         throw new Error(`Path is invalid`);
       }
 
-      if (!currentWallet.address || !validatorAddress) {
+      if (
+        !currentWallet.address ||
+        ((inputData.type === 'delegate' || inputData.type === 'undelegate') && !inputData.validatorAddress) ||
+        (inputData.type === 'redelegate' && (!inputData.validatorDstAddress || !inputData.validatorSrcAddress))
+      ) {
         throw new Error(`Address is invalid`);
       }
 
-      if (gt(sendAmount, minus(availableAmount, currentChain.fee.delegate, currentChain.decimal))) {
+      if (gt(sendAmount, minus(amount, inputData.type === 'delegate' ? fee : '0', currentChain.decimal))) {
         throw new Error(`sendAmount is invalid`);
       }
 
@@ -75,7 +130,21 @@ export default function Delegation({ open, onClose, validatorAddress }: Delegati
         throw new Error(`memo is invalid`);
       }
 
-      const txMsgOrigin = createTx.getDelegateTxMsg(validatorAddress, sendAmount, memo);
+      const txMsgOrigin = (() => {
+        if (inputData.type === 'redelegate')
+          return createTx.getRedelegateTxMsg(
+            inputData.validatorSrcAddress,
+            inputData.validatorDstAddress,
+            sendAmount,
+            memo,
+          );
+
+        if (inputData.type === 'undelegate') {
+          return createTx.getUndelegateTxMsg(inputData.validatorAddress, sendAmount, memo);
+        }
+
+        return createTx.getDelegateTxMsg(inputData.validatorAddress, sendAmount, memo);
+      })();
 
       const txMsgForSign = createMsgForLedger({
         message: txMsgOrigin,
@@ -94,9 +163,9 @@ export default function Delegation({ open, onClose, validatorAddress }: Delegati
         setTransactionInfoData({
           open: true,
           step: 'doing',
-          title: '위임하기',
+          title,
           from: currentWallet.address,
-          to: validatorAddress,
+          to: toAddress,
           amount: `${sendAmount} ${currentChain.symbolName}`,
           fee: `${currentChain.fee.delegate} ${currentChain.symbolName}`,
           memo,
@@ -119,6 +188,13 @@ export default function Delegation({ open, onClose, validatorAddress }: Delegati
         const result = await boardcastTx(txBody);
 
         setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: result.txhash }));
+
+        setTimeout(() => {
+          void swr.delegations.mutate();
+          void swr.balance.mutate();
+          void swr.unbondingDelegation.mutate();
+          void swr.rewards.mutate();
+        }, 5000);
       }
 
       if (currentWallet.walletType === 'keystation') {
@@ -131,9 +207,9 @@ export default function Delegation({ open, onClose, validatorAddress }: Delegati
         setTransactionInfoData({
           open: true,
           step: 'doing',
-          title: '위임하기',
+          title,
           from: currentWallet.address,
-          to: validatorAddress,
+          to: toAddress,
           amount: `${sendAmount} ${currentChain.symbolName}`,
           fee: `${currentChain.fee.delegate} ${currentChain.symbolName}`,
           memo,
@@ -172,12 +248,12 @@ export default function Delegation({ open, onClose, validatorAddress }: Delegati
     <>
       <Dialog open={open} onClose={handleOnClose} maxWidth="lg">
         <div className={styles.container}>
-          <div className={styles.title}>위임하기</div>
+          <div className={styles.title}>{title}</div>
 
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>사용 가능 수량</div>
+            <div className={styles.column1}>가능 수량</div>
             <div className={cx(styles.column2, styles.textEnd)}>
-              {availableAmount} {currentChain.symbolName}
+              {amount} {currentChain.symbolName}
             </div>
           </div>
           {/* <div className={styles.rowContainer}>
@@ -197,13 +273,21 @@ export default function Delegation({ open, onClose, validatorAddress }: Delegati
               />
               <Button
                 sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}
-                onClick={() => setSendAmount(divide(availableAmount, '2', currentChain.decimal))}
+                onClick={() => setSendAmount(divide(amount, '2', currentChain.decimal))}
               >
                 1/2
               </Button>
               <Button
                 sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}
-                onClick={() => setSendAmount(minus(availableAmount, currentChain.fee.delegate, currentChain.decimal))}
+                onClick={() =>
+                  setSendAmount(
+                    minus(
+                      amount,
+                      inputData.type === 'delegate' ? currentChain.fee.delegate : '0',
+                      currentChain.decimal,
+                    ),
+                  )
+                }
               >
                 MAX
               </Button>
@@ -241,6 +325,13 @@ export default function Delegation({ open, onClose, validatorAddress }: Delegati
             <Transaction
               onSuccess={(e) => {
                 setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: e.data.txhash }));
+
+                setTimeout(() => {
+                  void swr.delegations.mutate();
+                  void swr.balance.mutate();
+                  void swr.unbondingDelegation.mutate();
+                  void swr.rewards.mutate();
+                }, 5000);
               }}
             />
           )}

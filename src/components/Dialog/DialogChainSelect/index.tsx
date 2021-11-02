@@ -104,10 +104,10 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
         }
         setIsShowLoader(false);
       }
-      return;
+    } else {
+      history.push(`/${chain}`);
+      onClose?.();
     }
-
-    history.push(`/${chain}`);
   };
 
   return (
