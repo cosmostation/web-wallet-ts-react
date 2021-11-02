@@ -1,0 +1,52 @@
+@import '~/styles/index';
+
+.container {
+  box-sizing: border-box;
+  padding: 0 4rem 4rem;
+  max-width: 68.8rem;
+
+  width: 68.8rem;
+  font-size: 1.4rem;
+
+  color: $gray700;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: bold;
+
+  margin-bottom: 3rem;
+}
+
+.rowContainer {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 1.4rem;
+
+  min-height: 2.6rem;
+
+  margin-bottom: 1.3rem;
+
+  color: $gray700;
+}
+
+.column1 {
+  width: 30%;
+}
+
+.column2 {
+  width: 70%;
+}
+
+.textEnd {
+  text-align: end;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

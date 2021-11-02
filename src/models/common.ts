@@ -168,3 +168,8 @@ export type RewardPayload = {
     total: Amount[];
   };
 };
+
+export type WithdrawAddressPayload = {
+  height: string;
+  result: string;
+};

@@ -6,7 +6,7 @@ export function pow(base: number | string, exponent: number) {
 
 export function times(num1: number | string, num2: number | string, toFix?: number) {
   if (toFix !== undefined) {
-    return new Big(num1).times(num2).toFixed(toFix);
+    return new Big(num1).times(num2).toFixed(toFix, 0);
   }
 
   return new Big(num1).times(num2).toString();
@@ -14,7 +14,7 @@ export function times(num1: number | string, num2: number | string, toFix?: numb
 
 export function plus(num1: number | string, num2: number | string, toFix?: number) {
   if (toFix !== undefined) {
-    return new Big(num1).plus(num2).toFixed(toFix);
+    return new Big(num1).plus(num2).toFixed(toFix, 0);
   }
 
   return new Big(num1).plus(num2).toString();
@@ -22,7 +22,7 @@ export function plus(num1: number | string, num2: number | string, toFix?: numbe
 
 export function divide(num1: number | string, num2: number | string, toFix?: number) {
   if (toFix !== undefined) {
-    return new Big(num1).div(num2).toFixed(toFix);
+    return new Big(num1).div(num2).toFixed(toFix, 0);
   }
 
   return new Big(num1).div(num2).toString();
@@ -34,7 +34,7 @@ export function gt(num1: number | string, num2: number | string) {
 
 export function minus(num1: number | string, num2: number | string, toFix?: number) {
   if (toFix !== undefined) {
-    return new Big(num1).minus(num2).toFixed(toFix);
+    return new Big(num1).minus(num2).toFixed(toFix, 0);
   }
 
   return new Big(num1).minus(num2).toString();

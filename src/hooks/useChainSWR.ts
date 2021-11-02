@@ -16,6 +16,7 @@ import type {
   RewardPayload,
   UnbondingPayload,
   ValidatorPayload,
+  WithdrawAddressPayload,
 } from '~/models/common';
 import { gt, plus, pow, times } from '~/utils/calculator';
 import LcdURL from '~/utils/lcdURL';
@@ -206,6 +207,29 @@ export function useChainPriceSWR() {
   };
 }
 
+export function useWithdrawAddressSWR() {
+  const currentChain = useCurrentChain();
+  const currentWallet = useCurrentWallet();
+
+  const lcdURL = LcdURL(currentChain.path);
+
+  const requestURL = lcdURL.getWithdrawAddress(currentWallet.address!);
+
+  const fetcher = (fetchUrl: string) => get<WithdrawAddressPayload>(fetchUrl);
+
+  const { data, error, mutate } = useSWR<WithdrawAddressPayload, AxiosError>(requestURL, fetcher, {
+    refreshInterval: 0,
+    revalidateOnFocus: false,
+    isPaused: () => !currentWallet.address?.startsWith(currentChain.wallet.prefix),
+  });
+
+  return {
+    data,
+    error,
+    mutate,
+  };
+}
+
 export function useChainSWR() {
   const currentChain = useCurrentChain();
   const currentLanguage = useCurrentLanguage();
@@ -216,6 +240,7 @@ export function useChainSWR() {
   const rewards = useRewardsSWR();
   const validator = useValidatorsSWR();
   const account = useAccountSWR();
+  const withdrawAddress = useWithdrawAddressSWR();
 
   const isLoading =
     (balance.data || balance.error) &&
@@ -224,7 +249,8 @@ export function useChainSWR() {
     (chainPrice.data || chainPrice.error) &&
     (rewards.data || rewards.error) &&
     (validator.data || validator.error) &&
-    (account.data || account.error);
+    (account.data || account.error) &&
+    (withdrawAddress.data || withdrawAddress.error);
 
   const availableAmount = times(
     balance.data?.balance?.find((item) => item.denom === currentChain.denom)?.amount || '0',
@@ -289,6 +315,7 @@ export function useChainSWR() {
       rewards,
       validator,
       account,
+      withdrawAddress,
     },
     data: {
       availableAmount,
@@ -303,6 +330,7 @@ export function useChainSWR() {
       validValidators,
       validValidatorsTotalToken,
       myValidators,
+      withdrawAddress: withdrawAddress?.data?.result || '',
     },
   };
 }

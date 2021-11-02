@@ -1,13 +1,13 @@
 /* eslint-disable camelcase */
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { pow, times } from '~/utils/calculator';
+import { plus, pow, times } from '~/utils/calculator';
 
 export function useCreateTx() {
   const currentChain = useCurrentChain();
   const currentWallet = useCurrentWallet();
 
-  const recoveryContant = pow(10, currentChain.decimal);
+  const recoveryDecimal = pow(10, currentChain.decimal);
 
   return {
     getSendTxMsg: (toAddress: string, amount: string, memo?: string) => {
@@ -20,12 +20,12 @@ export function useCreateTx() {
             value: {
               from_address: currentWallet.address,
               to_address: toAddress,
-              amount: [{ denom: currentChain.denom, amount: times(amount, recoveryContant) }],
+              amount: [{ denom: currentChain.denom, amount: times(amount, recoveryDecimal) }],
             },
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.withdraw, recoveryContant) }],
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.withdraw, recoveryDecimal) }],
           gas: currentChain.gas.withdraw,
         },
         signatures: null,
@@ -44,12 +44,12 @@ export function useCreateTx() {
             value: {
               delegator_address: currentWallet.address,
               validator_address: validatorAddress,
-              amount: { denom: currentChain.denom, amount: times(amount, recoveryContant) },
+              amount: { denom: currentChain.denom, amount: times(amount, recoveryDecimal) },
             },
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryContant) }],
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryDecimal) }],
           gas: currentChain.gas.delegate,
         },
         signatures: null,
@@ -69,12 +69,12 @@ export function useCreateTx() {
               delegator_address: currentWallet.address,
               validator_src_address: validatorSrcAddress,
               validator_dst_address: validatorDstAddress,
-              amount: { denom: currentChain.denom, amount: times(amount, recoveryContant) },
+              amount: { denom: currentChain.denom, amount: times(amount, recoveryDecimal) },
             },
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryContant) }],
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryDecimal) }],
           gas: currentChain.gas.redelegate,
         },
         signatures: null,
@@ -94,12 +94,12 @@ export function useCreateTx() {
             value: {
               delegator_address: currentWallet.address,
               validator_address: validatorAddress,
-              amount: { denom: currentChain.denom, amount: times(amount, recoveryContant) },
+              amount: { denom: currentChain.denom, amount: times(amount, recoveryDecimal) },
             },
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryContant) }],
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryDecimal) }],
           gas: currentChain.gas.unbond,
         },
         signatures: null,
@@ -119,13 +119,39 @@ export function useCreateTx() {
             value: {
               delegator_address: currentWallet.address,
               withdraw_address: withdrawAddress,
-              amount: { denom: currentChain.denom, amount: times(amount, recoveryContant) },
+              amount: { denom: currentChain.denom, amount: times(amount, recoveryDecimal) },
             },
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryContant) }],
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryDecimal) }],
           gas: currentChain.gas.default,
+        },
+        signatures: null,
+        memo,
+      };
+
+      return txMsg;
+    },
+
+    getWithdrawRewardTxMsg: (data: { delegatorAddress: string; validatorAddress: string }[], memo?: string) => {
+      const msgType = 'cosmos-sdk/MsgWithdrawDelegationReward';
+
+      const msgs = data.map((datum) => ({
+        type: msgType,
+        value: {
+          delegator_address: datum.delegatorAddress,
+          validator_address: datum.validatorAddress,
+        },
+      }));
+
+      const gas = times('60000', data.length - 1, 0);
+
+      const txMsg = {
+        msg: msgs,
+        fee: {
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.default, recoveryDecimal) }],
+          gas: plus(currentChain.gas.default, gas, 0),
         },
         signatures: null,
         memo,

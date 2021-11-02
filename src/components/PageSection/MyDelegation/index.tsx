@@ -12,6 +12,7 @@ import Button from '~/components/Button';
 import type { InputData } from '~/components/Dialog/Delegation';
 import Delegation from '~/components/Dialog/Delegation';
 import ValidatorList from '~/components/Dialog/ValidatorList';
+import WidthdrawReward from '~/components/Dialog/WithdrawReward';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { divide, pow, times } from '~/utils/calculator';
@@ -35,6 +36,8 @@ export default function MyDelegation({ className }: MyDelegationProps) {
   });
 
   const [validatorListData, setValidatorListData] = useState({ open: false, validatorAddress: '' });
+
+  const [withdrawRewardData, setWithdrawRewardData] = useState({ open: false, validatorAddress: '' });
 
   const delegation = swr.delegations.data;
   const reward = swr.rewards.data;
@@ -171,7 +174,13 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                       >
                         재위임
                       </Button>
-                      <Button>이자 받기</Button>
+                      <Button
+                        onClick={() => {
+                          setWithdrawRewardData({ open: true, validatorAddress: validatorInfo!.operator_address });
+                        }}
+                      >
+                        이자 받기
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -184,6 +193,12 @@ export default function MyDelegation({ className }: MyDelegationProps) {
         open={delegationData.open}
         inputData={delegationData.inputData}
         onClose={() => setDelegationData((prev) => ({ ...prev, open: false }))}
+      />
+      <WidthdrawReward
+        {...withdrawRewardData}
+        onClose={() => {
+          setWithdrawRewardData((prev) => ({ ...prev, open: false }));
+        }}
       />
       <ValidatorList
         open={validatorListData.open}
