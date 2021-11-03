@@ -61,6 +61,15 @@ export default function DialogWithdrawReward({
 
   const toAddress = withdrawAddress;
 
+  const afterSuccess = () => {
+    setTimeout(() => {
+      void swr.delegations.mutate();
+      void swr.balance.mutate();
+      void swr.unbondingDelegation.mutate();
+      void swr.rewards.mutate();
+    }, 7000);
+  };
+
   const handleOnClick = async () => {
     try {
       await swr.account.mutate();
@@ -127,12 +136,7 @@ export default function DialogWithdrawReward({
 
         setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: result.txhash }));
 
-        setTimeout(() => {
-          void swr.delegations.mutate();
-          void swr.balance.mutate();
-          void swr.unbondingDelegation.mutate();
-          void swr.rewards.mutate();
-        }, 7000);
+        afterSuccess();
       }
 
       if (currentWallet.walletType === 'keystation') {
@@ -231,12 +235,7 @@ export default function DialogWithdrawReward({
               onSuccess={(e) => {
                 setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: e.data.txhash }));
 
-                setTimeout(() => {
-                  void swr.delegations.mutate();
-                  void swr.balance.mutate();
-                  void swr.unbondingDelegation.mutate();
-                  void swr.rewards.mutate();
-                }, 5000);
+                afterSuccess();
               }}
             />
           )}

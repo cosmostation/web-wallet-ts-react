@@ -15,41 +15,25 @@ import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { divide, getByte, gt, minus, pow, times } from '~/utils/calculator';
+import { getByte } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 
 import styles from './index.module.scss';
 
-export type InputData =
-  | {
-      type: 'delegate' | 'undelegate';
-      validatorAddress: string;
-    }
-  | {
-      type: 'redelegate';
-      validatorSrcAddress: string;
-      validatorDstAddress: string;
-    };
-
-type DialogDelegationProps = {
+type DialogModifyWithdrawAddressProps = {
   open: boolean;
   onClose?: () => void;
-  inputData: InputData;
 };
 
-export default function DialogDelegation({ inputData, open, onClose }: DialogDelegationProps) {
+export default function DialogModifyWithdrawAddress({ open, onClose }: DialogModifyWithdrawAddressProps) {
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
   const createTx = useCreateTx();
   const { boardcastTx } = useAxios();
   const { enqueueSnackbar } = useSnackbar();
 
-  const title = (() => {
-    if (inputData.type === 'redelegate') return '재위임하기';
-    if (inputData.type === 'undelegate') return '위임 해제하기';
-    return '위임하기';
-  })();
+  const title = '이자 지급 주소 변경';
 
   const [isOpenedTransaction, setIsOpenedTransaction] = useState(false);
   const [transactionInfoData, setTransactionInfoData] = useState<TransactionInfoData & { open: boolean }>({
@@ -58,53 +42,21 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
     open: false,
   });
 
-  const [sendAmount, setSendAmount] = useState('');
+  const [address, setAddress] = useState('');
   const [memo, setMemo] = useState('');
 
   const { data, swr } = useChainSWR();
 
-  const { availableAmount, account } = data;
+  const { withdrawAddress, account } = data;
 
-  const amount = (() => {
-    if (inputData.type === 'redelegate') {
-      return times(
-        swr.delegations?.data?.result?.find(
-          (item) => item.delegation.validator_address === inputData.validatorSrcAddress,
-        )?.balance?.amount || '0',
-        pow(10, -currentChain.decimal),
-        currentChain.decimal,
-      );
-    }
+  const fee = currentChain.fee.default;
 
-    if (inputData.type === 'undelegate') {
-      return times(
-        swr.delegations?.data?.result?.find((item) => item.delegation.validator_address === inputData.validatorAddress)
-          ?.balance?.amount || '0',
-        pow(10, -currentChain.decimal),
-        currentChain.decimal,
-      );
-    }
-
-    return availableAmount;
-  })();
-
-  const fee = (() => {
-    if (inputData.type === 'redelegate') return currentChain.fee.redelegate;
-    if (inputData.type === 'undelegate') return currentChain.fee.unbond;
-    return currentChain.fee.delegate;
-  })();
-
-  const toAddress = (() => {
-    if (inputData.type === 'redelegate') return inputData.validatorDstAddress;
-    return inputData.validatorAddress;
-  })();
+  const fromAddress = withdrawAddress;
 
   const afterSuccess = () => {
     setTimeout(() => {
-      void swr.delegations.mutate();
       void swr.balance.mutate();
-      void swr.unbondingDelegation.mutate();
-      void swr.rewards.mutate();
+      void swr.withdrawAddress.mutate();
     }, 7000);
   };
 
@@ -121,15 +73,12 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
       }
 
       if (
-        !currentWallet.address ||
-        ((inputData.type === 'delegate' || inputData.type === 'undelegate') && !inputData.validatorAddress) ||
-        (inputData.type === 'redelegate' && (!inputData.validatorDstAddress || !inputData.validatorSrcAddress))
+        !address ||
+        withdrawAddress === address ||
+        !address.startsWith(currentChain.wallet.prefix) ||
+        withdrawAddress.length !== address.length
       ) {
-        throw new Error(`Address is invalid`);
-      }
-
-      if (gt(sendAmount, minus(amount, inputData.type === 'delegate' ? fee : '0', currentChain.decimal))) {
-        throw new Error(`sendAmount is invalid`);
+        throw new Error(`address is invalid`);
       }
 
       if (
@@ -139,21 +88,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
         throw new Error(`memo is invalid`);
       }
 
-      const txMsgOrigin = (() => {
-        if (inputData.type === 'redelegate')
-          return createTx.getRedelegateTxMsg(
-            inputData.validatorSrcAddress,
-            inputData.validatorDstAddress,
-            sendAmount,
-            memo,
-          );
-
-        if (inputData.type === 'undelegate') {
-          return createTx.getUndelegateTxMsg(inputData.validatorAddress, sendAmount, memo);
-        }
-
-        return createTx.getDelegateTxMsg(inputData.validatorAddress, sendAmount, memo);
-      })();
+      const txMsgOrigin = createTx.getModifyWithdrawAddressTxMsg(address, memo);
 
       const txMsgForSign = createMsgForLedger({
         message: txMsgOrigin,
@@ -173,10 +108,9 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
           open: true,
           step: 'doing',
           title,
-          from: currentWallet.address,
-          to: toAddress,
-          amount: `${sendAmount} ${currentChain.symbolName}`,
-          fee: `${currentChain.fee.delegate} ${currentChain.symbolName}`,
+          from: fromAddress,
+          to: address,
+          fee: `${fee} ${currentChain.symbolName}`,
           memo,
           tx: JSON.stringify(txMsgOrigin, null, 4),
         });
@@ -212,10 +146,9 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
           open: true,
           step: 'doing',
           title,
-          from: currentWallet.address,
-          to: toAddress,
-          amount: `${sendAmount} ${currentChain.symbolName}`,
-          fee: `${currentChain.fee.delegate} ${currentChain.symbolName}`,
+          from: fromAddress,
+          to: address,
+          fee: `${fee} ${currentChain.symbolName}`,
           memo,
           tx: JSON.stringify(txMsgOrigin, null, 4),
         });
@@ -243,8 +176,8 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
   };
 
   const handleOnClose = () => {
-    setSendAmount('');
     setMemo('');
+    setAddress('');
 
     onClose?.();
   };
@@ -255,46 +188,18 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
           <div className={styles.title}>{title}</div>
 
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>가능 수량</div>
-            <div className={cx(styles.column2, styles.textEnd)}>
-              {amount} {currentChain.symbolName}
-            </div>
+            <div className={styles.column1}>현재 이자 지급 주소</div>
+            <div className={cx(styles.column2, styles.textEnd)}>{withdrawAddress}</div>
           </div>
-          {/* <div className={styles.rowContainer}>
-          <div className={styles.column1}>받을 지갑 주소</div>
-          <div className={styles.column2}>
-            <Input label="지갑 주소 입력" value={address} onChange={(event) => setAddress(event.currentTarget.value)} />
-          </div>
-        </div> */}
+
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>전송 수량</div>
+            <div className={styles.column1}>변경할 이자 지급 주소</div>
             <div className={styles.column2}>
               <Input
-                label="전송 수량 입력"
-                sx={{ width: 'calc(100% - 14.8rem)', fontSize: '1.4rem' }}
-                value={sendAmount}
-                onChange={(event) => setSendAmount(event.currentTarget.value)}
+                label="지갑 주소 입력"
+                value={address}
+                onChange={(event) => setAddress(event.currentTarget.value)}
               />
-              <Button
-                sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}
-                onClick={() => setSendAmount(divide(amount, '2', currentChain.decimal))}
-              >
-                1/2
-              </Button>
-              <Button
-                sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}
-                onClick={() =>
-                  setSendAmount(
-                    minus(
-                      amount,
-                      inputData.type === 'delegate' ? currentChain.fee.delegate : '0',
-                      currentChain.decimal,
-                    ),
-                  )
-                }
-              >
-                MAX
-              </Button>
             </div>
           </div>
           <div className={styles.rowContainer}>
@@ -317,7 +222,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
           <div className={styles.rowContainer}>
             <div className={styles.column1}>수수료</div>
             <div className={cx(styles.column2, styles.textEnd)}>
-              {currentChain.fee.delegate} {currentChain.symbolName}
+              {fee} {currentChain.symbolName}
             </div>
           </div>
           <div className={styles.buttonContainer}>

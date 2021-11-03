@@ -12,6 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import Button from '~/components/Button';
 import type { InputData } from '~/components/Dialog/DialogDelegation';
 import DialogDelegation from '~/components/Dialog/DialogDelegation';
+import DialogModifyWithdrawAddress from '~/components/Dialog/DialogModifyWithdrawAddress';
 import DialogValidatorList from '~/components/Dialog/DialogValidatorList';
 import DialogWithdrawReward from '~/components/Dialog/DialogWithdrawReward';
 import { useChainSWR } from '~/hooks/useChainSWR';
@@ -52,6 +53,8 @@ export default function MyDelegation({ className }: MyDelegationProps) {
     title: '',
   });
 
+  const [isOpenedModifyWithdrawAddress, setIsOpenedModifyWithdrawAddress] = useState(false);
+
   const delegation = swr.delegations.data;
   const reward = swr.rewards.data;
 
@@ -87,7 +90,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
       <div className={styles.titleContainer}>
         <div className={styles.title}>나의 위임내역</div>
         <div className={styles.titleButtonContainer}>
-          <Button>이자 지급 주소 변경</Button>
+          <Button onClick={() => setIsOpenedModifyWithdrawAddress(true)}>이자 지급 주소 변경</Button>
           <Button
             onClick={() => {
               const validatorAddress = sortedRewardList.map((item) => item.validatorAddress);
@@ -287,6 +290,10 @@ export default function MyDelegation({ className }: MyDelegationProps) {
         }}
         title="재위임"
         description="재위임할 검증인을 선택해주세요."
+      />
+      <DialogModifyWithdrawAddress
+        open={isOpenedModifyWithdrawAddress}
+        onClose={() => setIsOpenedModifyWithdrawAddress(false)}
       />
     </div>
   );
