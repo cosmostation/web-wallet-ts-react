@@ -9,7 +9,7 @@
 
 ### `yarn start`
 
-개발자 모드로 실행\
+개발자 모드로 실행
 [http://localhost:3000](http://localhost:3000) 로 접근
 
 ### `yarn build`

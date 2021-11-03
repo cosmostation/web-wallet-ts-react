@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import cx from 'clsx';
 import { useSnackbar } from 'notistack';
 import { useSetRecoilState } from 'recoil';
@@ -27,9 +28,12 @@ type WalletInfoProps = {
 };
 
 export default function WalletInfo({ className }: WalletInfoProps) {
+  const { t } = useTranslation();
+  const title = t('component.page_section.withdraw.send');
+
   const [transactionInfoData, setTransactionInfoData] = useState<TransactionInfoData & { open: boolean }>({
     step: 'doing',
-    title: '전송하기',
+    title,
     open: false,
   });
 
@@ -111,7 +115,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         setTransactionInfoData({
           open: true,
           step: 'doing',
-          title: '전송하기',
+          title,
           from: currentWallet.address,
           to: address,
           amount: `${sendAmount} ${currentChain.symbolName}`,
@@ -150,7 +154,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         setTransactionInfoData({
           open: true,
           step: 'doing',
-          title: '전송하기',
+          title,
           from: currentWallet.address,
           to: address,
           amount: `${sendAmount} ${currentChain.symbolName}`,
@@ -189,25 +193,31 @@ export default function WalletInfo({ className }: WalletInfoProps) {
   }, [currentChain]);
 
   return (
-    <>
-      <div className={cx(styles.container, className)}>
+    <div className={className}>
+      <div className={styles.title}>{t('component.page_section.withdraw.noun_send')}</div>
+
+      <div className={styles.contentContainer}>
         <div className={styles.rowContainer}>
-          <div className={styles.column1}>사용 가능 수량</div>
+          <div className={styles.column1}>{t('component.page_section.withdraw.available_amount')}</div>
           <div className={cx(styles.column2, styles.textEnd)}>
             {availableAmount} {currentChain.symbolName}
           </div>
         </div>
         <div className={styles.rowContainer}>
-          <div className={styles.column1}>받을 지갑 주소</div>
+          <div className={styles.column1}>{t('component.page_section.withdraw.to_address')}</div>
           <div className={styles.column2}>
-            <Input label="지갑 주소 입력" value={address} onChange={(event) => setAddress(event.currentTarget.value)} />
+            <Input
+              label={t('component.page_section.withdraw.input_address')}
+              value={address}
+              onChange={(event) => setAddress(event.currentTarget.value)}
+            />
           </div>
         </div>
         <div className={styles.rowContainer}>
-          <div className={styles.column1}>전송 수량</div>
+          <div className={styles.column1}>{t('component.page_section.withdraw.send_amount')}</div>
           <div className={styles.column2}>
             <Input
-              label="전송 수량 입력"
+              label={t('component.page_section.withdraw.input_amount')}
               sx={{ width: 'calc(100% - 14.8rem)', fontSize: '1.4rem' }}
               value={sendAmount}
               onChange={(event) => setSendAmount(event.currentTarget.value)}
@@ -227,10 +237,12 @@ export default function WalletInfo({ className }: WalletInfoProps) {
           </div>
         </div>
         <div className={styles.rowContainer}>
-          <div className={styles.column1}>메모 (선택 사항)</div>
+          <div className={styles.column1}>
+            {t('component.page_section.withdraw.memo')} ({t('component.page_section.withdraw.optional')})
+          </div>
           <div className={styles.column2}>
             <Input
-              label="메모 내용 입력"
+              label={t('component.page_section.withdraw.input_memo')}
               multiline
               size="medium"
               sx={{
@@ -244,7 +256,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
           </div>
         </div>
         <div className={styles.rowContainer}>
-          <div className={styles.column1}>수수료</div>
+          <div className={styles.column1}>{t('component.page_section.withdraw.tx_fee')}</div>
           <div className={cx(styles.column2, styles.textEnd)}>
             {currentChain.fee.withdraw} {currentChain.symbolName}
           </div>
@@ -273,6 +285,6 @@ export default function WalletInfo({ className }: WalletInfoProps) {
             : undefined
         }
       />
-    </>
+    </div>
   );
 }

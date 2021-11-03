@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import cx from 'clsx';
 import { useSnackbar } from 'notistack';
 import secp256k1 from 'secp256k1';
@@ -39,6 +40,7 @@ type DialogDelegationProps = {
 };
 
 export default function DialogDelegation({ inputData, open, onClose }: DialogDelegationProps) {
+  const { t } = useTranslation();
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
   const createTx = useCreateTx();
@@ -46,9 +48,9 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
   const { enqueueSnackbar } = useSnackbar();
 
   const title = (() => {
-    if (inputData.type === 'redelegate') return '재위임하기';
-    if (inputData.type === 'undelegate') return '위임 해제하기';
-    return '위임하기';
+    if (inputData.type === 'redelegate') return t('component.dialog.dialog_delegation.redelegate');
+    if (inputData.type === 'undelegate') return t('component.dialog.dialog_delegation.undelegate');
+    return t('component.dialog.dialog_delegation.delegate');
   })();
 
   const [isOpenedTransaction, setIsOpenedTransaction] = useState(false);
@@ -255,7 +257,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
           <div className={styles.title}>{title}</div>
 
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>가능 수량</div>
+            <div className={styles.column1}>{t('component.dialog.dialog_delegation.available_amount')}</div>
             <div className={cx(styles.column2, styles.textEnd)}>
               {amount} {currentChain.symbolName}
             </div>
@@ -267,10 +269,10 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
           </div>
         </div> */}
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>전송 수량</div>
+            <div className={styles.column1}>{t('component.dialog.dialog_delegation.amount')}</div>
             <div className={styles.column2}>
               <Input
-                label="전송 수량 입력"
+                label={t('component.dialog.dialog_delegation.input_amount')}
                 sx={{ width: 'calc(100% - 14.8rem)', fontSize: '1.4rem' }}
                 value={sendAmount}
                 onChange={(event) => setSendAmount(event.currentTarget.value)}
@@ -298,10 +300,12 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
             </div>
           </div>
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>메모 (선택 사항)</div>
+            <div className={styles.column1}>
+              {t('component.dialog.dialog_delegation.memo')} ({t('component.dialog.dialog_delegation.optional')})
+            </div>
             <div className={styles.column2}>
               <Input
-                label="메모 내용 입력"
+                label={t('component.dialog.dialog_delegation.input_memo')}
                 multiline
                 size="medium"
                 sx={{
@@ -315,7 +319,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
             </div>
           </div>
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>수수료</div>
+            <div className={styles.column1}>{t('component.dialog.dialog_delegation.tx_fee')}</div>
             <div className={cx(styles.column2, styles.textEnd)}>
               {currentChain.fee.delegate} {currentChain.symbolName}
             </div>

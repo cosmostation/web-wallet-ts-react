@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,6 +18,7 @@ type MyUndelegationProps = {
 };
 
 export default function MyUndelegation({ className }: MyUndelegationProps) {
+  const { t } = useTranslation();
   const { swr } = useChainSWR();
   const currentChain = useCurrentChain();
 
@@ -29,22 +31,22 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
 
   return (
     <div className={className}>
-      <div className={styles.title}>나의 위임해제내역</div>
+      <div className={styles.title}>{t('component.page_section.my_undelegation.my_undelegation')}</div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#fafafa' }}>
               <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
-                검증인
+                {t('component.page_section.my_undelegation.validator')}
               </TableCell>
               <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                블록높이
+                {t('component.page_section.my_undelegation.block_height')}
               </TableCell>
               <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                위임 철회 중 수량
+                {t('component.page_section.my_undelegation.undelegating_amount')}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
-                완료 시간
+                {t('component.page_section.my_undelegation.undelegation_complete_time')}
               </TableCell>
             </TableRow>
           </TableHead>

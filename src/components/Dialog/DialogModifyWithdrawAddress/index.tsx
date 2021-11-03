@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import cx from 'clsx';
 import { useSnackbar } from 'notistack';
 import secp256k1 from 'secp256k1';
@@ -27,13 +28,14 @@ type DialogModifyWithdrawAddressProps = {
 };
 
 export default function DialogModifyWithdrawAddress({ open, onClose }: DialogModifyWithdrawAddressProps) {
+  const { t } = useTranslation();
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
   const createTx = useCreateTx();
   const { boardcastTx } = useAxios();
   const { enqueueSnackbar } = useSnackbar();
 
-  const title = '이자 지급 주소 변경';
+  const title = t('component.dialog.dialog_modify_withdraw_address.modify_withdraw_address');
 
   const [isOpenedTransaction, setIsOpenedTransaction] = useState(false);
   const [transactionInfoData, setTransactionInfoData] = useState<TransactionInfoData & { open: boolean }>({
@@ -188,25 +190,32 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
           <div className={styles.title}>{title}</div>
 
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>현재 이자 지급 주소</div>
+            <div className={styles.column1}>
+              {t('component.dialog.dialog_modify_withdraw_address.current_withdraw_address')}
+            </div>
             <div className={cx(styles.column2, styles.textEnd)}>{withdrawAddress}</div>
           </div>
 
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>변경할 이자 지급 주소</div>
+            <div className={styles.column1}>
+              {t('component.dialog.dialog_modify_withdraw_address.withdraw_address_to_modify')}
+            </div>
             <div className={styles.column2}>
               <Input
-                label="지갑 주소 입력"
+                label={t('component.dialog.dialog_modify_withdraw_address.input_address')}
                 value={address}
                 onChange={(event) => setAddress(event.currentTarget.value)}
               />
             </div>
           </div>
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>메모 (선택 사항)</div>
+            <div className={styles.column1}>
+              {t('component.dialog.dialog_modify_withdraw_address.memo')} (
+              {t('component.dialog.dialog_modify_withdraw_address.optional')})
+            </div>
             <div className={styles.column2}>
               <Input
-                label="메모 내용 입력"
+                label={t('component.dialog.dialog_modify_withdraw_address.input_memo')}
                 multiline
                 size="medium"
                 sx={{
@@ -220,7 +229,7 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
             </div>
           </div>
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>수수료</div>
+            <div className={styles.column1}>{t('component.dialog.dialog_modify_withdraw_address.tx_fee')}</div>
             <div className={cx(styles.column2, styles.textEnd)}>
               {fee} {currentChain.symbolName}
             </div>

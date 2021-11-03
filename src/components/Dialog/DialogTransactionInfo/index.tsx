@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import cx from 'clsx';
 import CheckIcon from '@mui/icons-material/Check';
 
@@ -27,6 +28,7 @@ type DialogTransactionInfoProps = {
 };
 
 export default function DialogTransactionInfo({ open, onClose, data }: DialogTransactionInfoProps) {
+  const { t } = useTranslation();
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
 
@@ -44,8 +46,8 @@ export default function DialogTransactionInfo({ open, onClose, data }: DialogTra
                 </div>
                 <div className={styles.description}>
                   {isLedger
-                    ? '레저 기기에서 서명하세요.'
-                    : '키스테이션에서 Allow 버튼을 누르고 PIN을 입력하여 서명하세요.'}
+                    ? t('component.dialog.dialog_transaction_info.ledger_description')
+                    : t('component.dialog.dialog_transaction_info.keystation_description')}
                 </div>
               </div>
               <div className={styles.listContainer}>
@@ -63,21 +65,21 @@ export default function DialogTransactionInfo({ open, onClose, data }: DialogTra
                 )}
                 {data.amount && (
                   <div className={styles.itemContainer}>
-                    <div>수량</div>
+                    <div>{t('component.dialog.dialog_transaction_info.amount')}</div>
                     <div>{data.amount}</div>
                   </div>
                 )}
 
                 {data.fee && (
                   <div className={styles.itemContainer}>
-                    <div>tx 수수료</div>
+                    <div>{t('component.dialog.dialog_transaction_info.tx_fee')}</div>
                     <div>{data.fee}</div>
                   </div>
                 )}
 
                 {data.memo && (
                   <div className={styles.memoContainer}>
-                    <div>메모</div>
+                    <div>{t('component.dialog.dialog_transaction_info.memo')}</div>
                     <div className={styles.memoContent}>{data.memo}</div>
                   </div>
                 )}
@@ -95,19 +97,19 @@ export default function DialogTransactionInfo({ open, onClose, data }: DialogTra
             <>
               <div className={styles.successDesc}>
                 <CheckIcon sx={{ color: '#15cb6b', width: '3rem', height: '3rem' }} />
-                요청이 완료되었습니다.
+                {t('component.dialog.dialog_transaction_info.send_tx_successfully')}
               </div>
               <div className={styles.listContainer}>
                 {data.amount && (
                   <div className={styles.itemContainer}>
-                    <div>수량</div>
+                    <div>{t('component.dialog.dialog_transaction_info.amount')}</div>
                     <div>{data.amount}</div>
                   </div>
                 )}
 
                 {data.fee && (
                   <div className={styles.itemContainer}>
-                    <div>tx 수수료</div>
+                    <div>{t('component.dialog.dialog_transaction_info.tx_fee')}</div>
                     <div>{data.fee}</div>
                   </div>
                 )}
@@ -127,14 +129,16 @@ export default function DialogTransactionInfo({ open, onClose, data }: DialogTra
                     target="_blank"
                     rel="noreferrer"
                   >
-                    익스플로러에서 상세 확인
+                    {t('component.dialog.dialog_transaction_info.view_transaction')}
                   </a>
                 </div>
-                <div className={styles.linkDescription}>상세 트랜잭션 확인까지 3~10초 가량 소요됩니다.</div>
+                <div className={styles.linkDescription}>
+                  {t('component.dialog.dialog_transaction_info.view_transaction_description')}
+                </div>
               </div>
               <div className={styles.buttonContainer}>
                 <Button sx={{ fontSize: '1.4rem', fontWeight: 'bold' }} colorVariant="black" onClick={onClose}>
-                  확인
+                  {t('component.dialog.dialog_transaction_info.confirm')}
                 </Button>
               </div>
             </>

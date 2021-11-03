@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import cx from 'clsx';
 import copy from 'copy-to-clipboard';
 import { useSnackbar } from 'notistack';
@@ -22,6 +23,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
   const currentWallet = useCurrentWallet();
   const { enqueueSnackbar } = useSnackbar();
 
+  const { i18n, t } = useTranslation();
   const { data } = useChainSWR();
 
   const { availableAmount, price, totalAmount, totalPrice, delegationAmount, unbondingAmount, rewardAmount } = data;
@@ -35,7 +37,9 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         <div className={styles.firstContentInfoContainer}>
           <div className={styles.firstContentInfoFirstLineContainer}>
             {currentWallet.walletType && <div className={styles[currentWallet.walletType]} />}
-            <div className={styles.firstContentInfoFirstLineTitle}>지갑 주소</div>
+            <div className={styles.firstContentInfoFirstLineTitle}>
+              {t('component.page_section.wallet_info.address')}
+            </div>
             <div className={styles.firstContentInfoFirstLineHdPath}>HD derivation path: {currentWallet.HDPath}</div>
           </div>
           <div className={styles.firstContentInfoSecondLineContainer}>
@@ -69,7 +73,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
                 );
               }}
             >
-              지갑 상세정보
+              {t('component.page_section.wallet_info.address_detail')}
             </Button>
           </div>
         </div>
@@ -82,32 +86,36 @@ export default function WalletInfo({ className }: WalletInfoProps) {
           </div>
           <div className={styles.secondContentTotalContentContainer}>
             <div className={styles.secondContentTotalContentBold}>
-              Total(1{currentChain.symbolName} ≈ ₩{numberFormat(price)})
+              Total(1{currentChain.symbolName} ≈ {i18n.language === 'ko' ? '₩' : '$'}
+              {numberFormat(price)})
             </div>
             <div className={styles.secondContentCalContentContainer}>
               <div>
                 {totalAmount} {currentChain.symbolName}
               </div>
-              <div>≈ ₩{numberFormat(totalPrice)}</div>
+              <div>
+                ≈ {i18n.language === 'ko' ? '₩' : '$'}
+                {numberFormat(totalPrice)}
+              </div>
             </div>
           </div>
         </div>
         <Divider orientation="vertical" flexItem />
         <div className={styles.secondContentDelegateContainer}>
           <div className={styles.delegateInfoContainer}>
-            <div>사용 가능 수량</div>
+            <div>{t('component.page_section.wallet_info.available_amount')}</div>
             <div>{availableAmount}</div>
           </div>
           <div className={styles.delegateInfoContainer}>
-            <div>위임한 수량</div>
+            <div>{t('component.page_section.wallet_info.delegate_amount')}</div>
             <div>{delegationAmount}</div>
           </div>
           <div className={styles.delegateInfoContainer}>
-            <div>위임 철회 중 수량</div>
+            <div>{t('component.page_section.wallet_info.undelegating_amount')}</div>
             <div>{unbondingAmount}</div>
           </div>
           <div className={styles.delegateInfoContainer}>
-            <div>이자</div>
+            <div>{t('component.page_section.wallet_info.reward_amount')}</div>
             <div>{rewardAmount}</div>
           </div>
         </div>

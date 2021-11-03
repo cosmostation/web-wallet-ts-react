@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -32,6 +33,7 @@ export default function DialogValidatorList({
 }: DialogValidatorListProps) {
   const { data } = useChainSWR();
   const currentChain = useCurrentChain();
+  const { t } = useTranslation();
 
   const { validValidators, validValidatorsTotalToken } = data;
   return (
@@ -46,13 +48,13 @@ export default function DialogValidatorList({
               <TableHead>
                 <TableRow>
                   <TableCell align="center" sx={{ fontSize: '1.4rem', backgroundColor: '#fafafa' }} width="40%">
-                    검증인
+                    {t('component.dialog.dialog_validator_list.validator')}
                   </TableCell>
                   <TableCell align="right" sx={{ fontSize: '1.4rem', backgroundColor: '#fafafa' }}>
-                    총 위임량
+                    {t('component.dialog.dialog_validator_list.voting_power')}
                   </TableCell>
                   <TableCell align="right" sx={{ fontSize: '1.4rem', backgroundColor: '#fafafa' }}>
-                    검증인 수수료
+                    {t('component.dialog.dialog_validator_list.validator_fee')}
                   </TableCell>
                 </TableRow>
               </TableHead>

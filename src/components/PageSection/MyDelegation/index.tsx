@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import { useSnackbar } from 'notistack';
 import Paper from '@mui/material/Paper';
@@ -29,6 +30,8 @@ export default function MyDelegation({ className }: MyDelegationProps) {
   const { data, swr } = useChainSWR();
   const currentChain = useCurrentChain();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { t } = useTranslation();
 
   const [delegationData, setDelegationData] = useState<{ open: boolean; inputData: InputData }>({
     open: false,
@@ -88,9 +91,11 @@ export default function MyDelegation({ className }: MyDelegationProps) {
   return (
     <div className={className}>
       <div className={styles.titleContainer}>
-        <div className={styles.title}>나의 위임내역</div>
+        <div className={styles.title}>{t('component.page_section.my_delegation.my_delegation_detail')}</div>
         <div className={styles.titleButtonContainer}>
-          <Button onClick={() => setIsOpenedModifyWithdrawAddress(true)}>이자 지급 주소 변경</Button>
+          <Button onClick={() => setIsOpenedModifyWithdrawAddress(true)}>
+            {t('component.page_section.my_delegation.modify_withdraw_address')}
+          </Button>
           <Button
             onClick={() => {
               const validatorAddress = sortedRewardList.map((item) => item.validatorAddress);
@@ -98,7 +103,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
               const rewardAmount = getRewardAmount(validatorAddress);
 
               if (gt(currentChain.fee.default, rewardAmount)) {
-                enqueueSnackbar('요청할 이자가 Tx 수수료보다 낮습니다.', { variant: 'error' });
+                enqueueSnackbar(t('component.page_section.my_delegation.error_waste_fee'), { variant: 'error' });
                 return;
               }
 
@@ -106,12 +111,12 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                 open: true,
                 validatorAddress,
                 amount: rewardAmount,
-                title: '이자 모두 받기',
-                description: '이자 수량이 높은 순으로 한 번에 최대 10개의 검증인에게 이자를 요청할 수 있습니다.',
+                title: t('component.page_section.my_delegation.claim_all_reward'),
+                description: t('component.page_section.my_delegation.claim_all_reward_description'),
               });
             }}
           >
-            이자 모두 받기
+            {t('component.page_section.my_delegation.claim_all_reward')}
           </Button>
         </div>
       </div>
@@ -120,22 +125,22 @@ export default function MyDelegation({ className }: MyDelegationProps) {
           <TableHead>
             <TableRow sx={{ backgroundColor: '#fafafa' }}>
               <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
-                검증인
+                {t('component.page_section.my_delegation.validator')}
               </TableCell>
               <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                총 위임량
+                {t('component.page_section.my_delegation.voting_power')}
               </TableCell>
               <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                검증인 수수료
+                {t('component.page_section.my_delegation.validator_fee')}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
-                내가 위임한 수량
+                {t('component.page_section.my_delegation.my_delegate_amount')}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
-                이자
+                {t('component.page_section.my_delegation.my_reward')}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: '1.4rem' }} width="20%">
-                위임
+                {t('component.page_section.my_delegation.noun_delegate')}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -211,7 +216,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                           });
                         }}
                       >
-                        위임
+                        {t('component.page_section.my_delegation.noun_delegate')}
                       </Button>
                       <Button
                         onClick={() => {
@@ -221,7 +226,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                           });
                         }}
                       >
-                        위임 철회
+                        {t('component.page_section.my_delegation.undelegate')}
                       </Button>
                       <Button
                         onClick={() => {
@@ -236,14 +241,16 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                           });
                         }}
                       >
-                        재위임
+                        {t('component.page_section.my_delegation.redelegate')}
                       </Button>
                       <Button
                         onClick={() => {
                           const rewardAmount = getRewardAmount([validatorInfo!.operator_address]);
 
                           if (gt(currentChain.fee.default, rewardAmount)) {
-                            enqueueSnackbar('요청할 이자가 Tx 수수료보다 낮습니다.', { variant: 'error' });
+                            enqueueSnackbar(t('component.page_section.my_delegation.error_waste_fee'), {
+                              variant: 'error',
+                            });
                             return;
                           }
 
@@ -251,11 +258,11 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                             open: true,
                             validatorAddress: [validatorInfo!.operator_address],
                             amount: rewardAmount,
-                            title: '이자 받기',
+                            title: t('component.page_section.my_delegation.claim_reward'),
                           });
                         }}
                       >
-                        이자 받기
+                        {t('component.page_section.my_delegation.claim_reward')}
                       </Button>
                     </div>
                   </TableCell>
@@ -288,8 +295,8 @@ export default function MyDelegation({ className }: MyDelegationProps) {
             }));
           }, 200);
         }}
-        title="재위임"
-        description="재위임할 검증인을 선택해주세요."
+        title={t('component.page_section.my_delegation.redelegate')}
+        description={t('component.page_section.my_delegation.select_redelegate_validator')}
       />
       <DialogModifyWithdrawAddress
         open={isOpenedModifyWithdrawAddress}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import cx from 'clsx';
 import { useSnackbar } from 'notistack';
 import secp256k1 from 'secp256k1';
@@ -38,6 +39,7 @@ export default function DialogWithdrawReward({
   open,
   onClose,
 }: DialogWithdrawRewardProps) {
+  const { t } = useTranslation();
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
   const createTx = useCreateTx();
@@ -194,19 +196,22 @@ export default function DialogWithdrawReward({
           </div>
 
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>이자 지급 주소</div>
+            <div className={styles.column1}>{t('component.dialog.dialog_withdraw_reward.reward_address')}</div>
             <div className={cx(styles.column2, styles.textEnd)}>{withdrawAddress}</div>
           </div>
 
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>나의 이자</div>
+            <div className={styles.column1}>{t('component.dialog.dialog_withdraw_reward.my_reward')}나의 이자</div>
             <div className={cx(styles.column2, styles.textEnd)}>{amount}</div>
           </div>
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>메모 (선택 사항)</div>
+            <div className={styles.column1}>
+              {t('component.dialog.dialog_withdraw_reward.memo')} (
+              {t('component.dialog.dialog_withdraw_reward.optional')})
+            </div>
             <div className={styles.column2}>
               <Input
-                label="메모 내용 입력"
+                label={t('component.dialog.dialog_withdraw_reward.input_memo')}
                 multiline
                 size="medium"
                 sx={{
@@ -220,7 +225,7 @@ export default function DialogWithdrawReward({
             </div>
           </div>
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>수수료</div>
+            <div className={styles.column1}>{t('component.dialog.dialog_withdraw_reward.tx_fee')}</div>
             <div className={cx(styles.column2, styles.textEnd)}>
               {fee} {currentChain.symbolName}
             </div>

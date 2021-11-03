@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import cx from 'clsx';
 import { useSnackbar } from 'notistack';
 import { useSetRecoilState } from 'recoil';
@@ -28,6 +29,8 @@ export default function HdPath({ className }: HdPathProps) {
   const currentWallet = useCurrentWallet();
   const setIsShowLoader = useSetRecoilState(loaderState);
   const setWalletInfo = useSetRecoilState(walletInfoState);
+
+  const { t } = useTranslation();
 
   const [path, setPath] = useState(currentWallet.HDPath ? currentWallet.HDPath : currentChain.wallet.hdPath);
 
@@ -110,10 +113,10 @@ export default function HdPath({ className }: HdPathProps) {
         <div className={styles.inputContainer}>
           <Input value={path} onChange={(event) => setPath(event.currentTarget.value)} />
           <Button sx={{ fontSize: '1.4rem', fontWeight: 'bold' }} onClick={handleOnClick}>
-            적용
+            {t('component.page_section.hd_path.apply_path')}
           </Button>
           <Button sx={{ fontSize: '1.4rem', fontWeight: 'bold' }} onClick={() => setPath(currentChain.wallet.hdPath)}>
-            Path 초기화
+            {t('component.page_section.hd_path.init_path')}
           </Button>
         </div>
       </div>

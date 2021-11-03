@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -21,6 +22,7 @@ type AvailableValidatorProps = {
 };
 
 export default function AvailableValidator({ className }: AvailableValidatorProps) {
+  const { t } = useTranslation();
   const { data } = useChainSWR();
   const currentChain = useCurrentChain();
 
@@ -34,25 +36,25 @@ export default function AvailableValidator({ className }: AvailableValidatorProp
 
   return (
     <div className={className}>
-      <div className={styles.title}>위임 가능한 검증인</div>
+      <div className={styles.title}>{t('component.page_section.available_validator.available_validator')}</div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#fafafa' }}>
               <TableCell align="center" sx={{ fontSize: '1.4rem' }} width="40%">
-                검증인
+                {t('component.page_section.available_validator.validator')}
               </TableCell>
               <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                총 위임량
+                {t('component.page_section.available_validator.voting_power')}
               </TableCell>
               <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                검증인 수수료
+                {t('component.page_section.available_validator.validator_fee')}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
-                상태
+                {t('component.page_section.available_validator.status')}
               </TableCell>
               <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
-                위임
+                {t('component.page_section.available_validator.noun_delegate')}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -110,7 +112,7 @@ export default function AvailableValidator({ className }: AvailableValidatorProp
                       setDelegation({ open: true, validatorAddress: item.operator_address });
                     }}
                   >
-                    위임
+                    {t('component.page_section.available_validator.noun_delegate')}
                   </Button>
                 </TableCell>
               </TableRow>

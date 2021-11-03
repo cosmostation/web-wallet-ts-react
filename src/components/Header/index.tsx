@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import { useSetRecoilState } from 'recoil';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import LanguageIcon from '@mui/icons-material/Language';
 import MenuIcon from '@mui/icons-material/Menu';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import WidgetsIcon from '@mui/icons-material/Widgets';
@@ -18,6 +19,7 @@ import { DRAWER_WIDTH } from '~/constants/common';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentPath } from '~/hooks/useCurrentPath';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
+import i18n from '~/i18n/i18n';
 import { walletInfoState } from '~/stores/wallet';
 
 import styles from './index.module.scss';
@@ -213,6 +215,13 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
                 <div className={styles.accountButtonText}>Connect Wallet</div>
               </button>
             )}
+            <button
+              type="button"
+              className={styles.accountButton}
+              onClick={() => i18n.changeLanguage(i18n.language === 'ko' ? 'en' : 'ko')}
+            >
+              <LanguageIcon />
+            </button>
           </div>
         </div>
       </AppBar>

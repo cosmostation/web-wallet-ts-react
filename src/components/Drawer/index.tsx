@@ -8,6 +8,7 @@ import DialogWalletConnect from '~/components/Dialog/DialogWalletConnect';
 import type { Menu } from '~/constants/common';
 import { DRAWER_WIDTH } from '~/constants/common';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
+import { useCurrentPath } from '~/hooks/useCurrentPath';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 
 import { ReactComponent as GithubIcon } from './assets/icon_github.svg';
@@ -61,7 +62,9 @@ export default function Drawer({ open, onClose }: DrawerProps) {
 }
 
 function DrawerContent() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const { getPathWithDepth } = useCurrentPath();
 
   const [isOpenedConnect, setIsOpenedConnect] = useState(false);
   const [clickedMenu, setClickedMenu] = useState<Menu | null>(null);
@@ -103,30 +106,48 @@ function DrawerContent() {
               name={t('component.drawer.wallet')}
               imgURL="/images/common/icon_wallet.png"
               onClick={() => handleOnOpenConnect('wallet')}
+              selected={getPathWithDepth(2) === 'wallet'}
             />
             <ItemButton
               name={t('component.drawer.delegate')}
               imgURL="/images/common/icon_delegate.png"
               onClick={() => handleOnOpenConnect('delegate')}
+              selected={getPathWithDepth(2) === 'delegate'}
             />
             <ItemButton
               name="Broadcast Tx"
               imgURL="/images/common/icon_broadcast.png"
               onClick={() => handleOnOpenConnect('broadcast')}
+              selected={getPathWithDepth(2) === 'broadcast'}
             />
             <ItemButton name="Explorer" imgURL="/images/common/icon_explorer.png" />
           </div>
-          <button type="button" className={styles.guideButton}>
+          <button
+            type="button"
+            className={styles.guideButton}
+            onClick={() => {
+              if (i18n.language === 'ko') {
+                window.open('https://www.cosmostation.io/files/cosmostation_guide_web_ko.pdf', '_blank');
+                return;
+              }
+
+              window.open('https://www.cosmostation.io/files/cosmostation_guide_web_en.pdf', '_blank');
+            }}
+          >
             {t('component.drawer.web_wallet_guide')} <sup>PDF</sup>
           </button>
         </div>
         <div>
           <div className={styles.downloadText}>Download Cosmostation App Wallet!</div>
           <div className={styles.storeContainer}>
-            <a href="h">
+            <a
+              href="https://play.google.com/store/apps/details?id=wannabit.io.cosmostaion"
+              target="_blank"
+              rel="noreferrer"
+            >
               <div className={styles.googlePlay} />
             </a>
-            <a href="h">
+            <a href="https://apps.apple.com/app/cosmostation/id1459830339" target="_blank" rel="noreferrer">
               <div className={styles.appStore} />
             </a>
           </div>
