@@ -194,7 +194,7 @@ export default function Delegation({ inputData, open, onClose }: DelegationProps
           void swr.balance.mutate();
           void swr.unbondingDelegation.mutate();
           void swr.rewards.mutate();
-        }, 5000);
+        }, 7000);
       }
 
       if (currentWallet.walletType === 'keystation') {

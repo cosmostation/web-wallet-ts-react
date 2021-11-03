@@ -276,13 +276,13 @@ export function useChainSWR() {
       ?.map((item) => item.entries.reduce((ac, cu) => ac.plus(cu.balance), new Big('0')))
       ?.reduce((ac, cu) => ac.plus(cu), new Big('0'))
       .toString() || '0',
-    pow(10, currentChain.decimal * -1),
+    pow(10, -currentChain.decimal),
     currentChain.decimal,
   );
 
   const rewardAmount = times(
     rewards.data?.result?.total?.find((item) => item.denom === currentChain.denom)?.amount || '0',
-    pow(10, currentChain.decimal * -1),
+    pow(10, -currentChain.decimal),
     currentChain.decimal,
   );
 
@@ -292,7 +292,7 @@ export function useChainSWR() {
     .plus(rewardAmount)
     .toString();
 
-  const totalPrice = new Big(totalAmount).times(price).toFixed(currentLanguage === 'ko' ? 0 : 4);
+  const totalPrice = new Big(totalAmount).times(price).toFixed(currentLanguage === 'ko' ? 0 : 4, 0);
 
   const validators = validator?.data?.validators || [];
 

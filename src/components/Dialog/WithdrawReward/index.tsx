@@ -15,7 +15,7 @@ import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { getByte, plus, pow, times } from '~/utils/calculator';
+import { getByte } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 
@@ -24,17 +24,25 @@ import styles from './index.module.scss';
 type WithdrawRewardProps = {
   open: boolean;
   onClose?: () => void;
-  validatorAddress: string;
+  validatorAddress: string[];
+  amount: string;
+  title: string;
+  description?: string;
 };
 
-export default function WithdrawReward({ validatorAddress, open, onClose }: WithdrawRewardProps) {
+export default function WithdrawReward({
+  title,
+  description,
+  amount,
+  validatorAddress,
+  open,
+  onClose,
+}: WithdrawRewardProps) {
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
   const createTx = useCreateTx();
   const { boardcastTx } = useAxios();
   const { enqueueSnackbar } = useSnackbar();
-
-  const title = '이자 받기';
 
   const [isOpenedTransaction, setIsOpenedTransaction] = useState(false);
   const [transactionInfoData, setTransactionInfoData] = useState<TransactionInfoData & { open: boolean }>({
@@ -49,18 +57,7 @@ export default function WithdrawReward({ validatorAddress, open, onClose }: With
 
   const { withdrawAddress, account } = data;
 
-  const amount = times(
-    swr.rewards.data?.result?.rewards
-      ?.find((item) => item.validator_address === validatorAddress)
-      ?.reward?.filter((item) => item.denom === currentChain.denom)
-      ?.reduce((ac, cu) => plus(ac, cu.amount), '0') || '0',
-    pow(10, -currentChain.decimal),
-    currentChain.decimal,
-  );
-
   const fee = currentChain.fee.default;
-
-  const fromAddress = validatorAddress;
 
   const toAddress = withdrawAddress;
 
@@ -84,7 +81,7 @@ export default function WithdrawReward({ validatorAddress, open, onClose }: With
       }
 
       const txMsgOrigin = createTx.getWithdrawRewardTxMsg(
-        [{ delegatorAddress: toAddress, validatorAddress: fromAddress }],
+        validatorAddress.map((address) => ({ delegatorAddress: withdrawAddress, validatorAddress: address })),
         memo,
       );
 
@@ -106,7 +103,6 @@ export default function WithdrawReward({ validatorAddress, open, onClose }: With
           open: true,
           step: 'doing',
           title,
-          from: fromAddress,
           to: toAddress,
           amount: `${amount} ${currentChain.symbolName}`,
           fee: `${fee} ${currentChain.symbolName}`,
@@ -136,7 +132,7 @@ export default function WithdrawReward({ validatorAddress, open, onClose }: With
           void swr.balance.mutate();
           void swr.unbondingDelegation.mutate();
           void swr.rewards.mutate();
-        }, 5000);
+        }, 7000);
       }
 
       if (currentWallet.walletType === 'keystation') {
@@ -150,7 +146,6 @@ export default function WithdrawReward({ validatorAddress, open, onClose }: With
           open: true,
           step: 'doing',
           title,
-          from: fromAddress,
           to: toAddress,
           amount: `${amount} ${currentChain.symbolName}`,
           fee: `${fee} ${currentChain.symbolName}`,
@@ -189,7 +184,10 @@ export default function WithdrawReward({ validatorAddress, open, onClose }: With
     <>
       <Dialog open={open} onClose={handleOnClose} maxWidth="lg">
         <div className={styles.container}>
-          <div className={styles.title}>{title}</div>
+          <div className={styles.titleContainer}>
+            {title && <div className={styles.title}>{title}</div>}
+            {description && <div className={styles.description}>{description}</div>}
+          </div>
 
           <div className={styles.rowContainer}>
             <div className={styles.column1}>이자 지급 주소</div>

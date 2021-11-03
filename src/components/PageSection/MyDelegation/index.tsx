@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Big from 'big.js';
+import { useSnackbar } from 'notistack';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -15,7 +16,7 @@ import ValidatorList from '~/components/Dialog/ValidatorList';
 import WidthdrawReward from '~/components/Dialog/WithdrawReward';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
-import { divide, pow, times } from '~/utils/calculator';
+import { divide, gt, plus, pow, times } from '~/utils/calculator';
 
 import styles from './index.module.scss';
 
@@ -26,6 +27,7 @@ type MyDelegationProps = {
 export default function MyDelegation({ className }: MyDelegationProps) {
   const { data, swr } = useChainSWR();
   const currentChain = useCurrentChain();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [delegationData, setDelegationData] = useState<{ open: boolean; inputData: InputData }>({
     open: false,
@@ -37,7 +39,18 @@ export default function MyDelegation({ className }: MyDelegationProps) {
 
   const [validatorListData, setValidatorListData] = useState({ open: false, validatorAddress: '' });
 
-  const [withdrawRewardData, setWithdrawRewardData] = useState({ open: false, validatorAddress: '' });
+  const [withdrawRewardData, setWithdrawRewardData] = useState<{
+    open: boolean;
+    validatorAddress: string[];
+    amount: string;
+    title: string;
+    description?: string;
+  }>({
+    open: false,
+    validatorAddress: [],
+    amount: '',
+    title: '',
+  });
 
   const delegation = swr.delegations.data;
   const reward = swr.rewards.data;
@@ -48,9 +61,57 @@ export default function MyDelegation({ className }: MyDelegationProps) {
     return null;
   }
 
+  const rewardList =
+    swr.rewards.data?.result?.rewards?.map((item) => ({
+      validatorAddress: item.validator_address,
+      reward:
+        item?.reward
+          ?.filter((rewardItem) => rewardItem.denom === currentChain.denom)
+          ?.reduce((ac, cu) => plus(ac, cu.amount), '0') || '0',
+    })) || [];
+
+  const sortedRewardList = rewardList.sort((a, b) => (gt(b.reward, a.reward) ? 1 : -1)).slice(0, 10);
+
+  const getRewardAmount = (validatorAddress: string[]) =>
+    times(
+      rewardList
+        .filter?.((item) => validatorAddress.includes(item.validatorAddress))
+        .map((item) => item?.reward)
+        .reduce((ac, cu) => plus(ac, cu), '0') || '0',
+      pow(10, -currentChain.decimal),
+      currentChain.decimal,
+    );
+
   return (
     <div className={className}>
-      <div className={styles.title}>나의 위임내역</div>
+      <div className={styles.titleContainer}>
+        <div className={styles.title}>나의 위임내역</div>
+        <div className={styles.titleButtonContainer}>
+          <Button>이자 지급 주소 변경</Button>
+          <Button
+            onClick={() => {
+              const validatorAddress = sortedRewardList.map((item) => item.validatorAddress);
+
+              const rewardAmount = getRewardAmount(validatorAddress);
+
+              if (gt(currentChain.fee.default, rewardAmount)) {
+                enqueueSnackbar('요청할 이자가 Tx 수수료보다 낮습니다.', { variant: 'error' });
+                return;
+              }
+
+              setWithdrawRewardData({
+                open: true,
+                validatorAddress,
+                amount: rewardAmount,
+                title: '이자 모두 받기',
+                description: '이자 수량이 높은 순으로 한 번에 최대 10개의 검증인에게 이자를 요청할 수 있습니다.',
+              });
+            }}
+          >
+            이자 모두 받기
+          </Button>
+        </div>
+      </div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -176,7 +237,19 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                       </Button>
                       <Button
                         onClick={() => {
-                          setWithdrawRewardData({ open: true, validatorAddress: validatorInfo!.operator_address });
+                          const rewardAmount = getRewardAmount([validatorInfo!.operator_address]);
+
+                          if (gt(currentChain.fee.default, rewardAmount)) {
+                            enqueueSnackbar('요청할 이자가 Tx 수수료보다 낮습니다.', { variant: 'error' });
+                            return;
+                          }
+
+                          setWithdrawRewardData({
+                            open: true,
+                            validatorAddress: [validatorInfo!.operator_address],
+                            amount: rewardAmount,
+                            title: '이자 받기',
+                          });
                         }}
                       >
                         이자 받기

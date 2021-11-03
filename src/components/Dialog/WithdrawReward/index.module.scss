@@ -11,11 +11,21 @@
   color: $gray700;
 }
 
+.titleContainer {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 3rem;
+}
+
 .title {
   font-size: 1.6rem;
   font-weight: bold;
+}
 
-  margin-bottom: 3rem;
+.description {
+  margin-left: 2rem;
+  font-size: 1.2rem;
 }
 
 .rowContainer {
