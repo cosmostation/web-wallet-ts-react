@@ -78,6 +78,7 @@ export default function HdPath({ className }: HdPathProps) {
 
           return next;
         });
+        setIsShowLoader(false);
       }
     } catch (e) {
       if (e instanceof LedgerError) {

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import cx from 'clsx';
+import copy from 'copy-to-clipboard';
+import { useSnackbar } from 'notistack';
 import { useSetRecoilState } from 'recoil';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -29,6 +31,8 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
   const [isOpenedConnect, setIsOpenedConnect] = useState(false);
   const [isOpenedSelect, setIsOpenedSelect] = useState(false);
   const [isOpenedDrawer, setIsOpenedDrawer] = useState(false);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const setWalletInfo = useSetRecoilState(walletInfoState);
 
@@ -113,10 +117,33 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
                     <div className={styles.popoverAddressContainer}>
                       <div>{currentWallet.address}</div>
                       <div className={styles.popoverAddressToolButtonContainer}>
-                        <IconButton>
+                        <IconButton
+                          onClick={() => {
+                            if (!currentWallet.address) {
+                              enqueueSnackbar('copy failed', { variant: 'error' });
+                              return;
+                            }
+
+                            const result = copy(currentWallet.address);
+
+                            if (!result) {
+                              enqueueSnackbar('copy failed', { variant: 'error' });
+                            }
+                            enqueueSnackbar(`'${currentWallet.address}' copied!`);
+                          }}
+                        >
                           <ContentCopyIcon />
                         </IconButton>
-                        <IconButton>
+                        <IconButton
+                          onClick={() => {
+                            window.open(
+                              `https://www.mintscan.io/${currentChain.mintscanPath}/account/${
+                                currentWallet.address || ''
+                              }`,
+                              '_blank',
+                            );
+                          }}
+                        >
                           <OpenInNewIcon />
                         </IconButton>
                       </div>

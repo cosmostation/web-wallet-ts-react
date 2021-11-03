@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
 import cx from 'clsx';
+import copy from 'copy-to-clipboard';
+import { useSnackbar } from 'notistack';
 import QRCode from 'qrcode.react';
-import { useSetRecoilState } from 'recoil';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Divider, IconButton } from '@mui/material';
 
@@ -9,7 +9,6 @@ import Button from '~/components/Button';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { loaderState } from '~/stores/loader';
 import { numberFormat } from '~/utils/format';
 
 import styles from './index.module.scss';
@@ -19,19 +18,11 @@ type WalletInfoProps = {
 };
 
 export default function WalletInfo({ className }: WalletInfoProps) {
-  const setLoader = useSetRecoilState(loaderState);
   const currentChain = useCurrentChain();
   const currentWallet = useCurrentWallet();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const { isLoading, data } = useChainSWR();
-
-  useEffect(() => {
-    setLoader(true);
-
-    if (isLoading) {
-      setLoader(false);
-    }
-  }, [isLoading, setLoader]);
+  const { data } = useChainSWR();
 
   const { availableAmount, price, totalAmount, totalPrice, delegationAmount, unbondingAmount, rewardAmount } = data;
 
@@ -49,12 +40,37 @@ export default function WalletInfo({ className }: WalletInfoProps) {
           </div>
           <div className={styles.firstContentInfoSecondLineContainer}>
             {currentWallet.address}{' '}
-            <IconButton size="small">
+            <IconButton
+              size="small"
+              onClick={() => {
+                if (!currentWallet.address) {
+                  enqueueSnackbar('copy failed', { variant: 'error' });
+                  return;
+                }
+
+                const result = copy(currentWallet.address);
+
+                if (!result) {
+                  enqueueSnackbar('copy failed', { variant: 'error' });
+                }
+                enqueueSnackbar(`'${currentWallet.address}' copied!`);
+              }}
+            >
               <ContentCopyIcon sx={{ width: '2rem', height: '2rem' }} />
             </IconButton>
           </div>
           <div className={styles.firstContentInfoThirdLineContainer}>
-            <Button sx={{ fontWeight: 'bold', fontSize: '1.4rem' }}>지갑 상세정보</Button>
+            <Button
+              sx={{ fontWeight: 'bold', fontSize: '1.4rem' }}
+              onClick={() => {
+                window.open(
+                  `https://www.mintscan.io/${currentChain.mintscanPath}/account/${currentWallet.address || ''}`,
+                  '_blank',
+                );
+              }}
+            >
+              지갑 상세정보
+            </Button>
           </div>
         </div>
       </div>

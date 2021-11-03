@@ -47,7 +47,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
   const [sendAmount, setSendAmount] = useState('');
   const [memo, setMemo] = useState('');
 
-  const { isLoading, data, swr } = useChainSWR();
+  const { data, swr } = useChainSWR();
 
   const { availableAmount, account } = data;
 
@@ -181,14 +181,6 @@ export default function WalletInfo({ className }: WalletInfoProps) {
       } else enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
     }
   };
-
-  useEffect(() => {
-    setLoader(true);
-
-    if (isLoading) {
-      setLoader(false);
-    }
-  }, [isLoading, setLoader]);
 
   useEffect(() => {
     setAddress('');
