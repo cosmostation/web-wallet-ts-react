@@ -13,7 +13,7 @@ import { divide, pow, times } from '~/utils/calculator';
 
 import styles from './index.module.scss';
 
-type DelegationProps = {
+type DialogValidatorListProps = {
   title?: string;
   description?: string;
   open: boolean;
@@ -22,14 +22,14 @@ type DelegationProps = {
   onClick?: (validatorAddress: string) => void;
 };
 
-export default function ValidatorList({
+export default function DialogValidatorList({
   title,
   description,
   open,
   onClose,
   onClick,
   validatorAddress,
-}: DelegationProps) {
+}: DialogValidatorListProps) {
   const { data } = useChainSWR();
   const currentChain = useCurrentChain();
 

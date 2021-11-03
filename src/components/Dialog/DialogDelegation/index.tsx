@@ -5,8 +5,8 @@ import secp256k1 from 'secp256k1';
 
 import Button from '~/components/Button';
 import Dialog from '~/components/Dialog';
-import type { TransactionInfoData } from '~/components/Dialog/TransactionInfo';
-import TransactionInfo from '~/components/Dialog/TransactionInfo';
+import type { TransactionInfoData } from '~/components/Dialog/DialogTransactionInfo';
+import TransactionInfo from '~/components/Dialog/DialogTransactionInfo';
 import Input from '~/components/Input';
 import Transaction from '~/components/Keystation/Transaction';
 import { CHAIN } from '~/constants/chain';
@@ -32,13 +32,13 @@ export type InputData =
       validatorDstAddress: string;
     };
 
-type DelegationProps = {
+type DialogDelegationProps = {
   open: boolean;
   onClose?: () => void;
   inputData: InputData;
 };
 
-export default function Delegation({ inputData, open, onClose }: DelegationProps) {
+export default function DialogDelegation({ inputData, open, onClose }: DialogDelegationProps) {
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
   const createTx = useCreateTx();

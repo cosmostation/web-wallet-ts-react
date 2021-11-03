@@ -10,10 +10,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 import Button from '~/components/Button';
-import type { InputData } from '~/components/Dialog/Delegation';
-import Delegation from '~/components/Dialog/Delegation';
-import ValidatorList from '~/components/Dialog/ValidatorList';
-import WidthdrawReward from '~/components/Dialog/WithdrawReward';
+import type { InputData } from '~/components/Dialog/DialogDelegation';
+import DialogDelegation from '~/components/Dialog/DialogDelegation';
+import DialogValidatorList from '~/components/Dialog/DialogValidatorList';
+import DialogWithdrawReward from '~/components/Dialog/DialogWithdrawReward';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { divide, gt, plus, pow, times } from '~/utils/calculator';
@@ -262,18 +262,18 @@ export default function MyDelegation({ className }: MyDelegationProps) {
           </TableBody>
         </Table>
       </TableContainer>
-      <Delegation
+      <DialogDelegation
         open={delegationData.open}
         inputData={delegationData.inputData}
         onClose={() => setDelegationData((prev) => ({ ...prev, open: false }))}
       />
-      <WidthdrawReward
+      <DialogWithdrawReward
         {...withdrawRewardData}
         onClose={() => {
           setWithdrawRewardData((prev) => ({ ...prev, open: false }));
         }}
       />
-      <ValidatorList
+      <DialogValidatorList
         open={validatorListData.open}
         validatorAddress={validatorListData.validatorAddress}
         onClose={() => setValidatorListData((prev) => ({ ...prev, open: false }))}

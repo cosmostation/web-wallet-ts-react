@@ -5,8 +5,8 @@ import { useSetRecoilState } from 'recoil';
 import secp256k1 from 'secp256k1';
 
 import Button from '~/components/Button';
-import type { TransactionInfoData } from '~/components/Dialog/TransactionInfo';
-import TransactionInfo from '~/components/Dialog/TransactionInfo';
+import type { TransactionInfoData } from '~/components/Dialog/DialogTransactionInfo';
+import DialogTransactionInfo from '~/components/Dialog/DialogTransactionInfo';
 import Input from '~/components/Input';
 import Transaction from '~/components/Keystation/Transaction';
 import { CHAIN } from '~/constants/chain';
@@ -272,7 +272,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
           }}
         />
       )}
-      <TransactionInfo
+      <DialogTransactionInfo
         open={transactionInfoData.open}
         data={transactionInfoData}
         onClose={

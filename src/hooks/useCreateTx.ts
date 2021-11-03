@@ -109,7 +109,7 @@ export function useCreateTx() {
       return txMsg;
     },
 
-    getModifyWithdrawAddressTxMsg: (withdrawAddress: string, amount: string, memo?: string) => {
+    getModifyWithdrawAddressTxMsg: (withdrawAddress: string, memo?: string) => {
       const msgType = 'cosmos-sdk/MsgModifyWithdrawAddress';
 
       const txMsg = {
@@ -119,7 +119,6 @@ export function useCreateTx() {
             value: {
               delegator_address: currentWallet.address,
               withdraw_address: withdrawAddress,
-              amount: { denom: currentChain.denom, amount: times(amount, recoveryDecimal) },
             },
           },
         ],

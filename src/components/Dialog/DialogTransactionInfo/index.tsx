@@ -20,13 +20,13 @@ export type TransactionInfoData = {
   txHash?: string;
 };
 
-type TransactionInfoProps = {
+type DialogTransactionInfoProps = {
   open: boolean;
   data: TransactionInfoData;
   onClose?: () => void;
 };
 
-export default function TransactionInfo({ open, onClose, data }: TransactionInfoProps) {
+export default function DialogTransactionInfo({ open, onClose, data }: DialogTransactionInfoProps) {
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
 

@@ -9,7 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 import Button from '~/components/Button';
-import Delegation from '~/components/Dialog/Delegation';
+import DialogDelegation from '~/components/Dialog/DialogDelegation';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { divide, pow, times } from '~/utils/calculator';
@@ -118,7 +118,7 @@ export default function AvailableValidator({ className }: AvailableValidatorProp
           </TableBody>
         </Table>
       </TableContainer>
-      <Delegation
+      <DialogDelegation
         open={delegation.open}
         inputData={{ type: 'delegate', validatorAddress: delegation.validatorAddress }}
         onClose={() => setDelegation((prev) => ({ ...prev, open: false }))}
