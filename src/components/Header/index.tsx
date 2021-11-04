@@ -200,7 +200,6 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
                           setWalletInfo(defaultWallet);
                           setAnchorEl(null);
                           sessionStorage.setItem('wallet', JSON.stringify(defaultWallet));
-                          history.push(`/${currentChain.path}`);
                         }}
                       >
                         Close Wallet

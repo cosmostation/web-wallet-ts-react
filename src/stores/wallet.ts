@@ -5,7 +5,6 @@ export type WalletInfo = {
   HDPath: string | null;
   keystationAccount: string | null;
   address: string | null;
-  url: string | null;
 };
 
 export const walletInfoState = atom<WalletInfo>({
@@ -15,7 +14,6 @@ export const walletInfoState = atom<WalletInfo>({
     HDPath: null,
     keystationAccount: null,
     address: null,
-    url: null,
   },
 });
 
