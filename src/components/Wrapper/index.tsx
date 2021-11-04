@@ -48,20 +48,22 @@ export default function Wrapper({ children }: WrapperProps) {
         history.replace(`/${chainPath}/wallet`);
         return;
       }
+
+      if (!getPathWithDepth(2)) {
+        history.replace(`/${chainPath}/wallet`);
+      }
     }
 
-    if (!walletInfo.address && getPathWithDepth(2)) {
-      if (getPathWithDepth(1)) {
-        history.replace(`/${getPathWithDepth(1)}`);
-      } else {
-        history.replace(`/cosmos`);
-      }
+    if (walletInfo.address === null && getPathWithDepth(2)) {
+      history.replace(`/${getPathWithDepth(1)}`);
     }
   }, [walletInfo, getPathWithDepth, recoilChain, history]);
 
   useEffect(() => {
     if (sessionWallet) {
       setWalletInfo(JSON.parse(sessionWallet) as WalletInfo);
+    } else {
+      setWalletInfo({ walletType: null, HDPath: null, address: null, keystationAccount: null });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

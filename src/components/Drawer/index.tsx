@@ -6,7 +6,7 @@ import { Drawer as BaseDrawer } from '@mui/material';
 
 import DialogWalletConnect from '~/components/Dialog/DialogWalletConnect';
 import type { Menu } from '~/constants/common';
-import { DRAWER_WIDTH } from '~/constants/common';
+import { DRAWER_WIDTH, MENU } from '~/constants/common';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentPath } from '~/hooks/useCurrentPath';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
@@ -105,22 +105,26 @@ function DrawerContent() {
             <ItemButton
               name={t('component.drawer.wallet')}
               imgURL="/images/common/icon_wallet.png"
-              onClick={() => handleOnOpenConnect('wallet')}
-              selected={getPathWithDepth(2) === 'wallet'}
+              onClick={() => handleOnOpenConnect(MENU.WALLET)}
+              selected={getPathWithDepth(2) === MENU.WALLET}
             />
             <ItemButton
               name={t('component.drawer.delegate')}
               imgURL="/images/common/icon_delegate.png"
-              onClick={() => handleOnOpenConnect('delegate')}
-              selected={getPathWithDepth(2) === 'delegate'}
+              onClick={() => handleOnOpenConnect(MENU.DELEGATE)}
+              selected={getPathWithDepth(2) === MENU.DELEGATE}
             />
             <ItemButton
               name="Broadcast Tx"
               imgURL="/images/common/icon_broadcast.png"
-              onClick={() => handleOnOpenConnect('broadcast')}
-              selected={getPathWithDepth(2) === 'broadcast'}
+              onClick={() => handleOnOpenConnect(MENU.BROATCAST)}
+              selected={getPathWithDepth(2) === MENU.BROATCAST}
             />
-            <ItemButton name="Explorer" imgURL="/images/common/icon_explorer.png" />
+            <ItemButton
+              name="Explorer"
+              imgURL="/images/common/icon_explorer.png"
+              onClick={() => window.open(`https://www.mintscan.io/${currentChain.mintscanPath}`, '_blank')}
+            />
           </div>
           <button
             type="button"
