@@ -40,6 +40,11 @@ export default function HdPath({ className }: HdPathProps) {
         return;
       }
 
+      if (!/^([0-9]+\/[0-9]+\/[0-9]+\/[0-9]+\/[0-9]+)$/.test(path)) {
+        enqueueSnackbar('path is invalid', { variant: 'error' });
+        return;
+      }
+
       if (currentWallet.walletType === 'keystation') {
         setIsShowLoader(true);
         setIsOpenedSignin(true);
