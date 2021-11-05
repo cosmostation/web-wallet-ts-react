@@ -32,7 +32,7 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
     setIsShowLoader(true);
     setIsOpenedSignin(true);
 
-    const myKeystation = new Keystation('http://localhost:3000', currentChain.lcdURL, currentChain.wallet.hdPath);
+    const myKeystation = new Keystation(process.env.REACT_APP_HOST, currentChain.lcdURL, currentChain.wallet.hdPath);
 
     const popup = myKeystation.openWindow('signin', currentChain.wallet.prefix);
 

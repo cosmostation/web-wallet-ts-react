@@ -49,7 +49,7 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
           setIsShowLoader(true);
           setIsOpenedSignin(true);
 
-          const myKeystation = new Keystation('http://localhost:3000', chainInfo.lcdURL, chainInfo.wallet.hdPath);
+          const myKeystation = new Keystation(process.env.REACT_APP_HOST, chainInfo.lcdURL, chainInfo.wallet.hdPath);
 
           const popup = myKeystation.openWindow('signin', chainInfo.wallet.prefix);
 

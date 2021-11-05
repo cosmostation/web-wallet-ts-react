@@ -49,7 +49,7 @@ export default function HdPath({ className }: HdPathProps) {
         setIsShowLoader(true);
         setIsOpenedSignin(true);
 
-        const myKeystation = new Keystation('http://localhost:3000', currentChain.lcdURL, path);
+        const myKeystation = new Keystation(process.env.REACT_APP_HOST, currentChain.lcdURL, path);
 
         const popup = myKeystation.openWindow('signin', currentChain.wallet.prefix);
 

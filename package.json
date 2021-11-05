@@ -5,7 +5,8 @@
   "scripts": {
     "postinstall": "git config --local core.hooksPath ./git-hooks",
     "start": "craco start",
-    "build": "craco build",
+    "build:prod": "craco build",
+    "build:dev": "env-cmd -f .env.development craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "eslint": "eslint --max-warnings 0 ./src",
@@ -43,6 +44,7 @@
     "copy-to-clipboard": "^3.3.1",
     "craco-alias": "^3.0.1",
     "detect-browser": "^5.2.1",
+    "env-cmd": "^10.1.0",
     "eslint": "^7.11.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-base": "^14.2.1",

@@ -98,7 +98,7 @@ function DrawerContent() {
                 <img src="/images/common/logo.png" alt="logo" />
               </Link>
             </div>
-            <div className={styles.logoVersion}>v5.26.0</div>
+            <div className={styles.logoVersion}>{process.env.REACT_APP_VERSION}</div>
           </div>
           <div className={styles.divider} />
           <div className={styles.menuContainer}>

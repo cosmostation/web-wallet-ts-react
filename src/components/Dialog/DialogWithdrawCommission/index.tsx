@@ -130,7 +130,7 @@ export default function DialogDialogWithdrawCommission({ open, onClose }: Dialog
       if (currentWallet.walletType === 'keystation') {
         setIsOpenedTransaction(true);
 
-        const myKeystation = new Keystation('http://localhost:3000', currentChain.lcdURL, currentWallet.HDPath);
+        const myKeystation = new Keystation(process.env.REACT_APP_HOST, currentChain.lcdURL, currentWallet.HDPath);
 
         const popup = myKeystation.openWindow('transaction', txMsgForSign, currentWallet.keystationAccount!);
 
