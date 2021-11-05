@@ -32,7 +32,7 @@ export default function HdPath({ className }: HdPathProps) {
 
   const { t } = useTranslation();
 
-  const [path, setPath] = useState(currentWallet.HDPath ? currentWallet.HDPath : currentChain.wallet.hdPath);
+  const [path, setPath] = useState('');
 
   const handleOnClick = async () => {
     try {
@@ -111,7 +111,26 @@ export default function HdPath({ className }: HdPathProps) {
           </IconButton>
         </div>
         <div className={styles.inputContainer}>
-          <Input value={path} onChange={(event) => setPath(event.currentTarget.value)} />
+          <Input
+            value={path}
+            onChange={(event) => setPath(event.currentTarget.value)}
+            sx={{
+              width: '20rem',
+              '& .MuiOutlinedInput-root': {
+                height: '4rem',
+                fontSize: '1.4rem',
+                color: '#919191',
+              },
+              '& .MuiOutlinedInput-root:hover': {
+                '& > fieldset': {
+                  borderColor: 'black',
+                },
+              },
+              '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'black',
+              },
+            }}
+          />
           <Button sx={{ fontSize: '1.4rem', fontWeight: 'bold' }} onClick={handleOnClick}>
             {t('component.page_section.hd_path.apply_path')}
           </Button>

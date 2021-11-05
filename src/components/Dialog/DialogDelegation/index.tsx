@@ -92,7 +92,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
 
   const fee = (() => {
     if (inputData.type === 'redelegate') return currentChain.fee.redelegate;
-    if (inputData.type === 'undelegate') return currentChain.fee.unbond;
+    if (inputData.type === 'undelegate') return currentChain.fee.undelegate;
     return currentChain.fee.delegate;
   })();
 
@@ -107,6 +107,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
       void swr.balance.mutate();
       void swr.unbondingDelegation.mutate();
       void swr.rewards.mutate();
+      void swr.account.mutate();
     }, 7000);
   };
 
@@ -178,7 +179,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
           from: currentWallet.address,
           to: toAddress,
           amount: `${sendAmount} ${currentChain.symbolName}`,
-          fee: `${currentChain.fee.delegate} ${currentChain.symbolName}`,
+          fee: `${fee} ${currentChain.symbolName}`,
           memo,
           tx: JSON.stringify(txMsgOrigin, null, 4),
         });
@@ -217,7 +218,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
           from: currentWallet.address,
           to: toAddress,
           amount: `${sendAmount} ${currentChain.symbolName}`,
-          fee: `${currentChain.fee.delegate} ${currentChain.symbolName}`,
+          fee: `${fee} ${currentChain.symbolName}`,
           memo,
           tx: JSON.stringify(txMsgOrigin, null, 4),
         });
@@ -241,6 +242,8 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
         enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
         setTransactionInfoData((prev) => ({ ...prev, open: false }));
       } else enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
+
+      setTransactionInfoData(() => ({ step: 'doing', open: false, title }));
     }
   };
 
@@ -321,7 +324,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
           <div className={styles.rowContainer}>
             <div className={styles.column1}>{t('component.dialog.dialog_delegation.tx_fee')}</div>
             <div className={cx(styles.column2, styles.textEnd)}>
-              {currentChain.fee.delegate} {currentChain.symbolName}
+              {fee} {currentChain.symbolName}
             </div>
           </div>
           <div className={styles.buttonContainer}>

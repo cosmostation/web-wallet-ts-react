@@ -74,7 +74,7 @@ export function useCreateTx() {
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryDecimal) }],
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.redelegate, recoveryDecimal) }],
           gas: currentChain.gas.redelegate,
         },
         signatures: null,
@@ -99,8 +99,8 @@ export function useCreateTx() {
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryDecimal) }],
-          gas: currentChain.gas.unbond,
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.undelegate, recoveryDecimal) }],
+          gas: currentChain.gas.undelegate,
         },
         signatures: null,
         memo,
@@ -123,8 +123,10 @@ export function useCreateTx() {
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryDecimal) }],
-          gas: currentChain.gas.default,
+          amount: [
+            { denom: currentChain.denom, amount: times(currentChain.fee.modifyWithdrawAddress, recoveryDecimal) },
+          ],
+          gas: currentChain.gas.modifyWithdrawAddress,
         },
         signatures: null,
         memo,
@@ -133,13 +135,13 @@ export function useCreateTx() {
       return txMsg;
     },
 
-    getWithdrawRewardTxMsg: (data: { delegatorAddress: string; validatorAddress: string }[], memo?: string) => {
+    getWithdrawRewardTxMsg: (data: { validatorAddress: string }[], memo?: string) => {
       const msgType = 'cosmos-sdk/MsgWithdrawDelegationReward';
 
       const msgs = data.map((datum) => ({
         type: msgType,
         value: {
-          delegator_address: datum.delegatorAddress,
+          delegator_address: currentWallet.address,
           validator_address: datum.validatorAddress,
         },
       }));
@@ -149,8 +151,31 @@ export function useCreateTx() {
       const txMsg = {
         msg: msgs,
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.default, recoveryDecimal) }],
-          gas: plus(currentChain.gas.default, gas, 0),
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.withdrawReward, recoveryDecimal) }],
+          gas: plus(currentChain.gas.withdrawReward, gas, 0),
+        },
+        signatures: null,
+        memo,
+      };
+
+      return txMsg;
+    },
+
+    getWithdrawValidatorCommissionTxMsg: (validatorAddress: string, memo?: string) => {
+      const msgType = 'cosmos-sdk/MsgWithdrawValidatorCommission';
+
+      const txMsg = {
+        msg: [
+          {
+            type: msgType,
+            value: {
+              validator_address: validatorAddress,
+            },
+          },
+        ],
+        fee: {
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.withdrawCommission, recoveryDecimal) }],
+          gas: currentChain.gas.withdrawCommission,
         },
         signatures: null,
         memo,

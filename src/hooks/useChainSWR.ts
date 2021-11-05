@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import { useMemo } from 'react';
 import type { AxiosError } from 'axios';
 import axios from 'axios';
 import Big from 'big.js';
@@ -294,43 +295,73 @@ export function useChainSWR() {
 
   const totalPrice = new Big(totalAmount).times(price).toFixed(currentLanguage === 'ko' ? 0 : 4, 0);
 
-  const validators = validator?.data?.validators || [];
+  const validators = useMemo(() => validator?.data?.validators || [], [validator]);
 
-  const validValidators =
-    validator?.data?.validators
-      ?.filter((item) => item.status === 2 || item.status === 'BOND_STATUS_BONDED')
-      ?.sort((a, b) => (gt(b.tokens, a.tokens) ? 1 : -1)) || [];
+  const validValidators = useMemo(
+    () =>
+      validator?.data?.validators
+        ?.filter((item) => item.status === 2 || item.status === 'BOND_STATUS_BONDED')
+        ?.sort((a, b) => (gt(b.tokens, a.tokens) ? 1 : -1)) || [],
+    [validator],
+  );
 
   const validValidatorsTotalToken = validValidators.reduce((ac, cu) => plus(cu.tokens, ac, 0), '0');
 
-  const myValidators = delegations?.data?.result.map((item) => item.delegation.validator_address) || [];
+  const myValidators = useMemo(
+    () => delegations?.data?.result.map((item) => item.delegation.validator_address) || [],
+    [delegations],
+  );
 
-  return {
-    isLoading,
-    swr: {
-      balance,
-      delegations,
-      unbondingDelegation,
-      chainPrice,
-      rewards,
-      validator,
+  return useMemo(
+    () => ({
+      isLoading,
+      swr: {
+        balance,
+        delegations,
+        unbondingDelegation,
+        chainPrice,
+        rewards,
+        validator,
+        account,
+        withdrawAddress,
+      },
+      data: {
+        availableAmount,
+        delegationAmount,
+        unbondingAmount,
+        rewardAmount,
+        totalAmount,
+        price,
+        totalPrice,
+        account: account.data,
+        validators,
+        validValidators,
+        validValidatorsTotalToken,
+        myValidators,
+        withdrawAddress: withdrawAddress?.data?.result || '',
+      },
+    }),
+    [
       account,
-      withdrawAddress,
-    },
-    data: {
       availableAmount,
+      balance,
+      chainPrice,
       delegationAmount,
-      unbondingAmount,
-      rewardAmount,
-      totalAmount,
+      delegations,
+      isLoading,
+      myValidators,
       price,
+      rewardAmount,
+      rewards,
+      totalAmount,
       totalPrice,
-      account: account.data,
-      validators,
+      unbondingAmount,
+      unbondingDelegation,
       validValidators,
       validValidatorsTotalToken,
-      myValidators,
-      withdrawAddress: withdrawAddress?.data?.result || '',
-    },
-  };
+      validator,
+      validators,
+      withdrawAddress,
+    ],
+  );
 }

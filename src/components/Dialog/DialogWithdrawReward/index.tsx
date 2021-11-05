@@ -59,7 +59,7 @@ export default function DialogWithdrawReward({
 
   const { withdrawAddress, account } = data;
 
-  const fee = currentChain.fee.default;
+  const fee = currentChain.fee.withdrawReward;
 
   const toAddress = withdrawAddress;
 
@@ -69,6 +69,7 @@ export default function DialogWithdrawReward({
       void swr.balance.mutate();
       void swr.unbondingDelegation.mutate();
       void swr.rewards.mutate();
+      void swr.account.mutate();
     }, 7000);
   };
 
@@ -92,7 +93,7 @@ export default function DialogWithdrawReward({
       }
 
       const txMsgOrigin = createTx.getWithdrawRewardTxMsg(
-        validatorAddress.map((address) => ({ delegatorAddress: withdrawAddress, validatorAddress: address })),
+        validatorAddress.map((address) => ({ validatorAddress: address })),
         memo,
       );
 
@@ -178,6 +179,8 @@ export default function DialogWithdrawReward({
         enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
         setTransactionInfoData((prev) => ({ ...prev, open: false }));
       } else enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
+
+      setTransactionInfoData(() => ({ step: 'doing', open: false, title }));
     }
   };
 

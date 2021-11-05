@@ -88,6 +88,11 @@ export default function MyDelegation({ className }: MyDelegationProps) {
       currentChain.decimal,
     );
 
+  const delegateList =
+    delegation.result?.filter?.((item) =>
+      validators.find((validatorItem) => validatorItem.operator_address === item.delegation.validator_address),
+    ) || [];
+
   return (
     <div className={className}>
       <div className={styles.titleContainer}>
@@ -102,7 +107,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
 
               const rewardAmount = getRewardAmount(validatorAddress);
 
-              if (gt(currentChain.fee.default, rewardAmount)) {
+              if (gt(currentChain.fee.withdrawReward, rewardAmount)) {
                 enqueueSnackbar(t('component.page_section.my_delegation.error_waste_fee'), { variant: 'error' });
                 return;
               }
@@ -145,12 +150,12 @@ export default function MyDelegation({ className }: MyDelegationProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {delegation.result.map((item, idx) => {
+            {delegateList.map((item, idx) => {
               const validatorInfo = validators.find(
                 (validatorItem) => validatorItem.operator_address === item.delegation.validator_address,
               );
 
-              const rewardInfo = reward.result.rewards.find(
+              const rewardInfo = reward.result?.rewards?.find(
                 (rewardItem) => rewardItem.validator_address === item.delegation.validator_address,
               );
 

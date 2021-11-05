@@ -91,6 +91,13 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
               </div>
               <WidgetsIcon />
             </button>
+            <button
+              type="button"
+              className={styles.accountButton}
+              onClick={() => i18n.changeLanguage(i18n.language === 'ko' ? 'en' : 'ko')}
+            >
+              <LanguageIcon />
+            </button>
             {currentWallet.address ? (
               <>
                 <button
@@ -214,13 +221,6 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
                 <div className={styles.accountButtonText}>Connect Wallet</div>
               </button>
             )}
-            <button
-              type="button"
-              className={styles.accountButton}
-              onClick={() => i18n.changeLanguage(i18n.language === 'ko' ? 'en' : 'ko')}
-            >
-              <LanguageIcon />
-            </button>
           </div>
         </div>
       </AppBar>

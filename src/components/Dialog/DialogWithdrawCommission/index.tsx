@@ -11,6 +11,7 @@ import TransactionInfo from '~/components/Dialog/DialogTransactionInfo';
 import Input from '~/components/Input';
 import Transaction from '~/components/Keystation/Transaction';
 import { CHAIN } from '~/constants/chain';
+import { validatorSet } from '~/constants/validator';
 import { useAxios } from '~/hooks/useAxios';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCreateTx } from '~/hooks/useCreateTx';
@@ -22,12 +23,12 @@ import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/tx
 
 import styles from './index.module.scss';
 
-type DialogModifyWithdrawAddressProps = {
+type DialogDialogWithdrawCommissionProps = {
   open: boolean;
   onClose?: () => void;
 };
 
-export default function DialogModifyWithdrawAddress({ open, onClose }: DialogModifyWithdrawAddressProps) {
+export default function DialogDialogWithdrawCommission({ open, onClose }: DialogDialogWithdrawCommissionProps) {
   const { t } = useTranslation();
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
@@ -35,7 +36,10 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
   const { boardcastTx } = useAxios();
   const { enqueueSnackbar } = useSnackbar();
 
-  const title = t('component.dialog.dialog_modify_withdraw_address.modify_withdraw_address');
+  const title = t('component.dialog.dialog_withdraw_commission.withdraw_commission');
+
+  const validatorAddress = validatorSet.find((item) => item.address === currentWallet.address)
+    ?.operatorAddress as string;
 
   const [isOpenedTransaction, setIsOpenedTransaction] = useState(false);
   const [transactionInfoData, setTransactionInfoData] = useState<TransactionInfoData & { open: boolean }>({
@@ -44,22 +48,18 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
     open: false,
   });
 
-  const [address, setAddress] = useState('');
   const [memo, setMemo] = useState('');
 
   const { data, swr } = useChainSWR();
 
-  const { withdrawAddress, account } = data;
+  const { account } = data;
 
-  const fee = currentChain.fee.modifyWithdrawAddress;
-
-  const fromAddress = withdrawAddress;
+  const fee = currentChain.fee.withdrawCommission;
 
   const afterSuccess = () => {
     setTimeout(() => {
-      void swr.account.mutate();
       void swr.balance.mutate();
-      void swr.withdrawAddress.mutate();
+      void swr.account.mutate();
     }, 7000);
   };
 
@@ -76,22 +76,13 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
       }
 
       if (
-        !address ||
-        withdrawAddress === address ||
-        !address.startsWith(currentChain.wallet.prefix) ||
-        withdrawAddress.length !== address.length
-      ) {
-        throw new Error(`address is invalid`);
-      }
-
-      if (
         (currentChain.path === CHAIN.IRIS && getByte(memo) > 99) ||
         (currentChain.path !== CHAIN.IRIS && getByte(memo) > 255)
       ) {
         throw new Error(`memo is invalid`);
       }
 
-      const txMsgOrigin = createTx.getModifyWithdrawAddressTxMsg(address, memo);
+      const txMsgOrigin = createTx.getWithdrawValidatorCommissionTxMsg(validatorAddress, memo);
 
       const txMsgForSign = createMsgForLedger({
         message: txMsgOrigin,
@@ -111,8 +102,6 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
           open: true,
           step: 'doing',
           title,
-          from: fromAddress,
-          to: address,
           fee: `${fee} ${currentChain.symbolName}`,
           memo,
           tx: JSON.stringify(txMsgOrigin, null, 4),
@@ -149,8 +138,6 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
           open: true,
           step: 'doing',
           title,
-          from: fromAddress,
-          to: address,
           fee: `${fee} ${currentChain.symbolName}`,
           memo,
           tx: JSON.stringify(txMsgOrigin, null, 4),
@@ -182,7 +169,6 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
 
   const handleOnClose = () => {
     setMemo('');
-    setAddress('');
 
     onClose?.();
   };
@@ -193,32 +179,18 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
           <div className={styles.title}>{title}</div>
 
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>
-              {t('component.dialog.dialog_modify_withdraw_address.current_withdraw_address')}
-            </div>
-            <div className={cx(styles.column2, styles.textEnd)}>{withdrawAddress}</div>
+            <div className={styles.column1}>{t('component.dialog.dialog_withdraw_commission.validator_address')}</div>
+            <div className={cx(styles.column2, styles.textEnd)}>{validatorAddress}</div>
           </div>
 
           <div className={styles.rowContainer}>
             <div className={styles.column1}>
-              {t('component.dialog.dialog_modify_withdraw_address.withdraw_address_to_modify')}
+              {t('component.dialog.dialog_withdraw_commission.memo')} (
+              {t('component.dialog.dialog_withdraw_commission.optional')})
             </div>
             <div className={styles.column2}>
               <Input
-                label={t('component.dialog.dialog_modify_withdraw_address.input_address')}
-                value={address}
-                onChange={(event) => setAddress(event.currentTarget.value)}
-              />
-            </div>
-          </div>
-          <div className={styles.rowContainer}>
-            <div className={styles.column1}>
-              {t('component.dialog.dialog_modify_withdraw_address.memo')} (
-              {t('component.dialog.dialog_modify_withdraw_address.optional')})
-            </div>
-            <div className={styles.column2}>
-              <Input
-                label={t('component.dialog.dialog_modify_withdraw_address.input_memo')}
+                label={t('component.dialog.dialog_withdraw_commission.input_memo')}
                 multiline
                 size="medium"
                 sx={{
@@ -232,7 +204,7 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
             </div>
           </div>
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>{t('component.dialog.dialog_modify_withdraw_address.tx_fee')}</div>
+            <div className={styles.column1}>{t('component.dialog.dialog_withdraw_commission.tx_fee')}</div>
             <div className={cx(styles.column2, styles.textEnd)}>
               {fee} {currentChain.symbolName}
             </div>

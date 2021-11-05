@@ -183,6 +183,8 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
         setTransactionInfoData((prev) => ({ ...prev, open: false }));
       } else enqueueSnackbar((e as { message: string }).message, { variant: 'error' });
+
+      setTransactionInfoData(() => ({ step: 'doing', open: false, title }));
     }
   };
 
