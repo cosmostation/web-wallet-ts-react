@@ -14,7 +14,13 @@ import styles from './index.module.scss';
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
-      <SnackbarProvider maxSnack={3} variant="success" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+      <SnackbarProvider
+        maxSnack={3}
+        variant="success"
+        autoHideDuration={4000}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        style={{ fontSize: '1.3rem' }}
+      >
         <App />
       </SnackbarProvider>
     </RecoilRoot>
