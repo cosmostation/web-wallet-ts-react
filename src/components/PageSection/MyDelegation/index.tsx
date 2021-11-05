@@ -89,9 +89,11 @@ export default function MyDelegation({ className }: MyDelegationProps) {
     );
 
   const delegateList =
-    delegation.result?.filter?.((item) =>
-      validators.find((validatorItem) => validatorItem.operator_address === item.delegation.validator_address),
-    ) || [];
+    delegation.result
+      ?.filter?.((item) =>
+        validators.find((validatorItem) => validatorItem.operator_address === item.delegation.validator_address),
+      )
+      ?.sort((a, b) => (gt(b.balance.amount, a.balance.amount) ? 1 : -1)) || [];
 
   return (
     <div className={className}>
