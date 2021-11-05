@@ -1,0 +1,22 @@
+@import '~/styles/index';
+
+.container {
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  color: $gray300;
+}
+
+.title {
+  font-size: 16rem;
+}
+
+.description {
+  font-size: 5rem;
+}
