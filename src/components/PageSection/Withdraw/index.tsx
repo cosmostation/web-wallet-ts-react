@@ -17,7 +17,7 @@ import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import { loaderState } from '~/stores/loader';
-import { divide, getByte, gt, minus } from '~/utils/calculator';
+import { divide, equal, getByte, gt, minus } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 import { isDecimal } from '~/utils/validator';
@@ -86,7 +86,11 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         throw new Error(`Address is invalid`);
       }
 
-      if (gt(sendAmount, minus(availableAmount, currentChain.fee.withdraw, currentChain.decimal))) {
+      if (
+        !sendAmount ||
+        equal(sendAmount, '0') ||
+        gt(sendAmount, minus(availableAmount, currentChain.fee.withdraw, currentChain.decimal))
+      ) {
         throw new Error(`sendAmount is invalid`);
       }
 

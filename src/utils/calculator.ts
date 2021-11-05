@@ -21,6 +21,10 @@ export function plus(num1: number | string, num2: number | string, toFix?: numbe
   return new Big(num1).plus(num2).toString();
 }
 
+export function equal(num1: number | string, num2: number | string) {
+  return new Big(num1).eq(num2);
+}
+
 export function divide(num1: number | string, num2: number | string, toFix?: number) {
   if (toFix !== undefined) {
     return new Big(num1).div(num2).toFixed(toFix, 0);

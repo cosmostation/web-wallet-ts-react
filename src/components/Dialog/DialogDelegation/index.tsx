@@ -16,7 +16,7 @@ import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { divide, getByte, gt, minus, pow, times } from '~/utils/calculator';
+import { divide, equal, getByte, gt, minus, pow, times } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 import { isDecimal } from '~/utils/validator';
@@ -134,9 +134,10 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
 
       if (
         !sendAmount ||
+        equal(sendAmount, '0') ||
         gt(sendAmount, minus(amount, inputData.type === 'delegate' ? fee : '0', currentChain.decimal))
       ) {
-        throw new Error(`sendAmount is invalid`);
+        throw new Error('Amount is invalid');
       }
 
       if (
