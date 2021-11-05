@@ -20,6 +20,7 @@ import { loaderState } from '~/stores/loader';
 import { divide, getByte, gt, minus } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
+import { isDecimal } from '~/utils/validator';
 
 import styles from './index.module.scss';
 
@@ -222,7 +223,13 @@ export default function WalletInfo({ className }: WalletInfoProps) {
               label={t('component.page_section.withdraw.input_amount')}
               sx={{ width: 'calc(100% - 14.8rem)', fontSize: '1.4rem' }}
               value={sendAmount}
-              onChange={(event) => setSendAmount(event.currentTarget.value)}
+              onChange={(event) => {
+                if (!isDecimal(event.currentTarget.value, currentChain.decimal) && event.currentTarget.value) {
+                  return;
+                }
+
+                setSendAmount(event.currentTarget.value);
+              }}
             />
             <Button
               sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}

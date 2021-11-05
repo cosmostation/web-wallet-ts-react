@@ -19,6 +19,7 @@ import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import { divide, getByte, gt, minus, pow, times } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
+import { isDecimal } from '~/utils/validator';
 
 import styles from './index.module.scss';
 
@@ -131,7 +132,10 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
         throw new Error(`Address is invalid`);
       }
 
-      if (gt(sendAmount, minus(amount, inputData.type === 'delegate' ? fee : '0', currentChain.decimal))) {
+      if (
+        !sendAmount ||
+        gt(sendAmount, minus(amount, inputData.type === 'delegate' ? fee : '0', currentChain.decimal))
+      ) {
         throw new Error(`sendAmount is invalid`);
       }
 
@@ -265,12 +269,6 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
               {amount} {currentChain.symbolName}
             </div>
           </div>
-          {/* <div className={styles.rowContainer}>
-          <div className={styles.column1}>받을 지갑 주소</div>
-          <div className={styles.column2}>
-            <Input label="지갑 주소 입력" value={address} onChange={(event) => setAddress(event.currentTarget.value)} />
-          </div>
-        </div> */}
           <div className={styles.rowContainer}>
             <div className={styles.column1}>{t('component.dialog.dialog_delegation.amount')}</div>
             <div className={styles.column2}>
@@ -278,7 +276,13 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
                 label={t('component.dialog.dialog_delegation.input_amount')}
                 sx={{ width: 'calc(100% - 14.8rem)', fontSize: '1.4rem' }}
                 value={sendAmount}
-                onChange={(event) => setSendAmount(event.currentTarget.value)}
+                onChange={(event) => {
+                  if (!isDecimal(event.currentTarget.value, currentChain.decimal) && event.currentTarget.value) {
+                    return;
+                  }
+
+                  setSendAmount(event.currentTarget.value);
+                }}
               />
               <Button
                 sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}

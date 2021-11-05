@@ -61,7 +61,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
   const delegation = swr.delegations.data;
   const reward = swr.rewards.data;
 
-  const { validators, validValidatorsTotalToken } = data;
+  const { validators, validValidatorsTotalToken, availableAmount } = data;
 
   if (!delegation?.result?.length || !reward?.result || !validators.length) {
     return null;
@@ -98,7 +98,21 @@ export default function MyDelegation({ className }: MyDelegationProps) {
       <div className={styles.titleContainer}>
         <div className={styles.title}>{t('component.page_section.my_delegation.my_delegation_detail')}</div>
         <div className={styles.titleButtonContainer}>
-          <Button onClick={() => setIsOpenedModifyWithdrawAddress(true)}>
+          <Button
+            onClick={() => {
+              if (gt(currentChain.fee.modifyWithdrawAddress, availableAmount)) {
+                enqueueSnackbar(
+                  `${t('component.page_section.my_delegation.error_need_more_fee')} ${t(
+                    'component.page_section.my_delegation.error_need_more_fee_description',
+                  )}`,
+                  { variant: 'error' },
+                );
+                return;
+              }
+
+              setIsOpenedModifyWithdrawAddress(true);
+            }}
+          >
             {t('component.page_section.my_delegation.modify_withdraw_address')}
           </Button>
           <Button
@@ -109,6 +123,16 @@ export default function MyDelegation({ className }: MyDelegationProps) {
 
               if (gt(currentChain.fee.withdrawReward, rewardAmount)) {
                 enqueueSnackbar(t('component.page_section.my_delegation.error_waste_fee'), { variant: 'error' });
+                return;
+              }
+
+              if (gt(currentChain.fee.withdrawReward, availableAmount)) {
+                enqueueSnackbar(
+                  `${t('component.page_section.my_delegation.error_need_more_fee')} ${t(
+                    'component.page_section.my_delegation.error_need_more_fee_description',
+                  )}`,
+                  { variant: 'error' },
+                );
                 return;
               }
 
@@ -225,6 +249,16 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                       </Button>
                       <Button
                         onClick={() => {
+                          if (gt(currentChain.fee.undelegate, availableAmount)) {
+                            enqueueSnackbar(
+                              `${t('component.page_section.my_delegation.error_need_more_fee')} ${t(
+                                'component.page_section.my_delegation.error_need_more_fee_description',
+                              )}`,
+                              { variant: 'error' },
+                            );
+                            return;
+                          }
+
                           setDelegationData({
                             open: true,
                             inputData: { type: 'undelegate', validatorAddress: validatorInfo!.operator_address },
@@ -235,6 +269,16 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                       </Button>
                       <Button
                         onClick={() => {
+                          if (gt(currentChain.fee.redelegate, availableAmount)) {
+                            enqueueSnackbar(
+                              `${t('component.page_section.my_delegation.error_need_more_fee')} ${t(
+                                'component.page_section.my_delegation.error_need_more_fee_description',
+                              )}`,
+                              { variant: 'error' },
+                            );
+                            return;
+                          }
+
                           setValidatorListData({ open: true, validatorAddress: validatorInfo!.operator_address });
                           setDelegationData({
                             open: false,
@@ -252,10 +296,20 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                         onClick={() => {
                           const rewardAmount = getRewardAmount([validatorInfo!.operator_address]);
 
-                          if (gt(currentChain.fee.default, rewardAmount)) {
+                          if (gt(currentChain.fee.withdrawReward, rewardAmount)) {
                             enqueueSnackbar(t('component.page_section.my_delegation.error_waste_fee'), {
                               variant: 'error',
                             });
+                            return;
+                          }
+
+                          if (gt(currentChain.fee.withdrawReward, availableAmount)) {
+                            enqueueSnackbar(
+                              `${t('component.page_section.my_delegation.error_need_more_fee')} ${t(
+                                'component.page_section.my_delegation.error_need_more_fee_description',
+                              )}`,
+                              { variant: 'error' },
+                            );
                             return;
                           }
 

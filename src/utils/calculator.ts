@@ -1,3 +1,4 @@
+import type { RoundingMode } from 'big.js';
 import Big from 'big.js';
 
 export function pow(base: number | string, exponent: number) {
@@ -48,4 +49,8 @@ export function getByte(str: string) {
       // eslint-disable-next-line no-bitwise
       .reduce((prev, c) => prev + (c === 10 ? 2 : c >> 7 ? 2 : 1), 0)
   );
+}
+
+export function fix(number: string, decimal: number, optional: RoundingMode = 0) {
+  return Big(number).toFixed(decimal, optional);
 }

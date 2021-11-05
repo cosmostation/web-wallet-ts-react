@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from 'notistack';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -13,7 +14,7 @@ import Button from '~/components/Button';
 import DialogDelegation from '~/components/Dialog/DialogDelegation';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
-import { divide, pow, times } from '~/utils/calculator';
+import { divide, gt, pow, times } from '~/utils/calculator';
 
 import styles from './index.module.scss';
 
@@ -22,13 +23,14 @@ type AvailableValidatorProps = {
 };
 
 export default function AvailableValidator({ className }: AvailableValidatorProps) {
+  const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
   const { data } = useChainSWR();
   const currentChain = useCurrentChain();
 
   const [delegation, setDelegation] = useState({ open: false, validatorAddress: '' });
 
-  const { validValidators, validValidatorsTotalToken, myValidators } = data;
+  const { validValidators, validValidatorsTotalToken, myValidators, availableAmount } = data;
 
   if (!validValidators.length) {
     return null;
@@ -109,6 +111,13 @@ export default function AvailableValidator({ className }: AvailableValidatorProp
                 <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
                   <Button
                     onClick={() => {
+                      if (gt(currentChain.fee.delegate, availableAmount)) {
+                        enqueueSnackbar(t('component.page_section.available_validator.error_need_more_fee'), {
+                          variant: 'error',
+                        });
+                        return;
+                      }
+
                       setDelegation({ open: true, validatorAddress: item.operator_address });
                     }}
                   >
