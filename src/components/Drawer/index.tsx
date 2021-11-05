@@ -115,12 +115,6 @@ function DrawerContent() {
               selected={getPathWithDepth(2) === MENU.DELEGATE}
             />
             <ItemButton
-              name="Broadcast Tx"
-              imgURL="/images/common/icon_broadcast.png"
-              onClick={() => handleOnOpenConnect(MENU.BROATCAST)}
-              selected={getPathWithDepth(2) === MENU.BROATCAST}
-            />
-            <ItemButton
               name="Explorer"
               imgURL="/images/common/icon_explorer.png"
               onClick={() => window.open(`https://www.mintscan.io/${currentChain.mintscanPath}`, '_blank')}
