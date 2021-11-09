@@ -49,4 +49,13 @@
     cursor: pointer;
     border-color: $gray600;
   }
+
+  &:disabled {
+    opacity: 0.5;
+
+    &:hover {
+      cursor: default;
+      border-color: $gray300;
+    }
+  }
 }

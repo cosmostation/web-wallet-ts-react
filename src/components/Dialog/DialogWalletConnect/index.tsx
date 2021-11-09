@@ -85,16 +85,20 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
       <Dialog open={open} onClose={onClose} maxWidth="lg">
         <div className={styles.container}>
           <div className={styles.connectContainer}>
-            <ConnectButton name="Connect To Ledger" imgURL="/images/signIn/ledger.png" onClick={handleOnClickLedger} />
+            <ConnectButton
+              name="Connect To Ledger"
+              imgURL="/images/signIn/ledger.png"
+              onClick={handleOnClickLedger}
+              disabled={!currentChain.wallet.support.ledger}
+            />
             <div className={styles.verticalDivider} />
             <ConnectButton
               name="Connect To Keystation"
               imgURL="/images/signIn/keystation.png"
               onClick={handleOnClickKeystation}
+              disabled={!currentChain.wallet.support.keystation}
             />
           </div>
-          <div>지갑 설치 및 사용법</div>
-          <div>추후 지원 예정</div>
         </div>
       </Dialog>
       {isOpenedSignin && (

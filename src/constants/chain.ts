@@ -31,6 +31,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'cosmos',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-cosmos.cosmostation.io',
     symbolName: 'ATOM',
@@ -68,6 +69,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'iaa',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-iris.cosmostation.io',
     symbolName: 'IRIS',
@@ -106,6 +108,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'kava',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-kava.cosmostation.io',
     symbolName: 'KAVA',
@@ -144,6 +147,7 @@ export const chains = {
     wallet: {
       hdPath: '44/494/0/0/0',
       prefix: 'band',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-band.cosmostation.io',
     symbolName: 'BAND',
@@ -181,6 +185,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'akash',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-akash.cosmostation.io',
     symbolName: 'AKT',
@@ -218,6 +223,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'certik',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-certik.cosmostation.io',
     symbolName: 'CTK',
@@ -255,6 +261,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'sent',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-sentinel.cosmostation.io',
     symbolName: 'DVPN',
@@ -292,6 +299,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'persistence',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-persistence.cosmostation.io',
     symbolName: 'XPRT',
@@ -329,6 +337,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'fetch',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-fetchai.cosmostation.io',
     symbolName: 'FET',
@@ -366,6 +375,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'sif',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-sifchain.cosmostation.io',
     symbolName: 'ROWAN',
@@ -403,6 +413,7 @@ export const chains = {
     wallet: {
       hdPath: '44/394/0/0/0',
       prefix: 'cro',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-cryptocom.cosmostation.io',
     symbolName: 'CRO',
@@ -440,6 +451,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'ki',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-kichain.cosmostation.io',
     symbolName: 'XKI',
@@ -477,6 +489,7 @@ export const chains = {
     wallet: {
       hdPath: '44/234/0/0/0',
       prefix: 'star',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-iov.cosmostation.io',
     symbolName: 'IOV',
@@ -514,6 +527,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'panacea',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-medibloc.cosmostation.io',
     symbolName: 'MED',
@@ -551,6 +565,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'emoney',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-emoney.cosmostation.io',
     symbolName: 'NGM',
@@ -588,6 +603,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'rizon',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-rizon.cosmostation.io',
     symbolName: 'ATOLO',
@@ -625,6 +641,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'juno',
+      support: { ledger: true, keystation: true },
     },
     lcdURL: 'https://lcd-juno.cosmostation.io',
     symbolName: 'JUNO',

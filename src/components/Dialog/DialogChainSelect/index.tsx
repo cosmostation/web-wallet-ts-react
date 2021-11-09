@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Dialog from '~/components/Dialog';
 import Signin from '~/components/Keystation/Signin';
@@ -25,7 +25,7 @@ type DialogChainSelectProps = {
 export default function DialogChainSelect({ open, onClose }: DialogChainSelectProps) {
   const [isOpenedSignin, setIsOpenedSignin] = useState(false);
 
-  const setWalletInfo = useSetRecoilState(walletInfoState);
+  const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
   const setIsShowLoader = useSetRecoilState(loaderState);
   const currentChain = useCurrentChain();
   const { enqueueSnackbar } = useSnackbar();
@@ -120,6 +120,10 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
               name={chaininfo.name}
               imgURL={chaininfo.imgURL}
               onClick={() => handleOnClick(chaininfo.path)}
+              disabled={
+                (walletInfo.walletType === 'keystation' && !chaininfo.wallet.support.keystation) ||
+                (walletInfo.walletType === 'ledger' && !chaininfo.wallet.support.ledger)
+              }
             />
           ))}
         </div>
@@ -142,12 +146,13 @@ type ChainButtonProps = {
   onClick?: () => void;
   name: string;
   imgURL: string;
+  disabled?: boolean;
 };
 
-function ChainButton({ name, imgURL, onClick }: ChainButtonProps) {
+function ChainButton({ name, imgURL, onClick, disabled }: ChainButtonProps) {
   return (
     <div className={styles.buttonContainer}>
-      <button type="button" className={styles.button} onClick={onClick}>
+      <button type="button" className={styles.button} onClick={onClick} disabled={disabled}>
         <div className={styles.imgContainer}>
           <img src={imgURL} alt={name} />
         </div>

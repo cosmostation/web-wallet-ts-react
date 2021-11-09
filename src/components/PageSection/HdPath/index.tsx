@@ -119,6 +119,11 @@ export default function HdPath({ className }: HdPathProps) {
           <Input
             value={path}
             onChange={(event) => setPath(event.currentTarget.value)}
+            onKeyPress={(event) => {
+              if (event.key === 'Enter') {
+                void handleOnClick();
+              }
+            }}
             sx={{
               width: '20rem',
               '& .MuiOutlinedInput-root': {
