@@ -63,7 +63,8 @@ export default function WalletInfo({ className }: WalletInfoProps) {
 
     setTimeout(() => {
       void swr.balance.mutate();
-    }, 5000);
+      void swr.account.mutate();
+    }, 7000);
   };
 
   const handleOnClick = async () => {
