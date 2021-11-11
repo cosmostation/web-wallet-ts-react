@@ -225,7 +225,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'certik',
-      support: { ledger: true, keystation: true },
+      support: { ledger: false, keystation: true },
     },
     lcdURL: 'https://lcd-certik.cosmostation.io',
     symbolName: 'CTK',
