@@ -23,7 +23,13 @@ export type Delegation = {
 };
 
 export type DelegationsPayload = {
-  result: { delegation: Delegation; balance: Amount }[];
+  result: {
+    delegation: Delegation;
+    balance: Amount;
+    delegator_address: string;
+    validator_address: string;
+    shares: string;
+  }[];
 };
 
 export type Account = {

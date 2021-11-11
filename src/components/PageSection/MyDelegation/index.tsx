@@ -63,7 +63,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
 
   const { validators, validValidatorsTotalToken, availableAmount } = data;
 
-  if (!delegation?.result?.length || !reward?.result || !validators.length) {
+  if (!delegation?.length || !reward?.result || !validators.length) {
     return null;
   }
 
@@ -89,7 +89,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
     );
 
   const delegateList =
-    delegation.result
+    delegation
       ?.filter?.((item) =>
         validators.find((validatorItem) => validatorItem.operator_address === item.delegation.validator_address),
       )
@@ -246,10 +246,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                             inputData: { type: 'delegate', validatorAddress: validatorInfo.operator_address },
                           });
                         }}
-                        disabled={
-                          validatorInfo.jailed ||
-                          !(validatorInfo.status === '2' || validatorInfo.status === 'BOND_STATUS_BONDED')
-                        }
+                        disabled={validatorInfo.jailed}
                       >
                         {t('component.page_section.my_delegation.noun_delegate')}
                       </Button>

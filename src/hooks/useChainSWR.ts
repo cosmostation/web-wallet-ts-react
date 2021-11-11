@@ -70,8 +70,23 @@ export function useDelegationsSWR() {
     isPaused: () => !currentWallet.address?.startsWith(currentChain.wallet.prefix),
   });
 
+  const returnData = data?.result.map((item) => {
+    if (item.delegator_address && item.validator_address && item.shares) {
+      return {
+        balance: item.balance,
+        delegation: {
+          delegator_address: item.delegator_address,
+          validator_address: item.validator_address,
+          shares: item.shares,
+        },
+      };
+    }
+
+    return { balance: item.balance || undefined, delegation: item.delegation || undefined };
+  });
+
   return {
-    data,
+    data: returnData,
     error,
     mutate,
   };
@@ -317,7 +332,7 @@ export function useChainSWR() {
   ].toFixed(currentLanguage === 'ko' ? 0 : 4);
 
   const delegationAmount = times(
-    delegations.data?.result
+    delegations.data
       ?.filter((item) => item.balance?.denom === currentChain.denom)
       ?.reduce((ac, cu) => ac.plus(cu.balance.amount), new Big('0'))
       .toString() || '0',
@@ -361,7 +376,7 @@ export function useChainSWR() {
   const validValidatorsTotalToken = validValidators.reduce((ac, cu) => plus(cu.tokens, ac, 0), '0');
 
   const myValidators = useMemo(
-    () => delegations?.data?.result.map((item) => item.delegation.validator_address) || [],
+    () => delegations?.data?.map((item) => item.delegation.validator_address) || [],
     [delegations],
   );
 
