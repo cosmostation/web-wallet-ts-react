@@ -130,22 +130,75 @@ export function useValidatorsSWR() {
 
   const requestURL = lcdURL.getValidators();
 
+  const isMoreQuery = requestURL.endsWith('/staking/validators');
+
   const fetcher = (fetchUrl: string) => get<ValidatorPayload>(fetchUrl);
 
-  const { data, error, mutate } = useSWR<ValidatorPayload, AxiosError>(requestURL, fetcher, {
+  const bondSWR = useSWR<ValidatorPayload, AxiosError>(requestURL, fetcher, {
     refreshInterval: 0,
     revalidateOnFocus: false,
     isPaused: () => !currentChain,
   });
 
-  const returnData = data
-    ? { validators: data.result ? data.result : data.validators, pagination: data.pagination }
+  const unbondedRequestURL = isMoreQuery ? `${requestURL}?status=unbonded` : requestURL;
+
+  const unbondingRequestURL = isMoreQuery ? `${requestURL}?status=unbonding` : requestURL;
+
+  const unbondedSWR = useSWR<ValidatorPayload, AxiosError>(unbondedRequestURL, fetcher, {
+    refreshInterval: 0,
+    revalidateOnFocus: false,
+    isPaused: () => !currentChain,
+  });
+
+  const unbondingSWR = useSWR<ValidatorPayload, AxiosError>(unbondingRequestURL, fetcher, {
+    refreshInterval: 0,
+    revalidateOnFocus: false,
+    isPaused: () => !currentChain,
+  });
+
+  const mutates = () => {
+    void bondSWR.mutate();
+    void unbondedSWR.mutate();
+    void unbondingSWR.mutate();
+  };
+
+  const bondReturnData = bondSWR.data
+    ? {
+        validators: bondSWR.data.result ? bondSWR.data.result : bondSWR.data.validators,
+        pagination: bondSWR.data.pagination,
+      }
     : undefined;
+
+  const unbondedReturnData = unbondedSWR.data
+    ? {
+        validators: unbondedSWR.data.result ? unbondedSWR.data.result : unbondedSWR.data.validators,
+        pagination: unbondedSWR.data.pagination,
+      }
+    : undefined;
+
+  const unbondingReturnData = unbondingSWR.data
+    ? {
+        validators: unbondingSWR.data.result ? unbondingSWR.data.result : unbondingSWR.data.validators,
+        pagination: unbondingSWR.data.pagination,
+      }
+    : undefined;
+
+  const returnData = !isMoreQuery
+    ? bondSWR.data
+    : !bondReturnData && !unbondedReturnData && !unbondingReturnData
+    ? undefined
+    : {
+        validators: [
+          ...(bondReturnData?.validators ? bondReturnData.validators : []),
+          ...(unbondedReturnData?.validators ? unbondedReturnData.validators : []),
+          ...(unbondingReturnData?.validators ? unbondingReturnData.validators : []),
+        ],
+      };
 
   return {
     data: returnData,
-    error,
-    mutate,
+    error: bondSWR.error,
+    mutate: mutates,
   };
 }
 

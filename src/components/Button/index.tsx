@@ -4,7 +4,7 @@ import { Button as BaseButton } from '@mui/material';
 type ButtonProps = ButtonBaseProps & { colorVariant?: 'black' | 'white' };
 
 export default function Button(props: ButtonProps) {
-  const { sx, children, onClick, colorVariant } = props;
+  const { sx, children, onClick, colorVariant, disabled } = props;
 
   const color =
     colorVariant === 'black'
@@ -41,6 +41,7 @@ export default function Button(props: ButtonProps) {
         ...sx,
       }}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </BaseButton>

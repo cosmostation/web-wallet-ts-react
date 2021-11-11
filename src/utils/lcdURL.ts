@@ -19,7 +19,7 @@ export default function LcdURL(chain: ChainPath) {
       const exceptionChains = [CHAIN.KAVA, CHAIN.KICHAIN] as string[];
       const path = exceptionChains.includes(chainInfo.path)
         ? '/staking/validators'
-        : '/cosmos/staking/v1beta1/validators?status=BOND_STATUS_BONDED&pagination.limit=150';
+        : '/cosmos/staking/v1beta1/validators?pagination.limit=10000';
 
       return `${chainInfo.lcdURL}${path}`;
     },

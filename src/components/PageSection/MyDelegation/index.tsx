@@ -185,6 +185,10 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                 (rewardItem) => rewardItem.validator_address === item.delegation.validator_address,
               );
 
+              if (!validatorInfo) {
+                return null;
+              }
+
               return (
                 <TableRow
                   // eslint-disable-next-line react/no-array-index-key
@@ -199,9 +203,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                     <div className={styles.validatorContainer}>
                       <div className={styles.validatorImgContainer}>
                         <img
-                          src={`https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/${
-                            currentChain.validatorIconDirectory
-                          }/${validatorInfo!.operator_address}.png`}
+                          src={`https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/${currentChain.validatorIconDirectory}/${validatorInfo.operator_address}.png`}
                           alt=""
                           onError={(e) => {
                             e.currentTarget.src = 'https://www.mintscan.io/static/media/validator_none.f01f85a0.svg';
@@ -209,23 +211,21 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                         />
                       </div>
                       <a
-                        href={`https://www.mintscan.io/${currentChain.mintscanPath}/validators/${
-                          validatorInfo!.operator_address
-                        }`}
+                        href={`https://www.mintscan.io/${currentChain.mintscanPath}/validators/${validatorInfo.operator_address}`}
                         target="_blank"
                         rel="noreferrer"
                         className={styles.aElementStyle}
                       >
-                        {validatorInfo!.description.moniker}
+                        {validatorInfo.description.moniker}
                       </a>
                     </div>
                   </TableCell>
                   <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                    {times(validatorInfo!.tokens, pow(10, -currentChain.decimal), 0)}
-                    <br />({times(divide(validatorInfo!.tokens, validValidatorsTotalToken), '100', 2)}%)
+                    {times(validatorInfo.tokens, pow(10, -currentChain.decimal), 0)}
+                    <br />({times(divide(validatorInfo.tokens, validValidatorsTotalToken), '100', 2)}%)
                   </TableCell>
                   <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                    {times(validatorInfo!.commission.commission_rates.rate, '100', 2)}%
+                    {times(validatorInfo.commission.commission_rates.rate, '100', 2)}%
                   </TableCell>
                   <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
                     {times(item.balance.amount, pow(10, -currentChain.decimal), currentChain.decimal)}
@@ -243,9 +243,13 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                         onClick={() => {
                           setDelegationData({
                             open: true,
-                            inputData: { type: 'delegate', validatorAddress: validatorInfo!.operator_address },
+                            inputData: { type: 'delegate', validatorAddress: validatorInfo.operator_address },
                           });
                         }}
+                        disabled={
+                          validatorInfo.jailed ||
+                          !(validatorInfo.status === '2' || validatorInfo.status === 'BOND_STATUS_BONDED')
+                        }
                       >
                         {t('component.page_section.my_delegation.noun_delegate')}
                       </Button>
@@ -263,7 +267,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
 
                           setDelegationData({
                             open: true,
-                            inputData: { type: 'undelegate', validatorAddress: validatorInfo!.operator_address },
+                            inputData: { type: 'undelegate', validatorAddress: validatorInfo.operator_address },
                           });
                         }}
                       >
@@ -281,12 +285,12 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                             return;
                           }
 
-                          setValidatorListData({ open: true, validatorAddress: validatorInfo!.operator_address });
+                          setValidatorListData({ open: true, validatorAddress: validatorInfo.operator_address });
                           setDelegationData({
                             open: false,
                             inputData: {
                               type: 'redelegate',
-                              validatorSrcAddress: validatorInfo!.operator_address,
+                              validatorSrcAddress: validatorInfo.operator_address,
                               validatorDstAddress: '',
                             },
                           });
@@ -296,7 +300,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                       </Button>
                       <Button
                         onClick={() => {
-                          const rewardAmount = getRewardAmount([validatorInfo!.operator_address]);
+                          const rewardAmount = getRewardAmount([validatorInfo.operator_address]);
 
                           if (gt(currentChain.fee.withdrawReward, rewardAmount)) {
                             enqueueSnackbar(t('component.page_section.my_delegation.error_waste_fee'), {
@@ -317,7 +321,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
 
                           setWithdrawRewardData({
                             open: true,
-                            validatorAddress: [validatorInfo!.operator_address],
+                            validatorAddress: [validatorInfo.operator_address],
                             amount: rewardAmount,
                             title: t('component.page_section.my_delegation.claim_reward'),
                           });

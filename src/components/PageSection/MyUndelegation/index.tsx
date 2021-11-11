@@ -19,13 +19,14 @@ type MyUndelegationProps = {
 
 export default function MyUndelegation({ className }: MyUndelegationProps) {
   const { t } = useTranslation();
-  const { swr } = useChainSWR();
+  const { swr, data } = useChainSWR();
   const currentChain = useCurrentChain();
 
   const undelegation = swr.unbondingDelegation.data;
-  const validator = swr.validator.data;
 
-  if (!undelegation?.result?.length || !validator?.validators) {
+  const { validators } = data;
+
+  if (!undelegation?.result?.length || !validators.length) {
     return null;
   }
 
@@ -52,14 +53,18 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
           </TableHead>
           <TableBody>
             {undelegation.result.map((item) => {
-              const validatorInfo = validator.validators!.find(
+              const validatorInfo = validators.find(
                 (validatorItem) => validatorItem.operator_address === item.validator_address,
               );
+
+              if (!validatorInfo) {
+                return null;
+              }
 
               return item.entries.map((entryItem, idx) => (
                 <TableRow
                   // eslint-disable-next-line react/no-array-index-key
-                  key={`${validatorInfo!.operator_address}_${idx}`}
+                  key={`${validatorInfo.operator_address}_${idx}`}
                   sx={{
                     '&:nth-of-type(even)': {
                       backgroundColor: '#fafafa',
@@ -70,9 +75,7 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
                     <div className={styles.validatorContainer}>
                       <div className={styles.validatorImgContainer}>
                         <img
-                          src={`https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/${
-                            currentChain.validatorIconDirectory
-                          }/${validatorInfo!.operator_address}.png`}
+                          src={`https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/${currentChain.validatorIconDirectory}/${validatorInfo.operator_address}.png`}
                           alt=""
                           onError={(e) => {
                             e.currentTarget.src = 'https://www.mintscan.io/static/media/validator_none.f01f85a0.svg';
@@ -80,14 +83,12 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
                         />
                       </div>
                       <a
-                        href={`https://www.mintscan.io/${currentChain.mintscanPath}/validators/${
-                          validatorInfo!.operator_address
-                        }`}
+                        href={`https://www.mintscan.io/${currentChain.mintscanPath}/validators/${validatorInfo.operator_address}`}
                         target="_blank"
                         rel="noreferrer"
                         className={styles.aElementStyle}
                       >
-                        {validatorInfo!.description.moniker}
+                        {validatorInfo.description.moniker}
                       </a>
                     </div>
                   </TableCell>
