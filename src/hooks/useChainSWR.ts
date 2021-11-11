@@ -6,7 +6,7 @@ import Big from 'big.js';
 import useSWR from 'swr';
 
 import type { ChainGeckoId } from '~/constants/chain';
-import { chains } from '~/constants/chain';
+import { CHAIN, chains } from '~/constants/chain';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentLanguage } from '~/hooks/useCurrentLanguage';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
@@ -155,9 +155,17 @@ export function useValidatorsSWR() {
     isPaused: () => !currentChain,
   });
 
-  const unbondedRequestURL = isMoreQuery ? `${requestURL}?status=unbonded` : requestURL;
+  const unbondedRequestURL = isMoreQuery
+    ? currentChain.path === CHAIN.KICHAIN
+      ? `${requestURL}?status=BOND_STATUS_UNBONDED`
+      : `${requestURL}?status=unbonded`
+    : requestURL;
 
-  const unbondingRequestURL = isMoreQuery ? `${requestURL}?status=unbonding` : requestURL;
+  const unbondingRequestURL = isMoreQuery
+    ? currentChain.path === CHAIN.KICHAIN
+      ? `${requestURL}?status=BOND_STATUS_UNBONDING`
+      : `${requestURL}?status=unbonding`
+    : requestURL;
 
   const unbondedSWR = useSWR<ValidatorPayload, AxiosError>(unbondedRequestURL, fetcher, {
     refreshInterval: 0,
@@ -368,9 +376,14 @@ export function useChainSWR() {
   const validValidators = useMemo(
     () =>
       validator?.data?.validators
-        ?.filter((item) => item.status === 2 || item.status === 'BOND_STATUS_BONDED')
+        ?.filter(
+          (item) =>
+            item.status === 2 ||
+            item.status === 'BOND_STATUS_BONDED' ||
+            (currentChain.path === CHAIN.KICHAIN && item.status === 3),
+        )
         ?.sort((a, b) => (gt(b.tokens, a.tokens) ? 1 : -1)) || [],
-    [validator],
+    [validator, currentChain],
   );
 
   const validValidatorsTotalToken = validValidators.reduce((ac, cu) => plus(cu.tokens, ac, 0), '0');
