@@ -620,9 +620,9 @@ export const chains = {
       undelegate: '0.005',
       redelegate: '0.005',
       withdraw: '0.005',
-      withdrawReward: '',
-      withdrawCommission: '',
-      modifyWithdrawAddress: '',
+      withdrawReward: '0.005',
+      withdrawCommission: '0.005',
+      modifyWithdrawAddress: '0.005',
     },
     gas: {
       default: '200000',
