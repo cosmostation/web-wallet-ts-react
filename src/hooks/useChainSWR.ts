@@ -378,9 +378,10 @@ export function useChainSWR() {
       validator?.data?.validators
         ?.filter(
           (item) =>
-            item.status === 2 ||
-            item.status === 'BOND_STATUS_BONDED' ||
-            (currentChain.path === CHAIN.KICHAIN && item.status === 3),
+            !item.jailed &&
+            (item.status === 2 ||
+              item.status === 'BOND_STATUS_BONDED' ||
+              (currentChain.path === CHAIN.KICHAIN && item.status === 3)),
         )
         ?.sort((a, b) => (gt(b.tokens, a.tokens) ? 1 : -1)) || [],
     [validator, currentChain],
