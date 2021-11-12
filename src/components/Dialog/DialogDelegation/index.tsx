@@ -292,15 +292,15 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
               </Button>
               <Button
                 sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}
-                onClick={() =>
-                  setSendAmount(
-                    minus(
-                      amount,
-                      inputData.type === 'delegate' ? currentChain.fee.delegate : '0',
-                      currentChain.decimal,
-                    ),
-                  )
-                }
+                onClick={() => {
+                  const maxAmount = minus(
+                    amount,
+                    inputData.type === 'delegate' ? currentChain.fee.delegate : '0',
+                    currentChain.decimal,
+                  );
+
+                  setSendAmount(gt(maxAmount, '0') ? maxAmount : '0');
+                }}
               >
                 MAX
               </Button>

@@ -244,7 +244,11 @@ export default function WalletInfo({ className }: WalletInfoProps) {
             </Button>
             <Button
               sx={{ fontSize: '1.4rem', width: '7rem', marginLeft: '0.4rem' }}
-              onClick={() => setSendAmount(minus(availableAmount, currentChain.fee.withdraw, currentChain.decimal))}
+              onClick={() => {
+                const maxAmount = minus(availableAmount, currentChain.fee.withdraw, currentChain.decimal);
+
+                setSendAmount(gt(maxAmount, '0') ? maxAmount : '0');
+              }}
             >
               MAX
             </Button>

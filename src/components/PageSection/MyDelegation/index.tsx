@@ -246,6 +246,13 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                     <div className={styles.buttonContainer}>
                       <Button
                         onClick={() => {
+                          if (gt(currentChain.fee.delegate, availableAmount)) {
+                            enqueueSnackbar(t('component.page_section.my_delegation.error_need_more_fee'), {
+                              variant: 'error',
+                            });
+                            return;
+                          }
+
                           setDelegationData({
                             open: true,
                             inputData: { type: 'delegate', validatorAddress: validatorInfo.operator_address },
