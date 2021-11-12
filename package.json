@@ -10,7 +10,7 @@
     "predeploy:dev": "rimraf ./build && yarn build:dev",
     "deploy:dev": "aws s3 rm s3://wallet.dev.cosmostation.io --recursive && aws s3 sync ./build s3://wallet.dev.cosmostation.io",
     "postdeploy:dev": "aws cloudfront create-invalidation --distribution-id EGDQGYHD8E4U4 --paths '/*'",
-    "predeploy": "rimraf ./build && yarn build:dev",
+    "predeploy": "rimraf ./build && yarn build",
     "deploy": "aws s3 rm s3://wallet.cosmostation.io --recursive && aws s3 sync ./build s3://wallet.cosmostation.io",
     "postdeploy": "aws cloudfront create-invalidation --distribution-id EFX15CQ01VJFM --paths '/*'",
     "test": "craco test",
