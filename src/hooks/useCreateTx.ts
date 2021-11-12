@@ -148,10 +148,12 @@ export function useCreateTx() {
 
       const gas = times('60000', data.length - 1, 0);
 
+      const fee = times(currentChain.fee.withdrawReward, data.length);
+
       const txMsg = {
         msg: msgs,
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.withdrawReward, recoveryDecimal) }],
+          amount: [{ denom: currentChain.denom, amount: times(fee, recoveryDecimal) }],
           gas: plus(currentChain.gas.withdrawReward, gas, 0),
         },
         signatures: null,

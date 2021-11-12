@@ -16,6 +16,7 @@ import DialogDelegation from '~/components/Dialog/DialogDelegation';
 import DialogModifyWithdrawAddress from '~/components/Dialog/DialogModifyWithdrawAddress';
 import DialogValidatorList from '~/components/Dialog/DialogValidatorList';
 import DialogWithdrawReward from '~/components/Dialog/DialogWithdrawReward';
+import { CHAIN } from '~/constants/chain';
 import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { divide, gt, plus, pow, times } from '~/utils/calculator';
@@ -100,30 +101,34 @@ export default function MyDelegation({ className }: MyDelegationProps) {
       <div className={styles.titleContainer}>
         <div className={styles.title}>{t('component.page_section.my_delegation.my_delegation_detail')}</div>
         <div className={styles.titleButtonContainer}>
-          <Button
-            onClick={() => {
-              if (gt(currentChain.fee.modifyWithdrawAddress, availableAmount)) {
-                enqueueSnackbar(
-                  `${t('component.page_section.my_delegation.error_need_more_fee')} ${t(
-                    'component.page_section.my_delegation.error_need_more_fee_description',
-                  )}`,
-                  { variant: 'error' },
-                );
-                return;
-              }
+          {currentChain.path !== CHAIN.FETCH_AI && (
+            <Button
+              onClick={() => {
+                if (gt(currentChain.fee.modifyWithdrawAddress, availableAmount)) {
+                  enqueueSnackbar(
+                    `${t('component.page_section.my_delegation.error_need_more_fee')} ${t(
+                      'component.page_section.my_delegation.error_need_more_fee_description',
+                    )}`,
+                    { variant: 'error' },
+                  );
+                  return;
+                }
 
-              setIsOpenedModifyWithdrawAddress(true);
-            }}
-          >
-            {t('component.page_section.my_delegation.modify_withdraw_address')}
-          </Button>
+                setIsOpenedModifyWithdrawAddress(true);
+              }}
+            >
+              {t('component.page_section.my_delegation.modify_withdraw_address')}
+            </Button>
+          )}
           <Button
             onClick={() => {
-              const validatorAddress = sortedRewardList.map((item) => item.validatorAddress);
+              const validatorAddress = sortedRewardList
+                .filter((item) => gt(getRewardAmount([item.validatorAddress]), currentChain.fee.withdrawReward))
+                .map((item) => item.validatorAddress);
 
               const rewardAmount = getRewardAmount(validatorAddress);
 
-              if (gt(currentChain.fee.withdrawReward, rewardAmount)) {
+              if (validatorAddress.length === 0) {
                 enqueueSnackbar(t('component.page_section.my_delegation.error_waste_fee'), { variant: 'error' });
                 return;
               }

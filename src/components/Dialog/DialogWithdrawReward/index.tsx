@@ -16,7 +16,7 @@ import { useChainSWR } from '~/hooks/useChainSWR';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { getByte } from '~/utils/calculator';
+import { getByte, times } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 
@@ -59,7 +59,7 @@ export default function DialogWithdrawReward({
 
   const { withdrawAddress, account } = data;
 
-  const fee = currentChain.fee.withdrawReward;
+  const fee = times(currentChain.fee.withdrawReward, validatorAddress.length);
 
   const toAddress = withdrawAddress;
 

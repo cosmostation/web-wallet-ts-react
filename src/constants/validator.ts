@@ -127,11 +127,6 @@ export const etcValidatorSet: ValidatorSet[] = [
     address: 'rizon1z60acfrp7ufscjjnh6pq7yrduf0m7ads4ra9qv',
     operatorAddress: 'rizonvaloper1z60acfrp7ufscjjnh6pq7yrduf0m7adsx8lyzu',
   },
-  // dev
-  {
-    address: 'juno1gr0e3pj3y6fqvzyfm0qxyw9h5dwfrvh857jaza',
-    operatorAddress: 'junovaloper1gr0e3pj3y6fqvzyfm0qxyw9h5dwfrvh8tryjey',
-  },
 ];
 
 export const validatorSet = [...cosmosValidatorSet, ...etcValidatorSet];
