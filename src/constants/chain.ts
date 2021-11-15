@@ -71,7 +71,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'iaa',
-      support: { ledger: true, keystation: true },
+      support: { ledger: false, keystation: true },
     },
     lcdURL: 'https://lcd-iris.cosmostation.io',
     symbolName: 'IRIS',
@@ -446,7 +446,7 @@ export const chains = {
     },
   },
   [CHAIN.KICHAIN]: {
-    chainId: 'kichain-1',
+    chainId: 'kichain-2',
     name: 'kichain',
     path: CHAIN.KICHAIN,
     imgURL: `${baseURL}/kichain.png`,

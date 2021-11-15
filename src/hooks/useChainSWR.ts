@@ -243,15 +243,13 @@ export function useAccountSWR() {
   });
 
   const account1 = data?.account?.base_vesting_account?.base_account;
-  const account2 =
-    data?.account?.account_number && data?.account?.sequence
-      ? { account_number: data.account.account_number, sequence: data.account.sequence }
-      : undefined;
+  const account2 = data?.account?.account_number
+    ? { account_number: data.account.account_number, sequence: data.account.sequence || '0' }
+    : undefined;
   const account3 = data?.result?.value?.PeriodicVestingAccount?.BaseVestingAccount?.BaseAccount;
-  const account4 =
-    data?.result?.value?.account_number && data?.result?.value?.sequence
-      ? { account_number: data.result.value.account_number, sequence: data.result.value.sequence }
-      : undefined;
+  const account4 = data?.result?.value?.account_number
+    ? { account_number: data.result.value.account_number, sequence: data.result.value.sequence || '0' }
+    : undefined;
 
   const account = account1 || account2 || account3 || account4;
 
