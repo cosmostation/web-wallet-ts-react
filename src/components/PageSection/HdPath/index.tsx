@@ -9,6 +9,7 @@ import { IconButton, TextField } from '@mui/material';
 
 import Button from '~/components/Button';
 import Signin from '~/components/Keystation/Signin';
+import { CHAIN } from '~/constants/chain';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import { loaderState } from '~/stores/loader';
@@ -148,6 +149,29 @@ export default function HdPath({ className }: HdPathProps) {
             {t('component.page_section.hd_path.init_path')}
           </Button>
         </div>
+        {currentWallet.walletType === 'keystation' && (
+          <>
+            {currentChain.path === CHAIN.KAVA && (
+              <div className={styles.alertDescriptionContainer}>
+                <div>Ledger Path: 44/118/0/0/0</div>
+                <div>Kava Path: 44/459/0/0/0</div>
+              </div>
+            )}
+            {currentChain.path === CHAIN.PERSISTENCE && (
+              <div className={styles.alertDescriptionContainer}>
+                <div>Ledger Path: 44/118/0/0/0</div>
+                <div>Persistence Path: 44/750/0/0/0</div>
+              </div>
+            )}
+            {currentChain.path === CHAIN.FETCH_AI && (
+              <div className={styles.alertDescriptionContainer}>
+                <div>Ledger Path: 44/118/0/0/0</div>
+                <div>Ledger Live Path: 44/60/0/0/0</div>
+                <div>Non Ledger Path: 44/60/0/0</div>
+              </div>
+            )}
+          </>
+        )}
       </div>
       {isOpenedSignin && (
         <Signin
