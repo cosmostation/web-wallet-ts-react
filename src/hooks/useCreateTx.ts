@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import { CHAIN } from '~/constants/chain';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import { plus, pow, times } from '~/utils/calculator';
@@ -11,7 +12,7 @@ export function useCreateTx() {
 
   return {
     getSendTxMsg: (toAddress: string, amount: string, memo?: string) => {
-      const msgType = 'cosmos-sdk/MsgSend';
+      const msgType = currentChain.path === CHAIN.CERTIK ? 'bank/MsgSend' : 'cosmos-sdk/MsgSend';
 
       const txMsg = {
         msg: [
