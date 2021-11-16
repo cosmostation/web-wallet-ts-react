@@ -123,7 +123,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
           <Button
             onClick={() => {
               const validatorAddress = sortedRewardList
-                // .filter((item) => gt(getRewardAmount([item.validatorAddress]), currentChain.fee.withdrawReward))
+                .filter((item) => gt(getRewardAmount([item.validatorAddress]), currentChain.fee.withdrawReward))
                 .map((item) => item.validatorAddress);
 
               const rewardAmount = getRewardAmount(validatorAddress);
@@ -133,15 +133,15 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                 return;
               }
 
-              // if (gt(currentChain.fee.withdrawReward, availableAmount)) {
-              //   enqueueSnackbar(
-              //     `${t('component.page_section.my_delegation.error_need_more_fee')} ${t(
-              //       'component.page_section.my_delegation.error_need_more_fee_description',
-              //     )}`,
-              //     { variant: 'error' },
-              //   );
-              //   return;
-              // }
+              if (gt(currentChain.fee.withdrawReward, availableAmount)) {
+                enqueueSnackbar(
+                  `${t('component.page_section.my_delegation.error_need_more_fee')} ${t(
+                    'component.page_section.my_delegation.error_need_more_fee_description',
+                  )}`,
+                  { variant: 'error' },
+                );
+                return;
+              }
 
               setWithdrawRewardData({
                 open: true,
@@ -311,22 +311,22 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                         onClick={() => {
                           const rewardAmount = getRewardAmount([validatorInfo.operator_address]);
 
-                          // if (gt(currentChain.fee.withdrawReward, rewardAmount)) {
-                          //   enqueueSnackbar(t('component.page_section.my_delegation.error_waste_fee'), {
-                          //     variant: 'error',
-                          //   });
-                          //   return;
-                          // }
+                          if (gt(currentChain.fee.withdrawReward, rewardAmount)) {
+                            enqueueSnackbar(t('component.page_section.my_delegation.error_waste_fee'), {
+                              variant: 'error',
+                            });
+                            return;
+                          }
 
-                          // if (gt(currentChain.fee.withdrawReward, availableAmount)) {
-                          //   enqueueSnackbar(
-                          //     `${t('component.page_section.my_delegation.error_need_more_fee')} ${t(
-                          //       'component.page_section.my_delegation.error_need_more_fee_description',
-                          //     )}`,
-                          //     { variant: 'error' },
-                          //   );
-                          //   return;
-                          // }
+                          if (gt(currentChain.fee.withdrawReward, availableAmount)) {
+                            enqueueSnackbar(
+                              `${t('component.page_section.my_delegation.error_need_more_fee')} ${t(
+                                'component.page_section.my_delegation.error_need_more_fee_description',
+                              )}`,
+                              { variant: 'error' },
+                            );
+                            return;
+                          }
 
                           setWithdrawRewardData({
                             open: true,
