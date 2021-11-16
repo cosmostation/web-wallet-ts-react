@@ -13,13 +13,14 @@ import Transaction from '~/components/Keystation/Transaction';
 import { CHAIN } from '~/constants/chain';
 import { useAxios } from '~/hooks/useAxios';
 import { useChainSWR } from '~/hooks/useChainSWR';
+import { useCreateProtoTx } from '~/hooks/useCreateProtoTx';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import { loaderState } from '~/stores/loader';
 import { divide, equal, getByte, gt, minus } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
-import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
+import { createBroadcastBody, createProtoBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 import { isDecimal } from '~/utils/validator';
 
 import styles from './index.module.scss';
@@ -45,8 +46,9 @@ export default function WalletInfo({ className }: WalletInfoProps) {
   const currentWallet = useCurrentWallet();
 
   const createTx = useCreateTx();
+  const createProtoTx = useCreateProtoTx();
 
-  const { boardcastTx } = useAxios();
+  const { broadcastTx, broadcastProtoTx } = useAxios();
 
   const [address, setAddress] = useState('');
   const [sendAmount, setSendAmount] = useState('');
@@ -64,7 +66,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
     setTimeout(() => {
       void swr.balance.mutate();
       void swr.account.mutate();
-    }, 7000);
+    }, 15000);
   };
 
   const handleOnClick = async () => {
@@ -133,6 +135,16 @@ export default function WalletInfo({ className }: WalletInfoProps) {
 
         const secpSignature = secp256k1.signatureImport(ledgerSignature);
 
+        const protoTxBody = createProtoTx.getSendTxBody(address, sendAmount, memo);
+        const protoAuthInfo = createProtoTx.getAuthInfo(
+          currentChain.fee.withdraw,
+          currentChain.gas.withdraw,
+          publicKey,
+          account.sequence,
+        );
+        const protoTxRaw = createProtoTx.getTxRaw(protoTxBody, protoAuthInfo, secpSignature);
+        const txBytes = createProtoBroadcastBody(protoTxRaw);
+
         const signature = createSignature({
           publicKey,
           signature: secpSignature,
@@ -143,9 +155,15 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         const tx = createSignedTx(txMsgOrigin, signature);
         const txBody = createBroadcastBody(tx);
 
-        const result = await boardcastTx(txBody);
+        const result = (currentChain.wallet.isProto ? await broadcastProtoTx(txBytes) : await broadcastTx(txBody)) as {
+          // eslint-disable-next-line camelcase
+          tx_response: { txhash: string };
+          txhash: string;
+        };
 
-        setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: result.txhash }));
+        const txHash = result?.tx_response ? result?.tx_response.txhash : result.txhash;
+
+        setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash }));
 
         handleOnSuccess();
       }

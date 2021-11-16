@@ -1,3 +1,5 @@
+import type { TxRaw } from '~/proto/cosmos/tx/v1beta1/tx_pb';
+
 export function createSignedTx(tx: Record<string, unknown>, signature: unknown) {
   return { ...tx, signatures: [signature] };
 }
@@ -24,5 +26,12 @@ export function createBroadcastBody(signedTx: Record<string, unknown>) {
   return {
     tx: signedTx,
     mode: 'sync',
+  };
+}
+
+export function createProtoBroadcastBody(txRaw: TxRaw) {
+  return {
+    tx_bytes: Buffer.from(txRaw.serializeBinary()).toString('base64'),
+    mode: 'BROADCAST_MODE_SYNC',
   };
 }

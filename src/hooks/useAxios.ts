@@ -14,5 +14,9 @@ export function useAxios() {
 
   const lcdURL = LcdURL(currentChain.path);
 
-  return { boardcastTx: (body?: Record<string, unknown>) => post<{ txhash: string }>(lcdURL.postTx(), body) };
+  return {
+    broadcastTx: (body?: Record<string, unknown>) => post<{ txhash: string }>(lcdURL.postTx(), body),
+    broadcastProtoTx: (body?: Record<string, unknown>) =>
+      post<{ tx_response: { txhash: string } }>(lcdURL.postProtoTx(), body),
+  };
 }

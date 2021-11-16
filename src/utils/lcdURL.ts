@@ -31,5 +31,6 @@ export default function LcdURL(chain: ChainPath) {
     },
     getWithdrawAddress: (address: string) => `${chainInfo.lcdURL}/distribution/delegators/${address}/withdraw_address`,
     postTx: () => `${chainInfo.lcdURL}/txs`,
+    postProtoTx: () => `${chainInfo.lcdURL}/cosmos/tx/v1beta1/txs`,
   };
 }

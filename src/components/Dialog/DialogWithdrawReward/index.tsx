@@ -13,12 +13,13 @@ import Transaction from '~/components/Keystation/Transaction';
 import { CHAIN } from '~/constants/chain';
 import { useAxios } from '~/hooks/useAxios';
 import { useChainSWR } from '~/hooks/useChainSWR';
+import { useCreateProtoTx } from '~/hooks/useCreateProtoTx';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { getByte, times } from '~/utils/calculator';
+import { getByte, plus, times } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
-import { createBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
+import { createBroadcastBody, createProtoBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 
 import styles from './index.module.scss';
 
@@ -43,7 +44,8 @@ export default function DialogWithdrawReward({
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
   const createTx = useCreateTx();
-  const { boardcastTx } = useAxios();
+  const createProtoTx = useCreateProtoTx();
+  const { broadcastTx, broadcastProtoTx } = useAxios();
   const { enqueueSnackbar } = useSnackbar();
 
   const [isOpenedTransaction, setIsOpenedTransaction] = useState(false);
@@ -70,7 +72,7 @@ export default function DialogWithdrawReward({
       void swr.unbondingDelegation.mutate();
       void swr.rewards.mutate();
       void swr.account.mutate();
-    }, 7000);
+    }, 15000);
   };
 
   const handleOnClick = async () => {
@@ -96,6 +98,8 @@ export default function DialogWithdrawReward({
         validatorAddress.map((address) => ({ validatorAddress: address })),
         memo,
       );
+
+      const gas = plus(currentChain.gas.withdrawReward, times('60000', validatorAddress.length - 1, 0), 0);
 
       const txMsgForSign = createMsgForLedger({
         message: txMsgOrigin,
@@ -125,6 +129,14 @@ export default function DialogWithdrawReward({
 
         const secpSignature = secp256k1.signatureImport(ledgerSignature);
 
+        const protoTxBody = createProtoTx.getWithdrawRewardTxBody(
+          validatorAddress.map((address) => ({ validatorAddress: address })),
+          memo,
+        );
+        const protoAuthInfo = createProtoTx.getAuthInfo(fee, gas, publicKey, account.sequence);
+        const protoTxRaw = createProtoTx.getTxRaw(protoTxBody, protoAuthInfo, secpSignature);
+        const txBytes = createProtoBroadcastBody(protoTxRaw);
+
         const signature = createSignature({
           publicKey,
           signature: secpSignature,
@@ -135,9 +147,15 @@ export default function DialogWithdrawReward({
         const tx = createSignedTx(txMsgOrigin, signature);
         const txBody = createBroadcastBody(tx);
 
-        const result = await boardcastTx(txBody);
+        const result = (currentChain.wallet.isProto ? await broadcastProtoTx(txBytes) : await broadcastTx(txBody)) as {
+          // eslint-disable-next-line camelcase
+          tx_response: { txhash: string };
+          txhash: string;
+        };
 
-        setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: result.txhash }));
+        const txHash = result?.tx_response ? result?.tx_response.txhash : result.txhash;
+
+        setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash }));
 
         afterSuccess();
       }

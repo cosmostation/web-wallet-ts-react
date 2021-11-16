@@ -4,22 +4,8 @@ html {
   font-size: 62.5%;
 }
 
-@font-face {
-  font-family: 'SpoqaHanSansNeo-Regular';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SpoqaHanSansNeo-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
 body {
   margin: 0;
-  font-family: 'SpoqaHanSansNeo-Regular';
-}
-
-// 별도로 Roboto 가 컴포넌트에 재정의 된 경우
-
-* {
-  font-family: 'SpoqaHanSansNeo-Regular';
 }
 
 main {
