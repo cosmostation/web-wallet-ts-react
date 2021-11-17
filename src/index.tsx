@@ -3,9 +3,12 @@ import './i18n/i18n';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactGA from 'react-ga';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 import { RecoilRoot } from 'recoil';
+
+import { chainValues } from '~/constants/chain';
 
 import reportWebVitals from './reportWebVitals';
 import Routes from './Routes';
@@ -25,7 +28,9 @@ ReactDOM.render(
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         style={{ fontSize: '1.3rem' }}
       >
-        <App />
+        <HelmetProvider>
+          <App />
+        </HelmetProvider>
       </SnackbarProvider>
     </RecoilRoot>
   </React.StrictMode>,
@@ -38,9 +43,18 @@ ReactDOM.render(
 reportWebVitals();
 
 function App() {
+  const chains = chainValues.map((chain) => chain.name);
+
+  const joinedChains = chains.join(', ');
   return (
     <BrowserRouter>
       <div className={styles.container}>
+        <Helmet>
+          <meta
+            name="keywords"
+            content={`tendermint, blockchain, validator, staking, node, validator node, cosmos validator, atom, atom staking, cosmos wallet, cosmos explorer, photon, wannabit, cosmostation, delegator, cosmos delegator, airdrop, cryptocurrency, bitcoin, ethereum, dfinity, cosmonaut, staking reward, cosmos staking calculator, cosmos staking, myetherwallet, atom explorer, cosmostation, cosmos blockchain, atom delegate, ${joinedChains}`}
+          />
+        </Helmet>
         <Routes />
       </div>
     </BrowserRouter>
