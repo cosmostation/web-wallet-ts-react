@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import { useRecoilState } from 'recoil';
 
 import type { chainPaths } from '~/constants/chain';
-import { chainValues } from '~/constants/chain';
+import { prefixSortedChainValues } from '~/constants/chain';
 import { MENU } from '~/constants/common';
 import { useCurrentPath } from '~/hooks/useCurrentPath';
 import { chainState } from '~/stores/chain';
@@ -38,7 +38,9 @@ export default function Wrapper({ children }: WrapperProps) {
 
   useEffect(() => {
     if (walletInfo.address) {
-      const chainPath = chainValues.find((item) => walletInfo.address?.startsWith(item.wallet.prefix))?.path;
+      const chainPath = prefixSortedChainValues.find((item) =>
+        walletInfo.address?.startsWith(item.wallet.prefix),
+      )?.path;
 
       if (!chainPath) return;
 

@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 
 import type { ChainValue } from '~/constants/chain';
-import { chains } from '~/constants/chain';
+import { prefixSortedChainValues } from '~/constants/chain';
 import type { WalletInfo } from '~/stores/wallet';
 import { walletInfoState } from '~/stores/wallet';
 
@@ -23,7 +23,7 @@ export default function Signin({ onSuccess }: SigninProps) {
     (e: MessageEvent) => {
       if (e.origin === 'https://keystation.cosmostation.io') {
         if (e.data) {
-          const chainInfo = Object.values(chains).find((chain) =>
+          const chainInfo = prefixSortedChainValues.find((chain) =>
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             (e.data.address as string).startsWith(chain.wallet.prefix),
           )!;

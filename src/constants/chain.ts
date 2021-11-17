@@ -26,6 +26,7 @@ export const CHAIN = {
   DESMOS: 'desmos',
   GRAVITY_BRIDGE: 'gravity-bridge',
   LUM: 'lum',
+  STARGAZE: 'stargaze',
 } as const;
 
 // chain info key === path
@@ -812,6 +813,7 @@ export const chains = {
       modifyWithdrawAddress: '200000',
     },
   },
+
   [CHAIN.BITSONG]: {
     chainId: 'bitsong-2b',
     name: 'bitsong',
@@ -968,9 +970,52 @@ export const chains = {
       modifyWithdrawAddress: '200000',
     },
   },
+  [CHAIN.STARGAZE]: {
+    chainId: 'stargaze-1',
+    name: 'stargaze',
+    path: CHAIN.STARGAZE,
+    imgURL: `${baseURL}/stargaze.png`,
+    wallet: {
+      hdPath: '44/118/0/0/0',
+      prefix: 'stars',
+      support: { ledger: true, keystation: true },
+      isProto: true,
+    },
+    lcdURL: 'https://lcd-stargaze.cosmostation.io/',
+    symbolName: 'STARS',
+    denom: 'ustars',
+    decimal: 6,
+    coingeckoId: 'stargaze',
+    validatorIconDirectory: 'stargaze',
+    mintscanPath: 'stargaze',
+    fee: {
+      default: '0.005',
+      delegate: '0.005',
+      undelegate: '0.005',
+      redelegate: '0.0075',
+      withdraw: '0.005',
+      withdrawReward: '0.005',
+      withdrawCommission: '0.005',
+      modifyWithdrawAddress: '0.005',
+    },
+    gas: {
+      default: '200000',
+      delegate: '200000',
+      undelegate: '200000',
+      redelegate: '300000',
+      withdraw: '200000',
+      withdrawReward: '200000',
+      withdrawCommission: '200000',
+      modifyWithdrawAddress: '200000',
+    },
+  },
 } as const;
 
 export const chainValues = Object.values(chains);
+
+export const prefixSortedChainValues = chainValues.sort((a, b) =>
+  b.wallet.prefix.length > a.wallet.prefix.length ? 1 : -1,
+);
 
 export const chainNames = chainValues.map((chain) => chain.name);
 export const chainGeckoIds = chainValues.map((chain) => chain.coingeckoId);
