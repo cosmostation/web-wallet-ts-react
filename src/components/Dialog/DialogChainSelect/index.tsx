@@ -117,7 +117,7 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
           {chainInfos.map((chaininfo) => (
             <ChainButton
               key={chaininfo.name}
-              name={chaininfo.name}
+              name={chaininfo.name.toUpperCase()}
               imgURL={chaininfo.imgURL}
               onClick={() => handleOnClick(chaininfo.path)}
               disabled={

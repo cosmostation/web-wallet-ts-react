@@ -87,7 +87,7 @@ export default function Header({ className, backgroundColor }: HeaderProps) {
                 <div className={styles.chainImgContainer}>
                   <img src={currentChain.imgURL} alt={currentChain.name} />
                 </div>
-                <div className={styles.accountButtonText}>{currentChain.name}</div>
+                <div className={styles.chainButtonText}>{currentChain.name.toUpperCase()}</div>
               </div>
               <WidgetsIcon />
             </button>
