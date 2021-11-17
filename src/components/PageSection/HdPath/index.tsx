@@ -173,6 +173,12 @@ export default function HdPath({ className }: HdPathProps) {
                 <div>Non Ledger Path: 44/60/0/0</div>
               </div>
             )}
+            {currentChain.path === CHAIN.MEDIBLOC && (
+              <div className={styles.alertDescriptionContainer}>
+                <div>Ledger Path: 44/118/0/0/0</div>
+                <div>Medibloc Path: 44/371/0/0/0</div>
+              </div>
+            )}
           </>
         )}
       </div>
