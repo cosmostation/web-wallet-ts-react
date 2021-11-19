@@ -21,6 +21,7 @@ export const CHAIN = {
   JUNO: 'juno',
   BITCANNA: 'bitcanna',
   REGEN: 'regen',
+  INJECTIVE: 'injective',
 } as const;
 
 // chain info key === path
@@ -747,6 +748,45 @@ export const chains = {
     coingeckoId: 'regen',
     validatorIconDirectory: 'regen',
     mintscanPath: 'regen',
+    fee: {
+      default: '0.005',
+      delegate: '0.005',
+      undelegate: '0.005',
+      redelegate: '0.005',
+      withdraw: '0.005',
+      withdrawReward: '0.005',
+      withdrawCommission: '0.005',
+      modifyWithdrawAddress: '0.005',
+    },
+    gas: {
+      default: '200000',
+      delegate: '200000',
+      undelegate: '200000',
+      redelegate: '300000',
+      withdraw: '200000',
+      withdrawReward: '200000',
+      withdrawCommission: '200000',
+      modifyWithdrawAddress: '200000',
+    },
+  },
+  [CHAIN.INJECTIVE]: {
+    chainId: 'injective-1',
+    name: 'injective',
+    path: CHAIN.INJECTIVE,
+    imgURL: `${baseURL}/injective.png`,
+    wallet: {
+      hdPath: '44/118/0/0/0',
+      prefix: 'inj',
+      support: { ledger: true, keystation: true },
+      isProto: true,
+    },
+    lcdURL: 'https://lcd-inj.cosmostation.io',
+    symbolName: 'INJ',
+    denom: 'inj',
+    decimal: 18,
+    coingeckoId: 'injective-protocol',
+    validatorIconDirectory: 'injective',
+    mintscanPath: 'injective',
     fee: {
       default: '0.005',
       delegate: '0.005',
