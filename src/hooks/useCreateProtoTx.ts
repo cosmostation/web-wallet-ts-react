@@ -33,7 +33,7 @@ export function useCreateProtoTx() {
       msgSend.setToAddress(toAddress);
 
       decCoin.setDenom(currentChain.denom);
-      decCoin.setAmount(times(amount, recoveryDecimal));
+      decCoin.setAmount(times(amount, recoveryDecimal, 0));
 
       msgSend.setAmountList([decCoin]);
 
@@ -69,7 +69,7 @@ export function useCreateProtoTx() {
 
       const decCoin = new DecCoin();
       decCoin.setDenom(currentChain.denom);
-      decCoin.setAmount(times(msgFee, recoveryDecimal));
+      decCoin.setAmount(times(msgFee, recoveryDecimal, 0));
 
       const fee = new Fee();
       fee.setAmountList([decCoin]);
@@ -103,7 +103,7 @@ export function useCreateProtoTx() {
       msgDelegate.setValidatorAddress(validatorAddress);
 
       decCoin.setDenom(currentChain.denom);
-      decCoin.setAmount(times(amount, recoveryDecimal));
+      decCoin.setAmount(times(amount, recoveryDecimal, 0));
 
       msgDelegate.setAmount(decCoin);
 
@@ -128,7 +128,7 @@ export function useCreateProtoTx() {
       msgBeginRedelegate.setValidatorDstAddress(validatorDstAddress);
 
       decCoin.setDenom(currentChain.denom);
-      decCoin.setAmount(times(amount, recoveryDecimal));
+      decCoin.setAmount(times(amount, recoveryDecimal, 0));
 
       msgBeginRedelegate.setAmount(decCoin);
 
@@ -153,7 +153,7 @@ export function useCreateProtoTx() {
       msgUndelegate.setValidatorAddress(validatorAddress);
 
       decCoin.setDenom(currentChain.denom);
-      decCoin.setAmount(times(amount, recoveryDecimal));
+      decCoin.setAmount(times(amount, recoveryDecimal, 0));
 
       msgUndelegate.setAmount(decCoin);
 

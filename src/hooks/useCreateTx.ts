@@ -21,12 +21,12 @@ export function useCreateTx() {
             value: {
               from_address: currentWallet.address,
               to_address: toAddress,
-              amount: [{ denom: currentChain.denom, amount: times(amount, recoveryDecimal) }],
+              amount: [{ denom: currentChain.denom, amount: times(amount, recoveryDecimal, 0) }],
             },
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.withdraw, recoveryDecimal) }],
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.withdraw, recoveryDecimal, 0) }],
           gas: currentChain.gas.withdraw,
         },
         signatures: null,
@@ -45,12 +45,12 @@ export function useCreateTx() {
             value: {
               delegator_address: currentWallet.address,
               validator_address: validatorAddress,
-              amount: { denom: currentChain.denom, amount: times(amount, recoveryDecimal) },
+              amount: { denom: currentChain.denom, amount: times(amount, recoveryDecimal, 0) },
             },
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryDecimal) }],
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.delegate, recoveryDecimal, 0) }],
           gas: currentChain.gas.delegate,
         },
         signatures: null,
@@ -70,12 +70,12 @@ export function useCreateTx() {
               delegator_address: currentWallet.address,
               validator_src_address: validatorSrcAddress,
               validator_dst_address: validatorDstAddress,
-              amount: { denom: currentChain.denom, amount: times(amount, recoveryDecimal) },
+              amount: { denom: currentChain.denom, amount: times(amount, recoveryDecimal, 0) },
             },
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.redelegate, recoveryDecimal) }],
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.redelegate, recoveryDecimal, 0) }],
           gas: currentChain.gas.redelegate,
         },
         signatures: null,
@@ -95,12 +95,12 @@ export function useCreateTx() {
             value: {
               delegator_address: currentWallet.address,
               validator_address: validatorAddress,
-              amount: { denom: currentChain.denom, amount: times(amount, recoveryDecimal) },
+              amount: { denom: currentChain.denom, amount: times(amount, recoveryDecimal, 0) },
             },
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.undelegate, recoveryDecimal) }],
+          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.undelegate, recoveryDecimal, 0) }],
           gas: currentChain.gas.undelegate,
         },
         signatures: null,
@@ -125,7 +125,7 @@ export function useCreateTx() {
         ],
         fee: {
           amount: [
-            { denom: currentChain.denom, amount: times(currentChain.fee.modifyWithdrawAddress, recoveryDecimal) },
+            { denom: currentChain.denom, amount: times(currentChain.fee.modifyWithdrawAddress, recoveryDecimal, 0) },
           ],
           gas: currentChain.gas.modifyWithdrawAddress,
         },
@@ -154,7 +154,7 @@ export function useCreateTx() {
       const txMsg = {
         msg: msgs,
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(fee, recoveryDecimal) }],
+          amount: [{ denom: currentChain.denom, amount: times(fee, recoveryDecimal, 0) }],
           gas: plus(currentChain.gas.withdrawReward, gas, 0),
         },
         signatures: null,
@@ -177,7 +177,9 @@ export function useCreateTx() {
           },
         ],
         fee: {
-          amount: [{ denom: currentChain.denom, amount: times(currentChain.fee.withdrawCommission, recoveryDecimal) }],
+          amount: [
+            { denom: currentChain.denom, amount: times(currentChain.fee.withdrawCommission, recoveryDecimal, 0) },
+          ],
           gas: currentChain.gas.withdrawCommission,
         },
         signatures: null,

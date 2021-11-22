@@ -738,7 +738,7 @@ export const chains = {
       hdPath: '44/118/0/0/0',
       prefix: 'regen',
       support: { ledger: true, keystation: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-regen.cosmostation.io',
     symbolName: 'REGEN',
