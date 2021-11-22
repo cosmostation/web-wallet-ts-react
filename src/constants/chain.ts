@@ -791,7 +791,7 @@ export const chains = {
       default: '0.005',
       delegate: '0.005',
       undelegate: '0.005',
-      redelegate: '0.005',
+      redelegate: '0.0075',
       withdraw: '0.005',
       withdrawReward: '0.005',
       withdrawCommission: '0.005',
