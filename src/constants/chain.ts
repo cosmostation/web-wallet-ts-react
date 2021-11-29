@@ -22,6 +22,7 @@ export const CHAIN = {
   BITCANNA: 'bitcanna',
   REGEN: 'regen',
   COMDEX: 'comdex',
+  BITSONG: 'bitsong',
 } as const;
 
 // chain info key === path
@@ -787,6 +788,45 @@ export const chains = {
     coingeckoId: 'comdex',
     validatorIconDirectory: 'comdex',
     mintscanPath: 'comdex',
+    fee: {
+      default: '0.005',
+      delegate: '0.005',
+      undelegate: '0.005',
+      redelegate: '0.0075',
+      withdraw: '0.005',
+      withdrawReward: '0.005',
+      withdrawCommission: '0.005',
+      modifyWithdrawAddress: '0.005',
+    },
+    gas: {
+      default: '200000',
+      delegate: '200000',
+      undelegate: '200000',
+      redelegate: '300000',
+      withdraw: '200000',
+      withdrawReward: '200000',
+      withdrawCommission: '200000',
+      modifyWithdrawAddress: '200000',
+    },
+  },
+  [CHAIN.BITSONG]: {
+    chainId: 'bitsong-2b',
+    name: 'bitsong',
+    path: CHAIN.BITSONG,
+    imgURL: `${baseURL}/bitsong.png`,
+    wallet: {
+      hdPath: '44/639/0/0/0',
+      prefix: 'bitsong',
+      support: { ledger: false, keystation: true },
+      isProto: false,
+    },
+    lcdURL: 'https://lcd-bitsong.cosmostation.io',
+    symbolName: 'BTSG',
+    denom: 'ubtsg',
+    decimal: 6,
+    coingeckoId: 'bitsong',
+    validatorIconDirectory: 'bitsong',
+    mintscanPath: 'bitsong',
     fee: {
       default: '0.005',
       delegate: '0.005',
