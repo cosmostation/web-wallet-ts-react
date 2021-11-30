@@ -250,8 +250,11 @@ export function useAccountSWR() {
   const account4 = data?.result?.value?.account_number
     ? { account_number: data.result.value.account_number, sequence: data.result.value.sequence || '0' }
     : undefined;
+  const account5 = data?.account?.account?.account_number
+    ? { account_number: data.account.account.account_number, sequence: data.account.account.sequence || '0' }
+    : undefined;
 
-  const account = account1 || account2 || account3 || account4;
+  const account = account1 || account2 || account3 || account4 || account5;
 
   return {
     data: account,
