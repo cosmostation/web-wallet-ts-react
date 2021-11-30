@@ -47,6 +47,7 @@ export type Account = {
       sequence: string;
     };
   };
+  account: Account;
 };
 
 export type AccountPayload = {
