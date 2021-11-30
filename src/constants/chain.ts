@@ -23,6 +23,7 @@ export const CHAIN = {
   REGEN: 'regen',
   COMDEX: 'comdex',
   BITSONG: 'bitsong',
+  DESMOS: 'desmos',
 } as const;
 
 // chain info key === path
@@ -827,6 +828,45 @@ export const chains = {
     coingeckoId: 'bitsong',
     validatorIconDirectory: 'bitsong',
     mintscanPath: 'bitsong',
+    fee: {
+      default: '0.005',
+      delegate: '0.005',
+      undelegate: '0.005',
+      redelegate: '0.0075',
+      withdraw: '0.005',
+      withdrawReward: '0.005',
+      withdrawCommission: '0.005',
+      modifyWithdrawAddress: '0.005',
+    },
+    gas: {
+      default: '200000',
+      delegate: '200000',
+      undelegate: '200000',
+      redelegate: '300000',
+      withdraw: '200000',
+      withdrawReward: '200000',
+      withdrawCommission: '200000',
+      modifyWithdrawAddress: '200000',
+    },
+  },
+  [CHAIN.DESMOS]: {
+    chainId: 'desmos-mainnet',
+    name: 'desmos',
+    path: CHAIN.DESMOS,
+    imgURL: `${baseURL}/desmos.png`,
+    wallet: {
+      hdPath: '44/852/0/0/0',
+      prefix: 'desmos',
+      support: { ledger: false, keystation: true },
+      isProto: false,
+    },
+    lcdURL: 'https://lcd-desmos.cosmostation.io',
+    symbolName: 'DSM',
+    denom: 'udsm',
+    decimal: 6,
+    coingeckoId: 'desmos',
+    validatorIconDirectory: 'desmos',
+    mintscanPath: 'desmos',
     fee: {
       default: '0.005',
       delegate: '0.005',
