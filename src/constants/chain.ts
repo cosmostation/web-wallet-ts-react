@@ -429,7 +429,7 @@ export const chains = {
       hdPath: '44/394/0/0/0',
       prefix: 'cro',
       support: { ledger: true, keystation: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-cryptocom.cosmostation.io',
     symbolName: 'CRO',
