@@ -37,7 +37,7 @@ export const chains = {
       hdPath: '44/118/0/0/0',
       prefix: 'cosmos',
       support: { ledger: true, keystation: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-cosmos.cosmostation.io',
     symbolName: 'ATOM',
