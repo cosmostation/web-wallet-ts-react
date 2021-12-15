@@ -311,6 +311,13 @@ export function useAccountSWR() {
         } as AuthAccount;
       }
 
+      if (data.result.account_number) {
+        return {
+          value: data.result,
+          type: data.result.type?.split('/')[1],
+        } as AuthAccount;
+      }
+
       return {
         ...data.result,
         type: data.result.type?.split('/')[1],
