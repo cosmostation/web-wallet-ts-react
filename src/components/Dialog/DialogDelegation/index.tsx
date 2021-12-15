@@ -17,7 +17,7 @@ import { useCreateProtoTx } from '~/hooks/useCreateProtoTx';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
-import { divide, equal, getByte, gt, minus, pow, times } from '~/utils/calculator';
+import { divide, equal, getByte, gt, minus, plus, pow, times } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createProtoBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 import { isDecimal } from '~/utils/validator';
@@ -70,7 +70,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
 
   const { data, swr } = useChainSWR();
 
-  const { availableAmount, account } = data;
+  const { availableAmount, account, vestingNotDelegate } = data;
 
   const amount = (() => {
     if (inputData.type === 'redelegate') {
@@ -91,7 +91,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
       );
     }
 
-    return availableAmount;
+    return plus(availableAmount, vestingNotDelegate, currentChain.decimal);
   })();
 
   const fee = (() => {
