@@ -31,7 +31,16 @@ export default function WalletInfo({ className }: WalletInfoProps) {
 
   const [isOpenedCommission, setIsOpenedCommission] = useState(false);
 
-  const { availableAmount, price, totalAmount, totalPrice, delegationAmount, unbondingAmount, rewardAmount } = data;
+  const {
+    availableAmount,
+    vestingNotDelegate,
+    price,
+    totalAmount,
+    totalPrice,
+    delegationAmount,
+    unbondingAmount,
+    rewardAmount,
+  } = data;
 
   const isAddressOfValidator = validatorSet.map((item) => item.address).includes(currentWallet.address || '');
 
@@ -135,6 +144,11 @@ export default function WalletInfo({ className }: WalletInfoProps) {
               <div>{t('component.page_section.wallet_info.reward_amount')}</div>
               <div>{rewardAmount}</div>
             </div>
+            <div className={styles.delegateInfoContainer}>
+              <div>{t('component.page_section.wallet_info.vesting_amount')}</div>
+              <div>{vestingNotDelegate}</div>
+            </div>
+            <div className={styles.delegateInfoContainer} />
           </div>
         </div>
       </div>

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable camelcase */
 import { useMemo } from 'react';
 import type { AxiosError } from 'axios';
@@ -11,7 +13,11 @@ import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentLanguage } from '~/hooks/useCurrentLanguage';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import type {
-  AccountPayload,
+  AuthAccount,
+  AuthAccountsPayload,
+  AuthAccountValue,
+  AuthBaseVestingAccount,
+  AuthBaseWithStartAndPeriod,
   BalancePayload,
   DelegationsPayload,
   RewardPayload,
@@ -21,6 +27,13 @@ import type {
 } from '~/models/common';
 import { gt, plus, pow, times } from '~/utils/calculator';
 import LcdURL from '~/utils/lcdURL';
+import {
+  calculatingDelegatedVestingTotal,
+  getDelegatedVestingTotal,
+  getPersistenceVestingRelatedBalances,
+  getVestingRelatedBalances,
+  getVestingRemained,
+} from '~/utils/vesting';
 
 async function get<T>(path: string): Promise<T> {
   const { data } = await axios.get<T>(path);
@@ -233,31 +246,89 @@ export function useAccountSWR() {
 
   const requestURL = lcdURL.getAccount(currentWallet.address!);
 
-  const fetcher = (fetchUrl: string) => get<AccountPayload>(fetchUrl);
+  const fetcher = (fetchUrl: string) => get<AuthAccountsPayload>(fetchUrl);
 
-  const { data, error, mutate } = useSWR<AccountPayload, AxiosError>(requestURL, fetcher, {
+  const { data, error, mutate } = useSWR<AuthAccountsPayload, AxiosError>(requestURL, fetcher, {
     refreshInterval: 0,
     revalidateOnFocus: false,
     errorRetryCount: 0,
     isPaused: () => !currentWallet.address?.startsWith(currentChain.wallet.prefix),
   });
 
-  const account1 = data?.account?.base_vesting_account?.base_account;
-  const account2 = data?.account?.account_number
-    ? { account_number: data.account.account_number, sequence: data.account.sequence || '0' }
-    : undefined;
-  const account3 = data?.result?.value?.PeriodicVestingAccount?.BaseVestingAccount?.BaseAccount;
-  const account4 = data?.result?.value?.account_number
-    ? { account_number: data.result.value.account_number, sequence: data.result.value.sequence || '0' }
-    : undefined;
-  const account5 = data?.account?.account?.account_number
-    ? { account_number: data.account.account.account_number, sequence: data.account.account.sequence || '0' }
-    : undefined;
+  const isBaseVestingAccount = (
+    payload: AuthAccountValue | AuthBaseVestingAccount | AuthBaseWithStartAndPeriod,
+  ): payload is AuthBaseVestingAccount =>
+    (payload as AuthBaseVestingAccount).base_vesting_account !== undefined &&
+    (payload as AuthBaseWithStartAndPeriod).vesting_periods === undefined;
 
-  const account = account1 || account2 || account3 || account4 || account5;
+  const isBaseWithStartAndPeriod = (
+    payload: AuthAccountValue | AuthBaseVestingAccount | AuthBaseWithStartAndPeriod,
+  ): payload is AuthBaseWithStartAndPeriod =>
+    (payload as AuthBaseWithStartAndPeriod).base_vesting_account !== undefined &&
+    (payload as AuthBaseWithStartAndPeriod).start_time !== undefined &&
+    (payload as AuthBaseWithStartAndPeriod).vesting_periods !== undefined;
+
+  const result = useMemo(() => {
+    if (data) {
+      const value = data.result.value || data.result;
+
+      if (isBaseWithStartAndPeriod(value)) {
+        const vestingAccount = value.base_vesting_account;
+
+        return {
+          type: data.result.type?.split('/')[1],
+          value: {
+            address: vestingAccount.base_account.address,
+            public_key: vestingAccount.base_account.public_key,
+            account_number: vestingAccount.base_account.account_number,
+            sequence: vestingAccount.base_account.sequence,
+            original_vesting: vestingAccount.original_vesting,
+            delegated_free: vestingAccount.delegated_free,
+            delegated_vesting: vestingAccount.delegated_vesting,
+            start_time: value.start_time,
+            vesting_periods: value.vesting_periods,
+            end_time: vestingAccount.end_time,
+          },
+        } as AuthAccount;
+      }
+
+      if (isBaseVestingAccount(value)) {
+        const vestingAccount = value.base_vesting_account;
+
+        return {
+          type: data.result.type?.split('/')[1],
+          value: {
+            address: vestingAccount.base_account.address,
+            public_key: vestingAccount.base_account.public_key,
+            account_number: vestingAccount.base_account.account_number,
+            sequence: vestingAccount.base_account.sequence,
+            original_vesting: vestingAccount.original_vesting,
+            delegated_free: vestingAccount.delegated_free,
+            delegated_vesting: vestingAccount.delegated_vesting,
+            start_time: value.start_time,
+            end_time: vestingAccount.end_time,
+          },
+        } as AuthAccount;
+      }
+
+      if (data.result.account_number) {
+        return {
+          value: data.result,
+          type: data.result.type?.split('/')[1],
+        } as AuthAccount;
+      }
+
+      return {
+        ...data.result,
+        type: data.result.type?.split('/')[1],
+      } as AuthAccount;
+    }
+
+    return data as unknown as AuthAccount;
+  }, [data]);
 
   return {
-    data: account,
+    data: result,
     error,
     mutate,
   };
@@ -330,47 +401,25 @@ export function useChainSWR() {
     (account.data || account.error) &&
     (withdrawAddress.data || withdrawAddress.error);
 
-  const availableAmount = times(
-    balance.data?.balance?.find((item) => item.denom === currentChain.denom)?.amount || '0',
-    pow(10, currentChain.decimal * -1),
-    currentChain.decimal,
-  );
+  const availableAmount = balance.data?.balance?.find((item) => item.denom === currentChain.denom)?.amount || '0';
 
   const price = (chainPrice.data?.[currentChain.coingeckoId] || { usd: 0, krw: 0 })[
     currentLanguage === 'ko' ? 'krw' : 'usd'
   ].toFixed(currentLanguage === 'ko' ? 0 : 4);
 
-  const delegationAmount = times(
+  const delegationAmount =
     delegations.data
       ?.filter((item) => item.balance?.denom === currentChain.denom)
       ?.reduce((ac, cu) => ac.plus(cu.balance.amount), new Big('0'))
-      .toString() || '0',
-    pow(10, currentChain.decimal * -1),
-    currentChain.decimal,
-  );
+      .toString() || '0';
 
-  const unbondingAmount = times(
+  const unbondingAmount =
     unbondingDelegation.data?.result
       ?.map((item) => item.entries.reduce((ac, cu) => ac.plus(cu.balance), new Big('0')))
       ?.reduce((ac, cu) => ac.plus(cu), new Big('0'))
-      .toString() || '0',
-    pow(10, -currentChain.decimal),
-    currentChain.decimal,
-  );
+      .toString() || '0';
 
-  const rewardAmount = times(
-    rewards.data?.result?.total?.find((item) => item.denom === currentChain.denom)?.amount || '0',
-    pow(10, -currentChain.decimal),
-    currentChain.decimal,
-  );
-
-  const totalAmount = new Big(availableAmount)
-    .plus(delegationAmount)
-    .plus(unbondingAmount)
-    .plus(rewardAmount)
-    .toString();
-
-  const totalPrice = new Big(totalAmount).times(price).toFixed(currentLanguage === 'ko' ? 0 : 4, 0);
+  const rewardAmount = rewards.data?.result?.total?.find((item) => item.denom === currentChain.denom)?.amount || '0';
 
   const validators = useMemo(() => validator?.data?.validators || [], [validator]);
 
@@ -395,6 +444,40 @@ export function useChainSWR() {
     [delegations],
   );
 
+  const accountInfo = useMemo(
+    () => ({ account_number: account.data?.value?.account_number, sequence: account.data?.value?.sequence }),
+    [account],
+  );
+
+  const vestingRemained = getVestingRemained(account.data, currentChain.denom);
+  const delegatedVestingTotal =
+    currentChain.name === 'kava'
+      ? getDelegatedVestingTotal(account.data, currentChain.denom)
+      : calculatingDelegatedVestingTotal(vestingRemained, delegationAmount);
+
+  const [vestingRelatedAvailable, vestingNotDelegate] = (() => {
+    if (gt(vestingRemained, '0')) {
+      if (currentChain.name === 'persistence') {
+        return getPersistenceVestingRelatedBalances(availableAmount, vestingRemained);
+      }
+
+      return getVestingRelatedBalances(availableAmount, vestingRemained, delegatedVestingTotal);
+    }
+
+    return [availableAmount, '0'];
+  })();
+
+  const totalAmount = new Big(vestingRelatedAvailable)
+    .plus(vestingNotDelegate)
+    .plus(delegationAmount)
+    .plus(unbondingAmount)
+    .plus(rewardAmount)
+    .toString();
+
+  const totalPrice = new Big(times(totalAmount, pow(10, currentChain.decimal * -1), currentChain.decimal))
+    .times(price)
+    .toFixed(currentLanguage === 'ko' ? 0 : 4, 0);
+
   return useMemo(
     () => ({
       isLoading,
@@ -409,14 +492,16 @@ export function useChainSWR() {
         withdrawAddress,
       },
       data: {
-        availableAmount,
-        delegationAmount,
-        unbondingAmount,
-        rewardAmount,
-        totalAmount,
+        availableAmount: times(vestingRelatedAvailable, pow(10, currentChain.decimal * -1), currentChain.decimal),
+        delegationAmount: times(delegationAmount, pow(10, currentChain.decimal * -1), currentChain.decimal),
+        unbondingAmount: times(unbondingAmount, pow(10, currentChain.decimal * -1), currentChain.decimal),
+        rewardAmount: times(rewardAmount, pow(10, currentChain.decimal * -1), currentChain.decimal),
+        totalAmount: times(totalAmount, pow(10, currentChain.decimal * -1), currentChain.decimal),
+        vestingRemained: times(vestingRemained, pow(10, currentChain.decimal * -1), currentChain.decimal),
+        vestingNotDelegate: times(vestingNotDelegate, pow(10, currentChain.decimal * -1), currentChain.decimal),
         price,
         totalPrice,
-        account: account.data,
+        account: accountInfo,
         validators,
         validValidators,
         validValidatorsTotalToken,
@@ -425,8 +510,12 @@ export function useChainSWR() {
       },
     }),
     [
+      vestingRemained,
+      vestingNotDelegate,
+      vestingRelatedAvailable,
+      currentChain,
+      accountInfo,
       account,
-      availableAmount,
       balance,
       chainPrice,
       delegationAmount,
