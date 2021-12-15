@@ -786,7 +786,7 @@ export const chains = {
     symbolName: 'CMDX',
     denom: 'ucmdx',
     decimal: 6,
-    coingeckoId: 'comdex',
+    coingeckoId: 'notExist',
     validatorIconDirectory: 'comdex',
     mintscanPath: 'comdex',
     fee: {
