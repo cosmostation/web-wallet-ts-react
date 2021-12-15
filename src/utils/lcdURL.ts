@@ -24,8 +24,7 @@ export default function LcdURL(chain: ChainPath) {
       return `${chainInfo.lcdURL}${path}`;
     },
     getAccount: (address: string) => {
-      const exceptionChains = [CHAIN.KAVA, CHAIN.KICHAIN] as string[];
-      const path = exceptionChains.includes(chainInfo.path) ? '/auth/accounts/' : '/cosmos/auth/v1beta1/accounts/';
+      const path = '/auth/accounts/';
 
       return `${chainInfo.lcdURL}${path}${address}`;
     },

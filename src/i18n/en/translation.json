@@ -82,6 +82,7 @@
   "component.page_section.wallet_info.delegate_amount": "Delegated Amount",
   "component.page_section.wallet_info.reward_amount": "Reward",
   "component.page_section.wallet_info.undelegating_amount": "Unbonding Amount",
+  "component.page_section.wallet_info.vesting_amount": "Vesting Amount",
   "component.page_section.wallet_info.withdraw_commission": "Get commission",
   "component.page_section.withdraw.available_amount": "Available Amount",
   "component.page_section.withdraw.input_address": "Insert recipient address",
