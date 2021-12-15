@@ -183,7 +183,7 @@ export const calculatingDelegatedVestingTotal = (vestingRemained: string, delega
 };
 
 export const getDelegatedVestingTotal = (vestingAccount: AuthAccount, denom: string): string => {
-  const delegatedVesting = vestingAccount.value.delegated_vesting || [];
+  const delegatedVesting = vestingAccount?.value?.delegated_vesting || [];
   const denomDelegatedVesting = filter(delegatedVesting, { denom });
 
   return reduce(denomDelegatedVesting, (acc, { amount }) => plus(acc, amount, 0), '0');

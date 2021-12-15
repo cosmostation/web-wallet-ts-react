@@ -246,6 +246,10 @@ export type AuthBaseWithStartAndPeriod = {
 export type AuthAccountResult = {
   type?: VestingType;
   value: AuthAccountValue | AuthBaseVestingAccount | AuthBaseWithStartAndPeriod;
+  account_number?: string;
+  sequence?: string;
+  address?: string;
+  public_key?: AuthAccountPubKey;
 };
 
 export type AuthAccountsPayload = {
