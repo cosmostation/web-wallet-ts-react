@@ -2,6 +2,8 @@ import './i18n/i18n';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactGA from 'react-ga';
+import { BrowserRouter } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 import { RecoilRoot } from 'recoil';
 
@@ -10,6 +12,8 @@ import Routes from './Routes';
 
 import '~/styles/normalize.scss';
 import styles from './index.module.scss';
+
+ReactGA.initialize('UA-215533649-1');
 
 ReactDOM.render(
   <React.StrictMode>
@@ -35,8 +39,10 @@ reportWebVitals();
 
 function App() {
   return (
-    <div className={styles.container}>
-      <Routes />
-    </div>
+    <BrowserRouter>
+      <div className={styles.container}>
+        <Routes />
+      </div>
+    </BrowserRouter>
   );
 }

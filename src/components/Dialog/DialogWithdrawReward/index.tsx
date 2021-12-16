@@ -17,6 +17,7 @@ import { useCreateProtoTx } from '~/hooks/useCreateProtoTx';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
+import { useGaEvent } from '~/hooks/useGaEvent';
 import { getByte, plus, times } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createProtoBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
@@ -41,6 +42,7 @@ export default function DialogWithdrawReward({
   onClose,
 }: DialogWithdrawRewardProps) {
   const { t } = useTranslation();
+  const gaEvent = useGaEvent();
   const currentWallet = useCurrentWallet();
   const currentChain = useCurrentChain();
   const createTx = useCreateTx();
@@ -155,6 +157,8 @@ export default function DialogWithdrawReward({
 
         const txHash = result?.tx_response ? result?.tx_response.txhash : result.txhash;
 
+        gaEvent('ClaimReward', 'ledger');
+
         setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash }));
 
         afterSuccess();
@@ -259,6 +263,8 @@ export default function DialogWithdrawReward({
           {isOpenedTransaction && (
             <Transaction
               onSuccess={(e) => {
+                gaEvent('ClaimReward', 'keystation');
+
                 setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: e.data.txhash }));
 
                 afterSuccess();

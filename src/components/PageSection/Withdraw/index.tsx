@@ -17,6 +17,7 @@ import { useCreateProtoTx } from '~/hooks/useCreateProtoTx';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
+import { useGaEvent } from '~/hooks/useGaEvent';
 import { loaderState } from '~/stores/loader';
 import { divide, equal, getByte, gt, minus } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
@@ -32,6 +33,8 @@ type WalletInfoProps = {
 export default function WalletInfo({ className }: WalletInfoProps) {
   const { t } = useTranslation();
   const title = t('component.page_section.withdraw.send');
+
+  const gaEvent = useGaEvent();
 
   const [transactionInfoData, setTransactionInfoData] = useState<TransactionInfoData & { open: boolean }>({
     step: 'doing',
@@ -162,6 +165,8 @@ export default function WalletInfo({ className }: WalletInfoProps) {
         };
 
         const txHash = result?.tx_response ? result?.tx_response.txhash : result.txhash;
+
+        gaEvent('Send', 'ledger');
 
         setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash }));
 
@@ -306,6 +311,8 @@ export default function WalletInfo({ className }: WalletInfoProps) {
       {isOpenedTransaction && (
         <Transaction
           onSuccess={(e) => {
+            gaEvent('Send', 'keystation');
+
             setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: e.data.txhash }));
 
             handleOnSuccess();
