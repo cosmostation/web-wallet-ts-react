@@ -6,6 +6,6 @@ export function useGaTracker() {
   const location = useLocation();
 
   useEffect(() => {
-    ReactGA.pageview(location.pathname + location.search);
+    ReactGA.pageview(location.pathname);
   }, [location]);
 }
