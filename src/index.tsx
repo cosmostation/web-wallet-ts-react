@@ -13,7 +13,7 @@ import Routes from './Routes';
 import '~/styles/normalize.scss';
 import styles from './index.module.scss';
 
-ReactGA.initialize('UA-215533649-1');
+ReactGA.initialize('UA-215547490-1');
 
 ReactDOM.render(
   <React.StrictMode>
