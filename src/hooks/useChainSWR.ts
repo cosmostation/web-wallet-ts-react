@@ -445,7 +445,10 @@ export function useChainSWR() {
   );
 
   const accountInfo = useMemo(
-    () => ({ account_number: account.data?.value?.account_number, sequence: account.data?.value?.sequence }),
+    () =>
+      account.data?.value?.account_number
+        ? { account_number: account.data?.value?.account_number, sequence: account.data?.value?.sequence || '0' }
+        : undefined,
     [account],
   );
 

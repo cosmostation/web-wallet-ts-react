@@ -17,6 +17,7 @@ import { useCreateProtoTx } from '~/hooks/useCreateProtoTx';
 import { useCreateTx } from '~/hooks/useCreateTx';
 import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
+import { useGaEvent } from '~/hooks/useGaEvent';
 import { divide, equal, getByte, gt, minus, plus, pow, times } from '~/utils/calculator';
 import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createProtoBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
@@ -47,6 +48,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
   const currentChain = useCurrentChain();
   const createTx = useCreateTx();
   const createProtoTx = useCreateProtoTx();
+  const gaEvent = useGaEvent();
 
   const { broadcastTx, broadcastProtoTx } = useAxios();
 
@@ -239,6 +241,11 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
 
         const txHash = result?.tx_response ? result?.tx_response.txhash : result.txhash;
 
+        gaEvent(
+          inputData.type === 'delegate' ? 'Delegate' : inputData.type === 'redelegate' ? 'Redelegate' : 'Undelegate',
+          'ledger',
+        );
+
         setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash }));
 
         afterSuccess();
@@ -375,6 +382,15 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
           {isOpenedTransaction && (
             <Transaction
               onSuccess={(e) => {
+                gaEvent(
+                  inputData.type === 'delegate'
+                    ? 'Delegate'
+                    : inputData.type === 'redelegate'
+                    ? 'Redelegate'
+                    : 'Undelegate',
+                  'keystation',
+                );
+
                 setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash: e.data.txhash }));
 
                 afterSuccess();
