@@ -82,7 +82,7 @@
   "component.page_section.wallet_info.delegate_amount": "위임한 수량",
   "component.page_section.wallet_info.reward_amount": "이자",
   "component.page_section.wallet_info.undelegating_amount": "위임 철회 중 수량",
-  "component.page_section.wallet_info.vesting_amount": "투자 중 수량",
+  "component.page_section.wallet_info.vesting_amount": "위임 가능 수량",
   "component.page_section.wallet_info.withdraw_commission": "검증인 수수료 받기",
   "component.page_section.withdraw.available_amount": "사용 가능 수량",
   "component.page_section.withdraw.input_address": "지갑 주소 입력",
