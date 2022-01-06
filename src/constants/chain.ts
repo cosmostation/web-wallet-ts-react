@@ -893,7 +893,7 @@ export const chains = {
     },
   },
   [CHAIN.GRAVITY_BRIDGE]: {
-    chainId: 'gravity-bridge-1',
+    chainId: 'gravity-bridge-2',
     name: 'g-bridge',
     path: CHAIN.GRAVITY_BRIDGE,
     imgURL: `${baseURL}/gravity-bridge.png`,
