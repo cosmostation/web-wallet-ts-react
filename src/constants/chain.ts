@@ -28,6 +28,7 @@ export const CHAIN = {
   LUM: 'lum',
   STARGAZE: 'stargaze',
   CHIHUAHUA: 'chihuahua',
+  SECRET: 'secret',
 } as const;
 
 // chain info key === path
@@ -1047,6 +1048,45 @@ export const chains = {
       withdrawReward: '200000',
       withdrawCommission: '200000',
       modifyWithdrawAddress: '200000',
+    },
+  },
+  [CHAIN.SECRET]: {
+    chainId: 'secret-4',
+    name: 'secret',
+    path: CHAIN.SECRET,
+    imgURL: `${baseURL}/secret.png`,
+    wallet: {
+      hdPath: '44/529/0/0/0',
+      prefix: 'secret',
+      support: { ledger: false, keystation: true },
+      isProto: true,
+    },
+    lcdURL: 'https://lcd-secret.cosmostation.io',
+    symbolName: 'SCRT',
+    denom: 'uscrt',
+    decimal: 6,
+    coingeckoId: 'secret',
+    validatorIconDirectory: 'secret',
+    mintscanPath: 'secret',
+    fee: {
+      default: '0.01',
+      delegate: '0.01',
+      undelegate: '0.01',
+      redelegate: '0.015',
+      withdraw: '0.005',
+      withdrawReward: '0.01',
+      withdrawCommission: '0.01',
+      modifyWithdrawAddress: '0.01',
+    },
+    gas: {
+      default: '40000',
+      delegate: '40000',
+      undelegate: '40000',
+      redelegate: '60000',
+      withdraw: '20000',
+      withdrawReward: '40000',
+      withdrawCommission: '40000',
+      modifyWithdrawAddress: '40000',
     },
   },
 } as const;
