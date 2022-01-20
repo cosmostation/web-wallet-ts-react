@@ -111,7 +111,7 @@ export const chains = {
     },
   },
   [CHAIN.KAVA]: {
-    chainId: 'kava-8',
+    chainId: 'kava-9',
     name: 'kava',
     path: CHAIN.KAVA,
     imgURL: `${baseURL}/kava.png`,
@@ -120,7 +120,7 @@ export const chains = {
       hdPath: '44/118/0/0/0',
       prefix: 'kava',
       support: { ledger: true, keystation: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-kava.cosmostation.io',
     symbolName: 'KAVA',
