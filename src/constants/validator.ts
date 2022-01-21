@@ -99,6 +99,51 @@ export const cosmosValidatorSet: ValidatorSet[] = [
     address: 'bcna1ss2f0nl7sn42x8x0d337mj9welzml8h0splm67',
     operatorAddress: 'bcnavaloper1ss2f0nl7sn42x8x0d337mj9welzml8h0fuwmq2',
   },
+  // regen
+  {
+    address: 'regen1ss2f0nl7sn42x8x0d337mj9welzml8h04nyxyg',
+    operatorAddress: 'regenvaloper1ss2f0nl7sn42x8x0d337mj9welzml8h0f5erue',
+  },
+  // comdex
+  {
+    address: 'comdex1p0a674uq64mxfgxa2h75a6k7r86hjg7p2768u9',
+    operatorAddress: 'comdexvaloper1p0a674uq64mxfgxa2h75a6k7r86hjg7pefq4zy',
+  },
+  // bitsong
+  {
+    address: 'bitsong1wf3q0a3uzechxvf27reuqts8nqm45sn29ykncv',
+    operatorAddress: 'bitsongvaloper1wf3q0a3uzechxvf27reuqts8nqm45sn2yq26g3',
+  },
+  // desmos
+  {
+    address: 'desmos1tknem46cl5mlxkpqmls2nct38rtkvyq7xk9lj2',
+    operatorAddress: 'desmosvaloper1tknem46cl5mlxkpqmls2nct38rtkvyq7cmdtcc',
+  },
+  // gravity-bridge
+  {
+    address: 'gravity18ytfr4s8lfccy048zl00y3akujxqvq75sfpuzq',
+    operatorAddress: 'gravityvaloper18ytfr4s8lfccy048zl00y3akujxqvq75pzczg5',
+  },
+  // lum
+  {
+    address: 'lum1kjjpdtn5ts3qmj70sfgfm67t24y8yhrzudqasa',
+    operatorAddress: 'lumvaloper1kjjpdtn5ts3qmj70sfgfm67t24y8yhrzr6fwte',
+  },
+  // stargaze
+  {
+    address: 'stars1ulvgmlttxhrnmegu57sj0n2qc7xvtrn9ptqxsy',
+    operatorAddress: 'starsvaloper1ulvgmlttxhrnmegu57sj0n2qc7xvtrn9245jtu',
+  },
+  // chihuahua
+  {
+    address: 'chihuahua1tgcypttehx3afugys6eq28h0kpmswfkgcuewfw',
+    operatorAddress: 'chihuahuavaloper1tgcypttehx3afugys6eq28h0kpmswfkgtten6j',
+  },
+  // axelar
+  {
+    address: 'axelar1kj8j6hkmgfvtxpgfuskj602sxs5dsfkm6cc78s',
+    operatorAddress: 'axelarvaloper1kj8j6hkmgfvtxpgfuskj602sxs5dsfkm6ewm4l',
+  },
 ];
 
 export const etcValidatorSet: ValidatorSet[] = [
