@@ -16,7 +16,7 @@ export default function LcdURL(chain: ChainPath) {
     getUnbondingDelegations: (address: string) =>
       `${chainInfo.lcdURL}/staking/delegators/${address}/unbonding_delegations`,
     getValidators: () => {
-      const exceptionChains = [CHAIN.KAVA, CHAIN.KICHAIN] as string[];
+      const exceptionChains = [CHAIN.KICHAIN] as string[];
       const path = exceptionChains.includes(chainInfo.path)
         ? '/staking/validators'
         : '/cosmos/staking/v1beta1/validators?pagination.limit=10000';
