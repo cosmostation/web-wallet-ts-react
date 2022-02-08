@@ -30,6 +30,7 @@ export const CHAIN = {
   CHIHUAHUA: 'chihuahua',
   OSMOSIS: 'osmosis',
   KONSTELLATION: 'konstellation',
+  AXELAR: 'axelar',
 } as const;
 
 // chain info key === path
@@ -1117,6 +1118,45 @@ export const chains = {
       withdrawReward: '0.005',
       withdrawCommission: '0.005',
       modifyWithdrawAddress: '0.005',
+    },
+    gas: {
+      default: '200000',
+      delegate: '200000',
+      undelegate: '200000',
+      redelegate: '300000',
+      withdraw: '200000',
+      withdrawReward: '200000',
+      withdrawCommission: '200000',
+      modifyWithdrawAddress: '200000',
+    },
+  },
+  [CHAIN.AXELAR]: {
+    chainId: 'axelar-dojo-1',
+    name: 'axelar',
+    path: CHAIN.AXELAR,
+    imgURL: `${baseURL}/axelar.png`,
+    wallet: {
+      hdPath: '44/118/0/0/0',
+      prefix: 'axelar',
+      support: { ledger: true, keystation: true },
+      isProto: true,
+    },
+    lcdURL: 'https://lcd-axelar.cosmostation.io',
+    symbolName: 'AXL',
+    denom: 'uaxl',
+    decimal: 6,
+    coingeckoId: 'axelar',
+    validatorIconDirectory: 'axelar',
+    mintscanPath: 'axelar',
+    fee: {
+      default: '0.01',
+      delegate: '0.01',
+      undelegate: '0.01',
+      redelegate: '0.015',
+      withdraw: '0.01',
+      withdrawReward: '0.01',
+      withdrawCommission: '0.01',
+      modifyWithdrawAddress: '0.01',
     },
     gas: {
       default: '200000',
