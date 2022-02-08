@@ -29,6 +29,7 @@ export const CHAIN = {
   STARGAZE: 'stargaze',
   CHIHUAHUA: 'chihuahua',
   OSMOSIS: 'osmosis',
+  KONSTELLATION: 'konstellation',
 } as const;
 
 // chain info key === path
@@ -1068,6 +1069,45 @@ export const chains = {
     coingeckoId: 'osmosis',
     validatorIconDirectory: 'osmosis',
     mintscanPath: 'osmosis',
+    fee: {
+      default: '0.005',
+      delegate: '0.005',
+      undelegate: '0.005',
+      redelegate: '0.005',
+      withdraw: '0.005',
+      withdrawReward: '0.005',
+      withdrawCommission: '0.005',
+      modifyWithdrawAddress: '0.005',
+    },
+    gas: {
+      default: '200000',
+      delegate: '200000',
+      undelegate: '200000',
+      redelegate: '300000',
+      withdraw: '200000',
+      withdrawReward: '200000',
+      withdrawCommission: '200000',
+      modifyWithdrawAddress: '200000',
+    },
+  },
+  [CHAIN.KONSTELLATION]: {
+    chainId: 'darchub',
+    name: 'konstellation',
+    path: CHAIN.KONSTELLATION,
+    imgURL: `${baseURL}/konstellation.png`,
+    wallet: {
+      hdPath: '44/118/0/0/0',
+      prefix: 'darc',
+      support: { ledger: true, keystation: true },
+      isProto: true,
+    },
+    lcdURL: 'https://lcd-konstellation.cosmostation.io',
+    symbolName: 'DARC',
+    denom: 'udarc',
+    decimal: 6,
+    coingeckoId: 'konstellation',
+    validatorIconDirectory: 'konstellation',
+    mintscanPath: 'konstellation',
     fee: {
       default: '0.005',
       delegate: '0.005',
