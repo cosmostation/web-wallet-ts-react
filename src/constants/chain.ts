@@ -348,7 +348,7 @@ export const chains = {
     },
   },
   [CHAIN.FETCH_AI]: {
-    chainId: 'fetchhub-2',
+    chainId: 'fetchhub-3',
     name: 'fetch.ai',
     path: CHAIN.FETCH_AI,
     imgURL: `${baseURL}/fetch-ai.png`,
