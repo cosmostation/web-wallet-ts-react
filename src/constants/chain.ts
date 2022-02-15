@@ -30,6 +30,7 @@ export const CHAIN = {
   CHIHUAHUA: 'chihuahua',
   OSMOSIS: 'osmosis',
   KONSTELLATION: 'konstellation',
+  UMEE: 'umee',
 } as const;
 
 // chain info key === path
@@ -1117,6 +1118,45 @@ export const chains = {
       withdrawReward: '0.005',
       withdrawCommission: '0.005',
       modifyWithdrawAddress: '0.005',
+    },
+    gas: {
+      default: '200000',
+      delegate: '200000',
+      undelegate: '200000',
+      redelegate: '300000',
+      withdraw: '200000',
+      withdrawReward: '200000',
+      withdrawCommission: '200000',
+      modifyWithdrawAddress: '200000',
+    },
+  },
+  [CHAIN.UMEE]: {
+    chainId: 'umee-1',
+    name: 'umee',
+    path: CHAIN.UMEE,
+    imgURL: `${baseURL}/umee.png`,
+    wallet: {
+      hdPath: '44/118/0/0/0',
+      prefix: 'umee',
+      support: { ledger: true, keystation: true },
+      isProto: true,
+    },
+    lcdURL: 'https://lcd-umee.cosmostation.io',
+    symbolName: 'UMEE',
+    denom: 'uumee',
+    decimal: 6,
+    coingeckoId: 'umee',
+    validatorIconDirectory: 'umee',
+    mintscanPath: 'umee',
+    fee: {
+      default: '0',
+      delegate: '0',
+      undelegate: '0',
+      redelegate: '0',
+      withdraw: '0',
+      withdrawReward: '0',
+      withdrawCommission: '0',
+      modifyWithdrawAddress: '0',
     },
     gas: {
       default: '200000',
