@@ -1145,7 +1145,7 @@ export const chains = {
     symbolName: 'UMEE',
     denom: 'uumee',
     decimal: 6,
-    coingeckoId: 'umee',
+    coingeckoId: 'umee_temp',
     validatorIconDirectory: 'umee',
     mintscanPath: 'umee',
     fee: {
