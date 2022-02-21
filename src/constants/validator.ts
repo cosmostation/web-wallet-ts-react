@@ -54,6 +54,10 @@ export const cosmosValidatorSet: ValidatorSet[] = [
     address: 'cro1xdmxh2hf68x7r5fwnu09ddyvrt2d6nwg8dp46l',
     operatorAddress: 'crocncl1xdmxh2hf68x7r5fwnu09ddyvrt2d6nwgyqzucr',
   },
+  {
+    address: 'cro1eh78lm37wjqjyglpfvnsu8mvuchuva723ecw0z',
+    operatorAddress: 'crocncl1eh78lm37wjqjyglpfvnsu8mvuchuva72j5m8d7',
+  },
   // sif
   {
     address: 'sif18tmu0lrfsdvke8e3a3jsd7fq2rs29krf5jzswe',
@@ -78,6 +82,10 @@ export const cosmosValidatorSet: ValidatorSet[] = [
   {
     address: 'certik18tmu0lrfsdvke8e3a3jsd7fq2rs29krfk833qe',
     operatorAddress: 'certikvaloper18tmu0lrfsdvke8e3a3jsd7fq2rs29krfpn43fr',
+  },
+  {
+    address: 'certik1sxj05qm962yk8qah56q7u8f2fdqf6fmz3dc90t',
+    operatorAddress: 'certikvaloper1sxj05qm962yk8qah56q7u8f2fdqf6fmzxeu9x3',
   },
   // emoney
   {
