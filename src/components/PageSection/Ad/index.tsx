@@ -40,6 +40,15 @@ export default function Ad() {
             - DeFi analytics & leaderboard for protocols on Binance Smart Chain
           </div>
         </div>
+        <div className={styles.aditem}>
+          Sponsored: <div className={styles.pStakeImage} />{' '}
+          <div>
+            Submit Wallet Address For $PSTAKE Airdrop{' '}
+            <a href="https://airdrop.pstake.finance/" target="_blank" rel="noreferrer">
+              Now!
+            </a>
+          </div>
+        </div>
       </Carousel>
     </div>
   );
