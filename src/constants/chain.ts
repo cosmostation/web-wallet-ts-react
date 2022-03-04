@@ -319,7 +319,7 @@ export const chains = {
       hdPath: '44/118/0/0/0',
       prefix: 'persistence',
       support: { ledger: true, keystation: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-persistence.cosmostation.io',
     symbolName: 'XPRT',
