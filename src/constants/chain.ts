@@ -31,6 +31,7 @@ export const CHAIN = {
   OSMOSIS: 'osmosis',
   KONSTELLATION: 'konstellation',
   UMEE: 'umee',
+  OMNIFLIX: 'omniflix',
 } as const;
 
 // chain info key === path
@@ -1157,6 +1158,45 @@ export const chains = {
       withdrawReward: '0',
       withdrawCommission: '0',
       modifyWithdrawAddress: '0',
+    },
+    gas: {
+      default: '200000',
+      delegate: '200000',
+      undelegate: '200000',
+      redelegate: '300000',
+      withdraw: '200000',
+      withdrawReward: '200000',
+      withdrawCommission: '200000',
+      modifyWithdrawAddress: '200000',
+    },
+  },
+  [CHAIN.OMNIFLIX]: {
+    chainId: 'omniflixhub-1',
+    name: 'omniflix',
+    path: CHAIN.OMNIFLIX,
+    imgURL: `${baseURL}/omniflix.png`,
+    wallet: {
+      hdPath: '44/118/0/0/0',
+      prefix: 'omniflix',
+      support: { ledger: true, keystation: true },
+      isProto: true,
+    },
+    lcdURL: 'https://lcd-omniflix.cosmostation.io',
+    symbolName: 'FLIX',
+    denom: 'uflix',
+    decimal: 6,
+    coingeckoId: 'omniflix',
+    validatorIconDirectory: 'omniflix',
+    mintscanPath: 'omniflix',
+    fee: {
+      default: '0.0005',
+      delegate: '0.0005',
+      undelegate: '0.0005',
+      redelegate: '0.00075',
+      withdraw: '0.0005',
+      withdrawReward: '0.0005',
+      withdrawCommission: '0.0005',
+      modifyWithdrawAddress: '0.0005',
     },
     gas: {
       default: '200000',
