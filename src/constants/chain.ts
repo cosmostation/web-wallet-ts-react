@@ -32,6 +32,7 @@ export const CHAIN = {
   KONSTELLATION: 'konstellation',
   UMEE: 'umee',
   OMNIFLIX: 'omniflix',
+  PROVENANCE: 'provenance',
 } as const;
 
 // chain info key === path
@@ -1197,6 +1198,45 @@ export const chains = {
       withdrawReward: '0.0005',
       withdrawCommission: '0.0005',
       modifyWithdrawAddress: '0.0005',
+    },
+    gas: {
+      default: '200000',
+      delegate: '200000',
+      undelegate: '200000',
+      redelegate: '300000',
+      withdraw: '200000',
+      withdrawReward: '200000',
+      withdrawCommission: '200000',
+      modifyWithdrawAddress: '200000',
+    },
+  },
+  [CHAIN.PROVENANCE]: {
+    chainId: 'pio-mainnet-1',
+    name: 'provenance',
+    path: CHAIN.PROVENANCE,
+    imgURL: `${baseURL}/provenance.png`,
+    wallet: {
+      hdPath: '44/505/0/0/0',
+      prefix: 'pb',
+      support: { ledger: false, keystation: true },
+      isProto: true,
+    },
+    lcdURL: 'https://lcd-provenance.cosmostation.io',
+    symbolName: 'HASH',
+    denom: 'nhash',
+    decimal: 9,
+    coingeckoId: 'provenance',
+    validatorIconDirectory: 'provenance',
+    mintscanPath: 'provenance',
+    fee: {
+      default: '0.4',
+      delegate: '0.4',
+      undelegate: '0.4',
+      redelegate: '0.6',
+      withdraw: '0.4',
+      withdrawReward: '0.4',
+      withdrawCommission: '0.4',
+      modifyWithdrawAddress: '0.4',
     },
     gas: {
       default: '200000',
