@@ -29,7 +29,7 @@ export default function Ad() {
         <div className={styles.aditem}>
           <div>
             $MNTL Airdrop is Live!{' '}
-            <a href="https://airdrop.assetmantle.one/stakedrop" target="_blank" rel="noreferrer">
+            <a href="https://airdrop.assetmantle.one/" target="_blank" rel="noreferrer">
               Check Your Eligibility
             </a>
           </div>
