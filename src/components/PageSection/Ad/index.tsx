@@ -18,6 +18,23 @@ export default function Ad() {
         swipeable={false}
       >
         <div className={styles.aditem}>
+          Sponsored: <div className={styles.pStakeImage} />{' '}
+          <div>
+            Submit Wallet Address For $PSTAKE Airdrop{' '}
+            <a href="https://airdrop.pstake.finance/" target="_blank" rel="noreferrer">
+              Now!
+            </a>
+          </div>
+        </div>
+        <div className={styles.aditem}>
+          <div>
+            $MNTL Airdrop is Live!{' '}
+            <a href="https://airdrop.assetmantle.one/stakedrop" target="_blank" rel="noreferrer">
+              Check Your Eligibility
+            </a>
+          </div>
+        </div>
+        <div className={styles.aditem}>
           <div>Sponsored: </div>
           <div className={styles.cosmosImage} />
           <div>
@@ -38,15 +55,6 @@ export default function Ad() {
               Defistation
             </a>{' '}
             - DeFi analytics & leaderboard for protocols on Binance Smart Chain
-          </div>
-        </div>
-        <div className={styles.aditem}>
-          Sponsored: <div className={styles.pStakeImage} />{' '}
-          <div>
-            Submit Wallet Address For $PSTAKE Airdrop{' '}
-            <a href="https://airdrop.pstake.finance/" target="_blank" rel="noreferrer">
-              Now!
-            </a>
           </div>
         </div>
       </Carousel>
