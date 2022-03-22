@@ -18,15 +18,6 @@ export default function Ad() {
         swipeable={false}
       >
         <div className={styles.aditem}>
-          Sponsored: <div className={styles.pStakeImage} />{' '}
-          <div>
-            Submit Wallet Address For $PSTAKE Airdrop{' '}
-            <a href="https://airdrop.pstake.finance/" target="_blank" rel="noreferrer">
-              Now!
-            </a>
-          </div>
-        </div>
-        <div className={styles.aditem}>
           <div>
             $MNTL Airdrop is Live!{' '}
             <a href="https://airdrop.assetmantle.one/" target="_blank" rel="noreferrer">
