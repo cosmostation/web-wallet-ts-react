@@ -634,7 +634,7 @@ export const chains = {
       hdPath: '44/118/0/0/0',
       prefix: 'rizon',
       support: { ledger: true, keystation: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-rizon.cosmostation.io',
     symbolName: 'ATOLO',
