@@ -18,6 +18,20 @@ export default function Ad() {
         swipeable={false}
       >
         <div className={styles.aditem}>
+          <div>Sponsored: </div>
+          <div className={styles.koinlyImage} />
+          <div>
+            Tax deadline?{' '}
+            <a
+              href="https://koinly.io?utm_source=mintscan.io&utm_medium=mobile_banner"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Sort your crypto taxes FAST with Koinly!
+            </a>
+          </div>
+        </div>
+        <div className={styles.aditem}>
           <div>
             $MNTL Airdrop is Live!{' '}
             <a href="https://airdrop.assetmantle.one/" target="_blank" rel="noreferrer">
