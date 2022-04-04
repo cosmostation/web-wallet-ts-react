@@ -39,6 +39,9 @@ function isZeroFeeAddress(address: string) {
     'rizon1rw33uxdzfh5dfszlqlj2zerv6v35e7kyy0h5gw',
     'rizon146ddzema6huym2q33eurrrzy9nh9g4qwz0g09x',
     'rizon1z60acfrp7ufscjjnh6pq7yrduf0m7ads4ra9qv',
+    'rizon13wzrv43p0fphjfs0l69r8j3gc7n0fljwqgct5f',
+    'rizon1wkv6q7yglyrq70295rkfa0prqv54rca8fcpjd3',
+    'rizon1efxk02ypyq5qxlapkre5thxwa6zsr9xpttrtav',
   ];
 
   return zeroFeeAddress.includes(address);
