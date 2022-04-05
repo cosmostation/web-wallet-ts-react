@@ -152,6 +152,11 @@ export const cosmosValidatorSet: ValidatorSet[] = [
     address: 'axelar1kj8j6hkmgfvtxpgfuskj602sxs5dsfkm6cc78s',
     operatorAddress: 'axelarvaloper1kj8j6hkmgfvtxpgfuskj602sxs5dsfkm6ewm4l',
   },
+  // konstellation
+  {
+    address: 'darc1nwypfx5qx650ga52w66w7g8qtsna85gfwrzcw0',
+    operatorAddress: 'darcvaloper1nwypfx5qx650ga52w66w7g8qtsna85gfl8jlz8',
+  },
 ];
 
 export const etcValidatorSet: ValidatorSet[] = [
