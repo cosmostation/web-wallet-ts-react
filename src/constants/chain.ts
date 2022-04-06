@@ -283,7 +283,7 @@ export const chains = {
       hdPath: '44/118/0/0/0',
       prefix: 'sent',
       support: { ledger: true, keystation: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-sentinel.cosmostation.io',
     symbolName: 'DVPN',
