@@ -353,7 +353,7 @@ export const chains = {
     },
   },
   [CHAIN.FETCH_AI]: {
-    chainId: 'fetchhub-3',
+    chainId: 'fetchhub-4',
     name: 'fetch.ai',
     path: CHAIN.FETCH_AI,
     imgURL: `${baseURL}/fetch-ai.png`,
@@ -361,7 +361,7 @@ export const chains = {
       hdPath: '44/118/0/0/0',
       prefix: 'fetch',
       support: { ledger: true, keystation: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-fetchai.cosmostation.io',
     symbolName: 'FET',
