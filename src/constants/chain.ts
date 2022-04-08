@@ -665,7 +665,7 @@ export const chains = {
     },
   },
   [CHAIN.JUNO]: {
-    chainId: 'juno-2',
+    chainId: 'juno-1',
     name: 'juno',
     path: CHAIN.JUNO,
     imgURL: `${baseURL}/juno.png`,
