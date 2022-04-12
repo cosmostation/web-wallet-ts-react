@@ -1090,7 +1090,7 @@ export const chains = {
       redelegate: '300000',
       withdraw: '200000',
       withdrawReward: '200000',
-      withdrawCommission: '200000',
+      withdrawCommission: '250000',
       modifyWithdrawAddress: '200000',
     },
   },
