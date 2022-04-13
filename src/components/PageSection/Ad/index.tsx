@@ -19,6 +19,16 @@ export default function Ad() {
       >
         <div className={styles.aditem}>
           <div>Sponsored: </div>
+          <div className={styles.crescentImage} />
+          <div>
+            Swap, Liquid Stake and Farm on{' '}
+            <a href="https://crescent.network" target="_blank" rel="noreferrer">
+              Crescent Network&apos;s Hybrid DEX now!
+            </a>
+          </div>
+        </div>
+        <div className={styles.aditem}>
+          <div>Sponsored: </div>
           <div className={styles.koinlyImage} />
           <div>
             Tax deadline?{' '}

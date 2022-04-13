@@ -41,3 +41,13 @@
   width: 10rem;
   height: 3rem;
 }
+
+.crescentImage {
+  background-image: url('assets/crescent.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top;
+  width: 3rem;
+  height: 3rem;
+  margin-right: 1rem;
+}
