@@ -2,6 +2,7 @@ import { useState } from 'react';
 import cx from 'clsx';
 import { useSnackbar } from 'notistack';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { InstallError, tendermint } from '@cosmostation/extension-client';
 
 import Dialog from '~/components/Dialog';
 import Signin from '~/components/Keystation/Signin';
@@ -42,6 +43,52 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
         clearInterval(timer);
       }
     }, 500);
+  };
+
+  const handleOnClickExtension = async () => {
+    setIsShowLoader(true);
+
+    try {
+      const provider = await tendermint();
+
+      const supportedChains = await provider.getSupportedChains();
+
+      if (![...supportedChains.official, ...supportedChains.unofficial].includes(currentChain.extensionId)) {
+        await provider.addChain({
+          addressPrefix: currentChain.wallet.prefix,
+          baseDenom: currentChain.denom,
+          displayDenom: currentChain.symbolName,
+          chainId: currentChain.chainId,
+          chainName: currentChain.extensionId,
+          restURL: currentChain.lcdURL,
+          coinGeckoId: currentChain.coingeckoId,
+          coinType: currentChain.wallet.hdPath.split('/')[1],
+          decimals: currentChain.decimal,
+          imageURL: currentChain.imgURL,
+        });
+      }
+      const account = await provider.requestAccount(currentChain.extensionId);
+
+      const nextWalletInfo: WalletInfo = {
+        ...walletInfo,
+        keystationAccount: null,
+        address: account.address,
+        HDPath: currentChain.wallet.hdPath,
+        walletType: 'cosmostation-extension',
+      };
+      sessionStorage.setItem('wallet', JSON.stringify(nextWalletInfo));
+      setWalletInfo(nextWalletInfo);
+
+      onSuccess?.(currentChain.path);
+    } catch (e) {
+      if (e instanceof InstallError) {
+        window.open('https://chrome.google.com/webstore/detail/cosmostation/fpkhgmpbidmiogeglndfbkegfdlnajnf');
+      } else {
+        enqueueSnackbar((e as { message?: string }).message, { variant: 'error' });
+      }
+    } finally {
+      setIsShowLoader(false);
+    }
   };
 
   const handleOnClickLedger = async () => {
@@ -96,6 +143,14 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
               name="Connect To Keystation"
               imgURL="/images/signIn/keystation.png"
               onClick={handleOnClickKeystation}
+              disabled={!currentChain.wallet.support.keystation}
+            />
+          </div>
+          <div className={styles.connectContainer}>
+            <ConnectButton
+              name="Cosmostation Extension"
+              imgURL="/images/signIn/keystation.png"
+              onClick={handleOnClickExtension}
               disabled={!currentChain.wallet.support.keystation}
             />
           </div>

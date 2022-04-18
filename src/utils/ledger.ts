@@ -131,3 +131,17 @@ export function createMsgForLedger({ message, chainId, accountNumber, sequence }
     ),
   );
 }
+
+export function createMsg({ message, chainId, accountNumber, sequence }: MsgForLedgerParams) {
+  return sortKeys(
+    {
+      chain_id: chainId,
+      fee: message.fee,
+      memo: message.memo || '',
+      msgs: message.msg,
+      sequence,
+      account_number: accountNumber,
+    },
+    { deep: true },
+  );
+}

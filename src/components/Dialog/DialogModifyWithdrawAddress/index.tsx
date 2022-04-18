@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import cx from 'clsx';
 import { useSnackbar } from 'notistack';
 import secp256k1 from 'secp256k1';
+import { tendermint } from '@cosmostation/extension-client';
+import type { SignAminoDoc } from '@cosmostation/extension-client/types/message';
 
 import Button from '~/components/Button';
 import Dialog from '~/components/Dialog';
@@ -19,7 +21,7 @@ import { useCurrentChain } from '~/hooks/useCurrentChain';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import { useGaEvent } from '~/hooks/useGaEvent';
 import { getByte } from '~/utils/calculator';
-import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
+import Ledger, { createMsg, createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createProtoBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 
 import styles from './index.module.scss';
@@ -106,6 +108,13 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
         sequence: account.sequence,
       });
 
+      const txMsg = createMsg({
+        message: txMsgOrigin,
+        accountNumber: account.account_number,
+        chainId: currentChain.chainId,
+        sequence: account.sequence,
+      });
+
       if (currentWallet.walletType === 'ledger') {
         const ledger = await Ledger();
 
@@ -151,6 +160,71 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
         const txHash = result?.tx_response ? result?.tx_response.txhash : result.txhash;
 
         gaEvent('ModifyWithdrawAddress', 'ledger');
+
+        setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash }));
+
+        afterSuccess();
+      }
+
+      if (currentWallet.walletType === 'cosmostation-extension') {
+        const provider = await tendermint();
+
+        const supportedChains = await provider.getSupportedChains();
+
+        if (![...supportedChains.official, ...supportedChains.unofficial].includes(currentChain.extensionId)) {
+          await provider.addChain({
+            addressPrefix: currentChain.wallet.prefix,
+            baseDenom: currentChain.denom,
+            displayDenom: currentChain.symbolName,
+            chainId: currentChain.chainId,
+            chainName: currentChain.extensionId,
+            restURL: currentChain.lcdURL,
+            coinGeckoId: currentChain.coingeckoId,
+            coinType: currentChain.wallet.hdPath.split('/')[1],
+            decimals: currentChain.decimal,
+            imageURL: currentChain.imgURL,
+          });
+        }
+        const extensionAccount = await provider.requestAccount(currentChain.extensionId);
+
+        setTransactionInfoData({
+          open: true,
+          step: 'doing',
+          title,
+          from: fromAddress,
+          to: address,
+          fee: `${fee} ${currentChain.symbolName}`,
+          memo,
+          tx: JSON.stringify(txMsgOrigin, null, 4),
+        });
+        const extensionSignature = await provider.signAmino(currentChain.extensionId, txMsg as SignAminoDoc);
+
+        const decodedSignature = Buffer.from(extensionSignature.signature, 'base64');
+
+        const protoTxBody = createProtoTx.getModifyWithdrawAddressTxBody(address, memo);
+        const protoAuthInfo = createProtoTx.getAuthInfo(fee, gas, extensionAccount.publicKey, account.sequence);
+        const protoTxRaw = createProtoTx.getTxRaw(protoTxBody, protoAuthInfo, decodedSignature);
+        const txBytes = createProtoBroadcastBody(protoTxRaw);
+
+        const signature = createSignature({
+          publicKey: extensionAccount.publicKey,
+          signature: decodedSignature,
+          accountNumber: account.account_number,
+          sequence: account.sequence,
+        });
+
+        const tx = createSignedTx(txMsgOrigin, signature);
+        const txBody = createBroadcastBody(tx);
+
+        const result = (currentChain.wallet.isProto ? await broadcastProtoTx(txBytes) : await broadcastTx(txBody)) as {
+          // eslint-disable-next-line camelcase
+          tx_response: { txhash: string };
+          txhash: string;
+        };
+
+        const txHash = result?.tx_response ? result?.tx_response.txhash : result.txhash;
+
+        gaEvent('ModifyWithdrawAddress', 'extension');
 
         setTransactionInfoData((prev) => ({ ...prev, step: 'success', open: true, txHash }));
 

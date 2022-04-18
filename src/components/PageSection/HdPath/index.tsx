@@ -104,6 +104,10 @@ export default function HdPath({ className }: HdPathProps) {
   useEffect(() => {
     setPath(currentChain.wallet.hdPath);
   }, [currentChain]);
+
+  if (currentWallet.walletType === 'cosmostation-extension') {
+    return null;
+  }
   return (
     <>
       <div className={cx(styles.container, className)}>
