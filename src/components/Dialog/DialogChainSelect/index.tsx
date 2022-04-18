@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { InstallError, tendermint } from '@cosmostation/extension-client';
 
 import Dialog from '~/components/Dialog';
 import Signin from '~/components/Keystation/Signin';
@@ -95,6 +96,58 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
           onClose?.();
 
           setIsShowLoader(false);
+        }
+
+        if (wallet.walletType === 'cosmostation-extension') {
+          setIsShowLoader(true);
+
+          try {
+            const provider = await tendermint();
+
+            const supportedChains = await provider.getSupportedChains();
+
+            if (![...supportedChains.official, ...supportedChains.unofficial].includes(chainInfo.extensionId)) {
+              await provider.addChain({
+                addressPrefix: chainInfo.wallet.prefix,
+                baseDenom: chainInfo.denom,
+                displayDenom: chainInfo.symbolName,
+                chainId: chainInfo.chainId,
+                chainName: chainInfo.extensionId,
+                restURL: chainInfo.lcdURL,
+                coinGeckoId: chainInfo.coingeckoId,
+                coinType: chainInfo.wallet.hdPath.split('/')[1],
+                decimals: chainInfo.decimal,
+                imageURL: chainInfo.imgURL,
+              });
+            }
+            const account = await provider.requestAccount(chainInfo.extensionId);
+
+            setWalletInfo((prev) => {
+              const next: WalletInfo = {
+                ...prev,
+                keystationAccount: null,
+                address: account.address,
+                HDPath: chainInfo.wallet.hdPath,
+                walletType: 'cosmostation-extension',
+              };
+
+              sessionStorage.setItem('wallet', JSON.stringify(next));
+
+              return next;
+            });
+
+            history.push(`/${chainInfo.path}${getPathWithDepth(2) ? `/${getPathWithDepth(2)}` : '/wallet'}`);
+
+            onClose?.();
+          } catch (e) {
+            if (e instanceof InstallError) {
+              window.open('https://chrome.google.com/webstore/detail/cosmostation/fpkhgmpbidmiogeglndfbkegfdlnajnf');
+            } else {
+              enqueueSnackbar((e as { message?: string }).message, { variant: 'error' });
+            }
+          } finally {
+            setIsShowLoader(false);
+          }
         }
       } catch (e) {
         if (e instanceof LedgerError) {

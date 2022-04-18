@@ -57,7 +57,9 @@ export default function WalletInfo({ className }: WalletInfoProps) {
               <div className={styles.firstContentInfoFirstLineTitle}>
                 {t('component.page_section.wallet_info.address')}
               </div>
-              <div className={styles.firstContentInfoFirstLineHdPath}>HD derivation path: {currentWallet.HDPath}</div>
+              {currentWallet.walletType !== 'cosmostation-extension' && (
+                <div className={styles.firstContentInfoFirstLineHdPath}>HD derivation path: {currentWallet.HDPath}</div>
+              )}
             </div>
             <div className={styles.firstContentInfoSecondLineContainer}>
               {currentWallet.address}{' '}

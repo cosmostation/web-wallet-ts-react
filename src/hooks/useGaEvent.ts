@@ -14,7 +14,7 @@ export function useGaEvent() {
       | 'ModifyWithdrawAddress'
       | 'ClaimReward'
       | 'WithdrawCommission',
-    label?: 'ledger' | 'keystation',
+    label?: 'ledger' | 'keystation' | 'extension',
   ) => {
     ReactGA.event({ category: currentChain.name, action, label });
   };

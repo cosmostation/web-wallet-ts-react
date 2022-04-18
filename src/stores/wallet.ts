@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
 
 export type WalletInfo = {
-  walletType?: 'keystation' | 'ledger' | null;
+  walletType?: 'keystation' | 'ledger' | 'cosmostation-extension' | null;
   HDPath?: string | null;
   keystationAccount?: string | null;
   address?: string | null;

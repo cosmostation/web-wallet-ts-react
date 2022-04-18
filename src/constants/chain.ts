@@ -42,6 +42,7 @@ export const chains = {
   [CHAIN.COSMOS]: {
     chainId: 'cosmoshub-4',
     name: 'cosmos',
+    extensionId: 'cosmos',
     path: CHAIN.COSMOS,
     imgURL: `${baseURL}/cosmos.png`,
     wallet: {
@@ -81,6 +82,7 @@ export const chains = {
   [CHAIN.IRIS]: {
     chainId: 'irishub-1',
     name: 'iris',
+    extensionId: 'iris',
     path: CHAIN.IRIS,
     imgURL: `${baseURL}/iris.png`,
     wallet: {
@@ -120,6 +122,7 @@ export const chains = {
   [CHAIN.KAVA]: {
     chainId: 'kava-9',
     name: 'kava',
+    extensionId: 'kava',
     path: CHAIN.KAVA,
     imgURL: `${baseURL}/kava.png`,
     hdPath: '44/118/0/0/0',
@@ -160,6 +163,7 @@ export const chains = {
   [CHAIN.BAND]: {
     chainId: 'laozi-mainnet',
     name: 'band',
+    extensionId: 'band',
     path: CHAIN.BAND,
     imgURL: `${baseURL}/band.png`,
     hdPath: '44/494/0/0/0',
@@ -200,6 +204,7 @@ export const chains = {
   [CHAIN.AKASH]: {
     chainId: 'akashnet-2',
     name: 'akash',
+    extensionId: 'akash',
     path: CHAIN.AKASH,
     imgURL: `${baseURL}/akash.png`,
     wallet: {
@@ -239,6 +244,7 @@ export const chains = {
   [CHAIN.CERTIK]: {
     chainId: 'shentu-2.2',
     name: 'certik',
+    extensionId: 'certik',
     path: CHAIN.CERTIK,
     imgURL: `${baseURL}/certik.png`,
     wallet: {
@@ -278,6 +284,7 @@ export const chains = {
   [CHAIN.SENTINEL]: {
     chainId: 'sentinelhub-2',
     name: 'sentinel',
+    extensionId: 'sentinel',
     path: CHAIN.SENTINEL,
     imgURL: `${baseURL}/sentinel.png`,
     wallet: {
@@ -317,6 +324,7 @@ export const chains = {
   [CHAIN.PERSISTENCE]: {
     chainId: 'core-1',
     name: 'persistence',
+    extensionId: 'persistence',
     path: CHAIN.PERSISTENCE,
     imgURL: `${baseURL}/persistence.png`,
     wallet: {
@@ -356,6 +364,7 @@ export const chains = {
   [CHAIN.FETCH_AI]: {
     chainId: 'fetchhub-4',
     name: 'fetch.ai',
+    extensionId: 'fetch.ai',
     path: CHAIN.FETCH_AI,
     imgURL: `${baseURL}/fetch-ai.png`,
     wallet: {
@@ -395,6 +404,7 @@ export const chains = {
   [CHAIN.SIFCHAIN]: {
     chainId: 'sifchain-1',
     name: 'sifchain',
+    extensionId: 'sif',
     path: CHAIN.SIFCHAIN,
     imgURL: `${baseURL}/sifchain.png`,
     wallet: {
@@ -434,6 +444,7 @@ export const chains = {
   [CHAIN.CRYPTO_ORG]: {
     chainId: 'crypto-org-chain-mainnet-1',
     name: 'crypto.org',
+    extensionId: 'crypto.com',
     path: CHAIN.CRYPTO_ORG,
     imgURL: `${baseURL}/crypto-org.png`,
     wallet: {
@@ -473,6 +484,7 @@ export const chains = {
   [CHAIN.KICHAIN]: {
     chainId: 'kichain-2',
     name: 'kichain',
+    extensionId: 'ki',
     path: CHAIN.KICHAIN,
     imgURL: `${baseURL}/kichain.png`,
     wallet: {
@@ -512,6 +524,7 @@ export const chains = {
   [CHAIN.STARNAME]: {
     chainId: 'iov-mainnet-ibc',
     name: 'starname',
+    extensionId: 'starname',
     path: CHAIN.STARNAME,
     imgURL: `${baseURL}/starname.png`,
     wallet: {
@@ -551,6 +564,7 @@ export const chains = {
   [CHAIN.MEDIBLOC]: {
     chainId: 'panacea-3',
     name: 'medibloc',
+    extensionId: 'medibloc',
     path: CHAIN.MEDIBLOC,
     imgURL: `${baseURL}/medibloc.png`,
     wallet: {
@@ -590,6 +604,7 @@ export const chains = {
   [CHAIN.EMONEY]: {
     chainId: 'emoney-3',
     name: 'emoney',
+    extensionId: 'emoney',
     path: CHAIN.EMONEY,
     imgURL: `${baseURL}/emoney.png`,
     wallet: {
@@ -629,6 +644,7 @@ export const chains = {
   [CHAIN.RIZON]: {
     chainId: 'titan-1',
     name: 'rizon',
+    extensionId: 'rizon',
     path: CHAIN.RIZON,
     imgURL: `${baseURL}/rizon.png`,
     wallet: {
@@ -668,6 +684,7 @@ export const chains = {
   [CHAIN.JUNO]: {
     chainId: 'juno-1',
     name: 'juno',
+    extensionId: 'juno',
     path: CHAIN.JUNO,
     imgURL: `${baseURL}/juno.png`,
     wallet: {
@@ -707,6 +724,7 @@ export const chains = {
   [CHAIN.BITCANNA]: {
     chainId: 'bitcanna-1',
     name: 'bitcanna',
+    extensionId: 'bitcanna',
     path: CHAIN.BITCANNA,
     imgURL: `${baseURL}/bitcanna.png`,
     wallet: {
@@ -746,6 +764,7 @@ export const chains = {
   [CHAIN.REGEN]: {
     chainId: 'regen-1',
     name: 'regen',
+    extensionId: 'regen',
     path: CHAIN.REGEN,
     imgURL: `${baseURL}/regen.png`,
     wallet: {
@@ -785,6 +804,7 @@ export const chains = {
   [CHAIN.COMDEX]: {
     chainId: 'comdex-1',
     name: 'comdex',
+    extensionId: 'comdex',
     path: CHAIN.COMDEX,
     imgURL: `${baseURL}/comdex.png`,
     wallet: {
@@ -825,6 +845,7 @@ export const chains = {
   [CHAIN.BITSONG]: {
     chainId: 'bitsong-2b',
     name: 'bitsong',
+    extensionId: 'bitsong',
     path: CHAIN.BITSONG,
     imgURL: `${baseURL}/bitsong.png`,
     wallet: {
@@ -864,13 +885,14 @@ export const chains = {
   [CHAIN.DESMOS]: {
     chainId: 'desmos-mainnet',
     name: 'desmos',
+    extensionId: 'desmos',
     path: CHAIN.DESMOS,
     imgURL: `${baseURL}/desmos.png`,
     wallet: {
-      hdPath: '44/852/0/0/0',
+      hdPath: '44/118/0/0/0',
       prefix: 'desmos',
-      support: { ledger: false, keystation: true },
-      isProto: false,
+      support: { ledger: true, keystation: true },
+      isProto: true,
     },
     lcdURL: 'https://lcd-desmos.cosmostation.io',
     symbolName: 'DSM',
@@ -903,6 +925,7 @@ export const chains = {
   [CHAIN.GRAVITY_BRIDGE]: {
     chainId: 'gravity-bridge-3',
     name: 'g-bridge',
+    extensionId: 'gravity bridge',
     path: CHAIN.GRAVITY_BRIDGE,
     imgURL: `${baseURL}/gravity-bridge.png`,
     wallet: {
@@ -942,6 +965,7 @@ export const chains = {
   [CHAIN.LUM]: {
     chainId: 'lum-network-1',
     name: 'lum',
+    extensionId: 'lum',
     path: CHAIN.LUM,
     imgURL: `${baseURL}/lum.png`,
     wallet: {
@@ -981,6 +1005,7 @@ export const chains = {
   [CHAIN.STARGAZE]: {
     chainId: 'stargaze-1',
     name: 'stargaze',
+    extensionId: 'stargaze',
     path: CHAIN.STARGAZE,
     imgURL: `${baseURL}/stargaze.png`,
     wallet: {
@@ -1020,6 +1045,7 @@ export const chains = {
   [CHAIN.CHIHUAHUA]: {
     chainId: 'chihuahua-1',
     name: 'chihuahua',
+    extensionId: 'chihuahua',
     path: CHAIN.CHIHUAHUA,
     imgURL: `${baseURL}/chihuahua.png`,
     wallet: {
@@ -1059,6 +1085,7 @@ export const chains = {
   [CHAIN.OSMOSIS]: {
     chainId: 'osmosis-1',
     name: 'osmosis',
+    extensionId: 'osmosis',
     path: CHAIN.OSMOSIS,
     imgURL: `${baseURL}/osmosis.png`,
     wallet: {
@@ -1086,18 +1113,19 @@ export const chains = {
     },
     gas: {
       default: '200000',
-      delegate: '200000',
-      undelegate: '200000',
-      redelegate: '300000',
-      withdraw: '200000',
-      withdrawReward: '200000',
+      delegate: '250000',
+      undelegate: '300000',
+      redelegate: '350000',
+      withdraw: '250000',
+      withdrawReward: '250000',
       withdrawCommission: '250000',
-      modifyWithdrawAddress: '200000',
+      modifyWithdrawAddress: '250000',
     },
   },
   [CHAIN.KONSTELLATION]: {
     chainId: 'darchub',
     name: 'konstellation',
+    extensionId: 'konstellation',
     path: CHAIN.KONSTELLATION,
     imgURL: `${baseURL}/konstellation.png`,
     wallet: {
@@ -1137,6 +1165,7 @@ export const chains = {
   [CHAIN.UMEE]: {
     chainId: 'umee-1',
     name: 'umee',
+    extensionId: 'umee',
     path: CHAIN.UMEE,
     imgURL: `${baseURL}/umee.png`,
     wallet: {
@@ -1176,6 +1205,7 @@ export const chains = {
   [CHAIN.OMNIFLIX]: {
     chainId: 'omniflixhub-1',
     name: 'omniflix',
+    extensionId: 'omniflix',
     path: CHAIN.OMNIFLIX,
     imgURL: `${baseURL}/omniflix.png`,
     wallet: {
@@ -1215,6 +1245,7 @@ export const chains = {
   [CHAIN.PROVENANCE]: {
     chainId: 'pio-mainnet-1',
     name: 'provenance',
+    extensionId: 'provenance',
     path: CHAIN.PROVENANCE,
     imgURL: `${baseURL}/provenance.png`,
     wallet: {
@@ -1254,6 +1285,7 @@ export const chains = {
   [CHAIN.CERBERUS]: {
     chainId: 'cerberus-chain-1',
     name: 'cerberus',
+    extensionId: 'cerberus',
     path: CHAIN.CERBERUS,
     imgURL: `${baseURL}/cerberus.png`,
     wallet: {
@@ -1293,6 +1325,7 @@ export const chains = {
   [CHAIN.CRESCENT]: {
     chainId: 'crescent-1',
     name: 'crescent',
+    extensionId: 'crescent',
     path: CHAIN.CRESCENT,
     imgURL: `${baseURL}/crescent.png`,
     wallet: {
