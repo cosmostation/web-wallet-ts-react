@@ -134,7 +134,7 @@ export const chains = {
     denom: 'ukava',
     decimal: 6,
     coingeckoId: 'kava',
-    validatorIconDirectory: 'kava/kava-2',
+    validatorIconDirectory: 'kava',
     mintscanPath: 'kava',
     fee: {
       default: '0.005',
@@ -167,7 +167,7 @@ export const chains = {
       hdPath: '44/494/0/0/0',
       prefix: 'band',
       support: { ledger: false, keystation: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-band.cosmostation.io',
     symbolName: 'BAND',
