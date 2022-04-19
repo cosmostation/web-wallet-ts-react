@@ -13,6 +13,9 @@ import type { WalletInfo } from '~/stores/wallet';
 import { walletInfoState } from '~/stores/wallet';
 import Ledger, { getBech32FromPK, LedgerError } from '~/utils/ledger';
 
+import { ReactComponent as CosmostationIcon } from './assets/Cosmostation.svg';
+import { ReactComponent as LedgerIcon } from './assets/Ledger.svg';
+
 import styles from './index.module.scss';
 
 type DialogWalletConnectProps = {
@@ -129,31 +132,32 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
 
   return (
     <>
-      <Dialog open={open} onClose={onClose} maxWidth="lg">
+      <Dialog open={open} onClose={onClose} maxWidth="lg" title="Connect Wallet">
         <div className={styles.container}>
           <div className={styles.connectContainer}>
             <ConnectButton
-              name="Connect To Ledger"
-              imgURL="/images/signIn/ledger.png"
               onClick={handleOnClickLedger}
               disabled={!currentChain.wallet.support.ledger}
-            />
-            <div className={styles.verticalDivider} />
+              className={styles.buttonStyle1}
+            >
+              <LedgerIcon />
+            </ConnectButton>
+            <div className={styles.centerDiv} />
             <ConnectButton
-              name="Connect To Keystation"
-              imgURL="/images/signIn/keystation.png"
-              onClick={handleOnClickKeystation}
-              disabled={!currentChain.wallet.support.keystation}
-            />
-          </div>
-          <div className={styles.connectContainer}>
-            <ConnectButton
-              name="Cosmostation Extension"
-              imgURL="/images/signIn/keystation.png"
               onClick={handleOnClickExtension}
               disabled={!currentChain.wallet.support.keystation}
-            />
+              className={styles.buttonStyle1}
+            >
+              <CosmostationIcon />
+            </ConnectButton>
           </div>
+          <ConnectButton
+            onClick={handleOnClickKeystation}
+            disabled={!currentChain.wallet.support.keystation}
+            className={styles.buttonStyle2}
+          >
+            Connect to Keystation
+          </ConnectButton>
         </div>
       </Dialog>
       {isOpenedSignin && (
@@ -172,19 +176,13 @@ type ConnectButtonProps = {
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
-  name: string;
-  imgURL: string;
+  children?: string | JSX.Element;
 };
 
-function ConnectButton({ className, name, imgURL, disabled, onClick }: ConnectButtonProps) {
+function ConnectButton({ className, children, disabled, onClick }: ConnectButtonProps) {
   return (
-    <div className={cx(styles.buttonContainer, className)}>
-      <button type="button" className={styles.button} onClick={onClick} disabled={disabled}>
-        <div className={styles.imgContainer}>
-          <img src={imgURL} alt={name} />
-        </div>
-        <div className={styles.text}>{name}</div>
-      </button>
-    </div>
+    <button type="button" className={cx(className, styles.button)} onClick={onClick} disabled={disabled}>
+      {children}
+    </button>
   );
 }
