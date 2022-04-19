@@ -201,6 +201,19 @@ export default function WalletInfo({ className }: WalletInfoProps) {
             imageURL: currentChain.imgURL,
           });
         }
+
+        setTransactionInfoData({
+          open: true,
+          step: 'doing',
+          title,
+          from: currentWallet.address,
+          to: address,
+          amount: `${sendAmount} ${currentChain.symbolName}`,
+          fee: `${currentChain.fee.withdraw} ${currentChain.symbolName}`,
+          memo,
+          tx: JSON.stringify(txMsgOrigin, null, 4),
+        });
+
         const extensionAccount = await provider.requestAccount(currentChain.extensionId);
 
         const extensionSignature = await provider.signAmino(currentChain.extensionId, txMsg as SignAminoDoc);
