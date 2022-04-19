@@ -1,7 +1,7 @@
 @import '~/styles/index';
 
 .container {
-  padding: 0 4rem 2rem;
+  padding: 0 2rem 2rem;
 
   max-width: 68.8rem;
 }
@@ -13,14 +13,14 @@
   align-items: center;
 }
 
+.centerDiv {
+  width: 1.2rem;
+}
+
 .verticalDivider {
   border-left: 0.1rem solid $gray300;
 
   height: 5rem;
-}
-
-.buttonContainer {
-  padding: 2.5rem;
 }
 
 .button {
@@ -30,11 +30,11 @@
   justify-content: center;
   align-items: center;
 
-  padding: 1rem;
-
   width: 25.5rem;
 
   border-radius: 0.5rem;
+
+  border: 0.1rem solid #ededed;
 
   & .imgContainer {
     width: 4.5rem;
@@ -60,7 +60,7 @@
 
   &:hover {
     cursor: pointer;
-    background-color: $gray200;
+    border: 0.1rem solid #949494;
   }
 
   &:disabled {
@@ -68,4 +68,18 @@
     opacity: 0.3;
     background-color: inherit;
   }
+}
+
+.buttonStyle1 {
+  height: 7rem;
+}
+
+.buttonStyle2 {
+  height: 4.5rem;
+  width: 100%;
+
+  font-size: 1.3rem;
+  font-weight: 700;
+
+  margin-top: 1.2rem;
 }
