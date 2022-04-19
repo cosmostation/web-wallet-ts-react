@@ -35,6 +35,7 @@ export const CHAIN = {
   PROVENANCE: 'provenance',
   CERBERUS: 'cerberus',
   CRESCENT: 'crescent',
+  ASSET_MANTLE: 'asset-mantle',
 } as const;
 
 // chain info key === path
@@ -1374,6 +1375,45 @@ export const chains = {
     coingeckoId: 'crescent-tmp',
     validatorIconDirectory: 'crescent',
     mintscanPath: 'crescent',
+    fee: {
+      default: '0',
+      delegate: '0',
+      undelegate: '0',
+      redelegate: '0',
+      withdraw: '0',
+      withdrawReward: '0',
+      withdrawCommission: '0',
+      modifyWithdrawAddress: '0',
+    },
+    gas: {
+      default: '200000',
+      delegate: '200000',
+      undelegate: '200000',
+      redelegate: '300000',
+      withdraw: '200000',
+      withdrawReward: '200000',
+      withdrawCommission: '200000',
+      modifyWithdrawAddress: '200000',
+    },
+  },
+  [CHAIN.ASSET_MANTLE]: {
+    chainId: 'mantle-1',
+    name: 'asset mantle',
+    path: CHAIN.ASSET_MANTLE,
+    imgURL: `${baseURL}/asset-mantle.png`,
+    wallet: {
+      hdPath: '44/118/0/0/0',
+      prefix: 'mantle',
+      support: { ledger: true, keystation: true },
+      isProto: true,
+    },
+    lcdURL: 'https://lcd-asset-mantle.cosmostation.io',
+    symbolName: 'MNTL',
+    denom: 'umntl',
+    decimal: 6,
+    coingeckoId: 'umntl-tmp',
+    validatorIconDirectory: 'asset-mantle',
+    mintscanPath: 'asset-mantle',
     fee: {
       default: '0',
       delegate: '0',
