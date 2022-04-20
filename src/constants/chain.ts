@@ -1398,13 +1398,15 @@ export const chains = {
   },
   [CHAIN.ASSET_MANTLE]: {
     chainId: 'mantle-1',
-    name: 'asset mantle',
+    name: 'assetmantle',
+    extensionId: 'assetmantle',
+    extensionCoinType: '118',
     path: CHAIN.ASSET_MANTLE,
     imgURL: `${baseURL}/asset-mantle.png`,
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'mantle',
-      support: { ledger: true, keystation: true },
+      support: { ledger: true, keystation: true, extension: true },
       isProto: true,
     },
     lcdURL: 'https://lcd-asset-mantle.cosmostation.io',
