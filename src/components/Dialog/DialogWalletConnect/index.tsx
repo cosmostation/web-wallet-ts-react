@@ -65,7 +65,7 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
           chainName: currentChain.extensionId,
           restURL: currentChain.lcdURL,
           coinGeckoId: currentChain.coingeckoId,
-          coinType: currentChain.wallet.hdPath.split('/')[1],
+          coinType: currentChain.extensionCoinType,
           decimals: currentChain.decimal,
           imageURL: currentChain.imgURL,
         });
@@ -145,7 +145,7 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
             <div className={styles.centerDiv} />
             <ConnectButton
               onClick={handleOnClickExtension}
-              disabled={!currentChain.wallet.support.keystation}
+              disabled={!currentChain.wallet.support.extension}
               className={styles.buttonStyle1}
             >
               <CosmostationIcon />

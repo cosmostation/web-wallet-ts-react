@@ -274,7 +274,7 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
             chainName: currentChain.extensionId,
             restURL: currentChain.lcdURL,
             coinGeckoId: currentChain.coingeckoId,
-            coinType: currentChain.wallet.hdPath.split('/')[1],
+            coinType: currentChain.extensionCoinType,
             decimals: currentChain.decimal,
             imageURL: currentChain.imgURL,
           });
