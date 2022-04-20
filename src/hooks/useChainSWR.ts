@@ -447,7 +447,10 @@ export function useChainSWR() {
   const accountInfo = useMemo(
     () =>
       account.data?.value?.account_number
-        ? { account_number: account.data?.value?.account_number, sequence: account.data?.value?.sequence || '0' }
+        ? {
+            account_number: String(account.data?.value?.account_number),
+            sequence: String(account.data?.value?.sequence || '0'),
+          }
         : undefined,
     [account],
   );

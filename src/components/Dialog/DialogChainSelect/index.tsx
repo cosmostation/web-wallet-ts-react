@@ -115,7 +115,7 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
                 chainName: chainInfo.extensionId,
                 restURL: chainInfo.lcdURL,
                 coinGeckoId: chainInfo.coingeckoId,
-                coinType: chainInfo.wallet.hdPath.split('/')[1],
+                coinType: chainInfo.extensionCoinType,
                 decimals: chainInfo.decimal,
                 imageURL: chainInfo.imgURL,
               });
@@ -175,7 +175,8 @@ export default function DialogChainSelect({ open, onClose }: DialogChainSelectPr
               onClick={() => handleOnClick(chaininfo.path)}
               disabled={
                 (walletInfo.walletType === 'keystation' && !chaininfo.wallet.support.keystation) ||
-                (walletInfo.walletType === 'ledger' && !chaininfo.wallet.support.ledger)
+                (walletInfo.walletType === 'ledger' && !chaininfo.wallet.support.ledger) ||
+                (walletInfo.walletType === 'cosmostation-extension' && !chaininfo.wallet.support.extension)
               }
             />
           ))}

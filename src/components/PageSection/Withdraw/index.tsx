@@ -196,7 +196,7 @@ export default function WalletInfo({ className }: WalletInfoProps) {
             chainName: currentChain.extensionId,
             restURL: currentChain.lcdURL,
             coinGeckoId: currentChain.coingeckoId,
-            coinType: currentChain.wallet.hdPath.split('/')[1],
+            coinType: currentChain.extensionCoinType,
             decimals: currentChain.decimal,
             imageURL: currentChain.imgURL,
           });

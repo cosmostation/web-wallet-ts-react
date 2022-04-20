@@ -180,7 +180,7 @@ export default function DialogModifyWithdrawAddress({ open, onClose }: DialogMod
             chainName: currentChain.extensionId,
             restURL: currentChain.lcdURL,
             coinGeckoId: currentChain.coingeckoId,
-            coinType: currentChain.wallet.hdPath.split('/')[1],
+            coinType: currentChain.extensionCoinType,
             decimals: currentChain.decimal,
             imageURL: currentChain.imgURL,
           });
