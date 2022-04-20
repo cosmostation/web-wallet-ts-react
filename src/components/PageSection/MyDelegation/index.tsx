@@ -237,7 +237,10 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                   </TableCell>
                   <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
                     {times(
-                      rewardInfo?.reward?.reduce((ac, cu) => ac.plus(cu.amount), new Big('0')).toString() || '0',
+                      rewardInfo?.reward
+                        ?.filter((i) => i.denom === currentChain.denom)
+                        .reduce((ac, cu) => ac.plus(cu.amount), new Big('0'))
+                        .toString() || '0',
                       pow(10, -currentChain.decimal),
                       currentChain.decimal,
                     )}

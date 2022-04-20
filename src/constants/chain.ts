@@ -873,7 +873,7 @@ export const chains = {
       hdPath: '44/639/0/0/0',
       prefix: 'bitsong',
       support: { ledger: false, keystation: true, extension: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-bitsong.cosmostation.io',
     symbolName: 'BTSG',

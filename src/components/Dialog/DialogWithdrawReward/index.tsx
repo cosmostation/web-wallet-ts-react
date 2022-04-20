@@ -303,7 +303,7 @@ export default function DialogWithdrawReward({
           </div>
 
           <div className={styles.rowContainer}>
-            <div className={styles.column1}>{t('component.dialog.dialog_withdraw_reward.my_reward')}나의 이자</div>
+            <div className={styles.column1}>{t('component.dialog.dialog_withdraw_reward.my_reward')}</div>
             <div className={cx(styles.column2, styles.textEnd)}>{amount}</div>
           </div>
           <div className={styles.rowContainer}>
