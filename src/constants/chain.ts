@@ -1160,7 +1160,7 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'darc',
-      support: { ledger: true, keystation: true, extension: false },
+      support: { ledger: true, keystation: true, extension: true },
       isProto: true,
     },
     lcdURL: 'https://lcd-konstellation.cosmostation.io',
