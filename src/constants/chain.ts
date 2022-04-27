@@ -217,7 +217,7 @@ export const chains = {
       hdPath: '44/118/0/0/0',
       prefix: 'akash',
       support: { ledger: true, keystation: true, extension: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-akash.cosmostation.io',
     symbolName: 'AKT',
