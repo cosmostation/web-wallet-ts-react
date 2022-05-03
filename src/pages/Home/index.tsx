@@ -220,6 +220,20 @@ export default function Home() {
         >
           sendTransaction
         </button>
+
+        <button
+          type="button"
+          onClick={async () => {
+            console.log(
+              await web3.current!.eth.sign(
+                '12312312311231231231123123123112',
+                '0xE4A7e953486D01d4Fdc76986a0c88fa4F87B30e5',
+              ),
+            );
+          }}
+        >
+          sign
+        </button>
         <div className={styles.container}>
           <div className={styles.mainImg} />
           <button type="button" onClick={handleOnOpenConnect} className={styles.connectButton}>
