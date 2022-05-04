@@ -21,6 +21,18 @@ export function useCreateProtoTx() {
 
   const recoveryDecimal = pow(10, currentChain.decimal);
 
+  const typeURL = (() => {
+    if (currentChain.name === 'evmos') {
+      return '/ethermint.crypto.v1.ethsecp256k1.PubKey';
+    }
+
+    if (currentChain.name === 'injective') {
+      return '/injective.crypto.v1beta1.ethsecp256k1.PubKey';
+    }
+
+    return '/cosmos.crypto.secp256k1.PubKey';
+  })();
+
   return {
     getSendTxBody: (toAddress: string, amount: string, memo?: string) => {
       const msgSend = new MsgSend();
@@ -59,7 +71,7 @@ export function useCreateProtoTx() {
       pubKey.setKey(publicKey);
 
       const any = new Any();
-      any.setTypeUrl('/cosmos.crypto.secp256k1.PubKey');
+      any.setTypeUrl(typeURL);
       any.setValue(pubKey.serializeBinary());
 
       const signerInfo = new SignerInfo();
