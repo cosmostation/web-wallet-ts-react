@@ -19,6 +19,15 @@ export default function Ad() {
       >
         <div className={styles.aditem}>
           <div>Sponsored: </div>
+          <div className={styles.trustednodeImage} />
+          <div>
+            <a href="https://trustednode.io/" target="_blank" rel="noreferrer">
+              Earn the rewards you deserve on the coins you love
+            </a>
+          </div>
+        </div>
+        <div className={styles.aditem}>
+          <div>Sponsored: </div>
           <div className={styles.crescentImage} />
           <div>
             Swap, Liquid Stake and Farm on{' '}
@@ -61,15 +70,6 @@ export default function Ad() {
             >
               Gravity DEX protocol
             </a>
-          </div>
-        </div>
-        <div className={styles.aditem}>
-          Sponsored: <div className={styles.defiImage} />{' '}
-          <div>
-            <a href="https://www.defistation.io/" target="_blank" rel="noreferrer">
-              Defistation
-            </a>{' '}
-            - DeFi analytics & leaderboard for protocols on Binance Smart Chain
           </div>
         </div>
       </Carousel>
