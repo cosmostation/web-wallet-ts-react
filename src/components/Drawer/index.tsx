@@ -62,7 +62,7 @@ export default function Drawer({ open, onClose }: DrawerProps) {
 }
 
 function DrawerContent() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const { getPathWithDepth } = useCurrentPath();
 
@@ -120,20 +120,6 @@ function DrawerContent() {
               onClick={() => window.open(`https://www.mintscan.io/${currentChain.mintscanPath}`, '_blank')}
             />
           </div>
-          <button
-            type="button"
-            className={styles.guideButton}
-            onClick={() => {
-              if (i18n.language === 'ko') {
-                window.open('https://www.cosmostation.io/files/cosmostation_guide_web_ko.pdf', '_blank');
-                return;
-              }
-
-              window.open('https://www.cosmostation.io/files/cosmostation_guide_web_en.pdf', '_blank');
-            }}
-          >
-            {t('component.drawer.web_wallet_guide')} <sup>PDF</sup>
-          </button>
         </div>
         <div>
           <div className={styles.downloadText}>Download Cosmostation App Wallet!</div>
