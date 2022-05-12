@@ -5,6 +5,7 @@ import copy from 'copy-to-clipboard';
 import { useSnackbar } from 'notistack';
 import QRCode from 'qrcode.react';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Divider, IconButton } from '@mui/material';
 
 import Button from '~/components/Button';
@@ -153,6 +154,56 @@ export default function WalletInfo({ className }: WalletInfoProps) {
             <div className={styles.delegateInfoContainer} />
           </div>
         </div>
+        {currentWallet.walletType === 'keystation' && (
+          <div className={styles.keystationDescriptionContainer}>
+            <div>
+              <InfoOutlinedIcon sx={{ color: '#CD1A1A', width: '1.2rem', height: '1.2rem' }} />
+            </div>
+            <div className={styles.keystationTextContainer}>
+              {i18n.language === 'ko' ? (
+                <>
+                  <span style={{ color: '#CD1A1A' }}>키스테이션 서비스</span>가 곧 종료됩니다. 코스모스테이션 웹 지갑을
+                  사용하고 싶으신 분들은,
+                  <br />
+                  <a
+                    href="https://chrome.google.com/webstore/detail/cosmostation/fpkhgmpbidmiogeglndfbkegfdlnajnf"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    이곳
+                  </a>
+                  을 클릭해서 코스모스테이션 월렛 익스텐션을 다운로드하세요.
+                  <br /> 마이그레이션 가이드 정보는{' '}
+                  <a href="https://docs.cosmostation.io/docs/intro/" target="_blank" rel="noreferrer">
+                    여기
+                  </a>
+                  를 참고하세요.
+                </>
+              ) : (
+                <>
+                  <span style={{ color: '#CD1A1A' }}>Keystation</span> service will soon be terminated. If you wish to
+                  use Cosmostation web wallet,
+                  <br />
+                  please click{' '}
+                  <a
+                    href="https://chrome.google.com/webstore/detail/cosmostation/fpkhgmpbidmiogeglndfbkegfdlnajnf"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    here
+                  </a>{' '}
+                  to download Cosmostation Wallet Extension.
+                  <br />
+                  Please refer to the migration guide{' '}
+                  <a href="https://docs.cosmostation.io/docs/intro/" target="_blank" rel="noreferrer">
+                    here
+                  </a>
+                  .
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
       <DialogWithdrawCommission open={isOpenedCommission} onClose={() => setIsOpenedCommission(false)} />
     </>
