@@ -457,7 +457,7 @@ export const chains = {
   [CHAIN.CRYPTO_ORG]: {
     chainId: 'crypto-org-chain-mainnet-1',
     name: 'crypto.org',
-    extensionId: 'crypto.com',
+    extensionId: 'crypto.org',
     extensionCoinType: '394',
     path: CHAIN.CRYPTO_ORG,
     imgURL: `${baseURL}/crypto-org.png`,
