@@ -72,6 +72,7 @@
 
 .buttonStyle1 {
   height: 7rem;
+  width: 100%;
 }
 
 .buttonStyle2 {
@@ -82,4 +83,23 @@
   font-weight: 700;
 
   margin-top: 1.2rem;
+}
+
+.keystationDescriptionContainer {
+  margin-top: 1.2rem;
+
+  border-radius: 0.5rem;
+
+  background-color: #fff3f3;
+
+  padding: 0.8rem 0.9rem;
+
+  display: flex;
+
+  font-size: 1.1rem;
+  line-height: 1.2rem;
+}
+
+.keystationTextContainer {
+  margin-left: 0.4rem;
 }

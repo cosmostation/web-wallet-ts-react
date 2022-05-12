@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import cx from 'clsx';
 import { useSnackbar } from 'notistack';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { InstallError, tendermint } from '@cosmostation/extension-client';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import Dialog from '~/components/Dialog';
 import Signin from '~/components/Keystation/Signin';
@@ -31,6 +33,8 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
   const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
   const currentChain = useCurrentChain();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { i18n } = useTranslation();
 
   const handleOnClickKeystation = () => {
     setIsShowLoader(true);
@@ -158,6 +162,48 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
           >
             Connect to Keystation
           </ConnectButton>
+          <div className={styles.keystationDescriptionContainer}>
+            <div>
+              <InfoOutlinedIcon sx={{ color: '#CD1A1A', width: '1.2rem', height: '1.2rem' }} />
+            </div>
+            <div className={styles.keystationTextContainer}>
+              {i18n.language === 'ko' ? (
+                <>
+                  <span style={{ color: '#CD1A1A' }}>키스테이션 서비스</span>가 곧 종료됩니다. 코스모스테이션 웹 지갑을
+                  사용하고 싶으신 분들은,{' '}
+                  <a
+                    href="https://chrome.google.com/webstore/detail/cosmostation/fpkhgmpbidmiogeglndfbkegfdlnajnf"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    이곳
+                  </a>
+                  을 클릭해서 코스모스테이션 월렛 익스텐션을 다운로드하세요. 마이그레이션 가이드 정보는{' '}
+                  <a href="https://docs.cosmostation.io/docs/intro/" target="_blank" rel="noreferrer">
+                    여기
+                  </a>
+                  를 참고하세요.
+                </>
+              ) : (
+                <>
+                  <span style={{ color: '#CD1A1A' }}>Keystation</span> service will soon be terminated. If you wish to
+                  use Cosmostation web wallet, please click{' '}
+                  <a
+                    href="https://chrome.google.com/webstore/detail/cosmostation/fpkhgmpbidmiogeglndfbkegfdlnajnf"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    here
+                  </a>{' '}
+                  to download Cosmostation Wallet Extension. Please refer to the migration guide{' '}
+                  <a href="https://docs.cosmostation.io/docs/intro/" target="_blank" rel="noreferrer">
+                    here
+                  </a>
+                  .
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </Dialog>
       {isOpenedSignin && (
