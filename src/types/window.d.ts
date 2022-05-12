@@ -17,4 +17,11 @@ interface Window {
     request: (message: import('~/types/message').RequestMessage) => Promise<T>;
     on: (eventName: import('~/types/message').ListenerType, eventHandler: (event?: unknown) => void) => void;
   };
+  xfi: {
+    ethereum: {
+      sendAsync: () => null;
+      request: (message: import('~/types/message').RequestMessage) => Promise<T>;
+      on: (eventName: import('~/types/message').ListenerType, eventHandler: (event?: unknown) => void) => void;
+    };
+  };
 }

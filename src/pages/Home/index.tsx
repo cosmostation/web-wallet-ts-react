@@ -92,9 +92,12 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log('ethereum', window.keplr);
-    console.log('ethereum', window.cosmostation);
-    web3.current = new Web3(window.cosmostation.ethereum);
+    // console.log('ethereum', window.keplr);
+    // console.log('ethereum', window.cosmostation);
+    setTimeout(() => {
+      // web3.current = new Web3(window.xfi.ethereum);
+      web3.current = new Web3(window.cosmostation.ethereum);
+    }, 1000);
   }, []);
 
   return (
@@ -202,19 +205,14 @@ export default function Home() {
         <button
           type="button"
           onClick={async () => {
-            await web3.current!.eth.sendTransaction({
+            await web3.current!.eth.signTransaction({
               from: '0xE4A7e953486D01d4Fdc76986a0c88fa4F87B30e5',
-              value: '0x1111',
-              data: '0x',
-              chain: 'dd',
-              chainId: 1,
-              gas: 11,
-              gasPrice: 11,
-              nonce: 1,
-              common: { customChain: { chainId: 1, networkId: 1, name: 'ddd' } },
-              hardfork: 'dddd',
-              maxFeePerGas: 11,
-              maxPriorityFeePerGas: 11,
+              to: '0xDdDf66022c8307222DC8a118F4DE97e131C17936',
+              value: '10000000000',
+              gas: 21000,
+              maxFeePerGas: '300',
+              maxPriorityFeePerGas: '10',
+              nonce: 5,
             });
           }}
         >
