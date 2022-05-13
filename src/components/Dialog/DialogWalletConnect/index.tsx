@@ -179,7 +179,7 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
                     이곳
                   </a>
                   을 클릭해서 코스모스테이션 월렛 익스텐션을 다운로드하세요. 마이그레이션 가이드 정보는{' '}
-                  <a href="https://docs.cosmostation.io/docs/intro/" target="_blank" rel="noreferrer">
+                  <a href="https://github.com/cosmostation/keystation" target="_blank" rel="noreferrer">
                     여기
                   </a>
                   를 참고하세요.
@@ -196,7 +196,7 @@ export default function DialogWalletConnect({ open, onClose, onSuccess }: Dialog
                     here
                   </a>{' '}
                   to download Cosmostation Wallet Extension. Please refer to the migration guide{' '}
-                  <a href="https://docs.cosmostation.io/docs/intro/" target="_blank" rel="noreferrer">
+                  <a href="https://github.com/cosmostation/keystation" target="_blank" rel="noreferrer">
                     here
                   </a>
                   .
