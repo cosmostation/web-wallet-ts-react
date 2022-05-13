@@ -96,7 +96,7 @@ export default function Home() {
     // console.log('ethereum', window.cosmostation);
     setTimeout(() => {
       // web3.current = new Web3(window.xfi.ethereum);
-      web3.current = new Web3(window.cosmostation.ethereum);
+      web3.current = new Web3(window.xfi.ethereum);
     }, 1000);
   }, []);
 
@@ -205,13 +205,13 @@ export default function Home() {
         <button
           type="button"
           onClick={async () => {
-            await web3.current!.eth.signTransaction({
+            await web3.current!.eth.sendTransaction({
               from: '0xE4A7e953486D01d4Fdc76986a0c88fa4F87B30e5',
               to: '0xDdDf66022c8307222DC8a118F4DE97e131C17936',
-              value: '10000000000',
+              value: '282036608375140',
               gas: 21000,
-              maxFeePerGas: '300',
-              maxPriorityFeePerGas: '10',
+              // maxFeePerGas: '300',
+              // maxPriorityFeePerGas: '10',
               nonce: 5,
             });
           }}
