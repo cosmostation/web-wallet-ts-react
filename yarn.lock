@@ -1123,10 +1123,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@cosmostation/extension-client@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@cosmostation/extension-client/-/extension-client-0.0.2.tgz#ab01a1a351c7ef54a49e02a266cc788bffa12077"
-  integrity sha512-O6wgKMWHn2YOcdPhz01hVsYbOQBMsWaZnRbiFkxqka/C+ZsUpAHWNwY2kHVYE0JxrMA05AS3WidEPSVs2t3b2g==
+"@cosmostation/extension-client@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@cosmostation/extension-client/-/extension-client-0.0.6.tgz#a04420c1c3d68b83d197e48e79787a3484fb8d2c"
+  integrity sha512-3N7NOz8JMOpJlVaGS++zha4AZoijJTnPkq8djEfpk/mJ6+laUNo4a1/mxANFm9i1KUZcU9HX6GKKx9v9nL/VDg==
 
 "@craco/craco@^6.3.0":
   version "6.3.0"

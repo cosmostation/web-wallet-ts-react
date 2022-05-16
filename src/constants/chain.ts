@@ -1105,7 +1105,7 @@ export const chains = {
       delegate: '200000',
       undelegate: '200000',
       redelegate: '300000',
-      withdraw: '200000',
+      withdraw: '199999',
       withdrawReward: '200000',
       withdrawCommission: '200000',
       modifyWithdrawAddress: '200000',

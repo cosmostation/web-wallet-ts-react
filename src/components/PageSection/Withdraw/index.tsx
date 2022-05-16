@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack';
 import { useSetRecoilState } from 'recoil';
 import secp256k1 from 'secp256k1';
 import { tendermint } from '@cosmostation/extension-client';
-import type { SignAminoDoc } from '@cosmostation/extension-client/types/message';
 
 import Button from '~/components/Button';
 import type { TransactionInfoData } from '~/components/Dialog/DialogTransactionInfo';
@@ -22,7 +21,7 @@ import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import { useGaEvent } from '~/hooks/useGaEvent';
 import { loaderState } from '~/stores/loader';
 import { divide, equal, getByte, gt, minus } from '~/utils/calculator';
-import Ledger, { createMsg, createMsgForLedger, LedgerError } from '~/utils/ledger';
+import Ledger, { createMsgForLedger, LedgerError } from '~/utils/ledger';
 import { createBroadcastBody, createProtoBroadcastBody, createSignature, createSignedTx } from '~/utils/txHelper';
 import { isDecimal } from '~/utils/validator';
 
@@ -112,13 +111,6 @@ export default function WalletInfo({ className }: WalletInfoProps) {
       const txMsgOrigin = createTx.getSendTxMsg(address, sendAmount, memo);
 
       const txMsgForSign = createMsgForLedger({
-        message: txMsgOrigin,
-        accountNumber: account.account_number,
-        chainId: currentChain.chainId,
-        sequence: account.sequence,
-      });
-
-      const txMsg = createMsg({
         message: txMsgOrigin,
         accountNumber: account.account_number,
         chainId: currentChain.chainId,
@@ -216,10 +208,6 @@ export default function WalletInfo({ className }: WalletInfoProps) {
 
         const extensionAccount = await provider.requestAccount(currentChain.extensionId);
 
-        const extensionSignature = await provider.signAmino(currentChain.extensionId, txMsg as SignAminoDoc);
-
-        const decodedSignature = Buffer.from(extensionSignature.signature, 'base64');
-
         const protoTxBody = createProtoTx.getSendTxBody(address, sendAmount, memo);
         const protoAuthInfo = createProtoTx.getAuthInfo(
           currentChain.fee.withdraw,
@@ -227,7 +215,25 @@ export default function WalletInfo({ className }: WalletInfoProps) {
           extensionAccount.publicKey,
           account.sequence,
         );
-        const protoTxRaw = createProtoTx.getTxRaw(protoTxBody, protoAuthInfo, decodedSignature);
+
+        const extensionSignature = await provider.signDirect(
+          currentChain.extensionId,
+          {
+            account_number: account.account_number,
+            chain_id: currentChain.chainId,
+            auth_info_bytes: protoAuthInfo.serializeBinary(),
+            body_bytes: protoTxBody.serializeBinary(),
+          },
+          { fee: true },
+        );
+
+        const decodedSignature = Buffer.from(extensionSignature.signature, 'base64');
+
+        const protoTxRaw = createProtoTx.getTxRaw2(
+          extensionSignature.signed_doc.body_bytes,
+          extensionSignature.signed_doc.auth_info_bytes,
+          decodedSignature,
+        );
         const txBytes = createProtoBroadcastBody(protoTxRaw);
 
         const signature = createSignature({

@@ -59,7 +59,7 @@ export function useCreateProtoTx() {
     },
 
     getAuthInfo: (msgFee: string, msgGas: string, publicKey: Uint8Array, sequence?: string | number) => {
-      const mode = SignMode.SIGN_MODE_LEGACY_AMINO_JSON;
+      const mode = SignMode.SIGN_MODE_DIRECT;
 
       const single = new ModeInfo.Single();
       single.setMode(mode);
@@ -81,7 +81,7 @@ export function useCreateProtoTx() {
 
       const decCoin = new DecCoin();
       decCoin.setDenom(currentChain.denom);
-      decCoin.setAmount(times(msgFee, recoveryDecimal, 0));
+      decCoin.setAmount(msgFee);
 
       const fee = new Fee();
       fee.setAmountList([decCoin]);
@@ -99,6 +99,15 @@ export function useCreateProtoTx() {
 
       txRaw.setAuthInfoBytes(authInfo.serializeBinary());
       txRaw.setBodyBytes(txBody.serializeBinary());
+      txRaw.setSignaturesList([signature]);
+
+      return txRaw;
+    },
+    getTxRaw2: (txBody: Uint8Array, authInfo: Uint8Array, signature: Uint8Array) => {
+      const txRaw = new TxRaw();
+
+      txRaw.setAuthInfoBytes(authInfo);
+      txRaw.setBodyBytes(txBody);
       txRaw.setSignaturesList([signature]);
 
       return txRaw;
