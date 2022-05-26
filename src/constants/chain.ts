@@ -125,7 +125,7 @@ export const chains = {
     },
   },
   [CHAIN.KAVA]: {
-    chainId: 'kava-9',
+    chainId: 'kava_2222-10',
     name: 'kava',
     extensionId: 'kava',
     extensionCoinType: '459',
