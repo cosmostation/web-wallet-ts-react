@@ -505,8 +505,8 @@ export const chains = {
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'ki',
-      support: { ledger: true, keystation: true, extension: true },
-      isProto: false,
+      support: { ledger: true, keystation: false, extension: true },
+      isProto: true,
     },
     lcdURL: 'https://lcd-kichain.cosmostation.io',
     symbolName: 'XKI',
