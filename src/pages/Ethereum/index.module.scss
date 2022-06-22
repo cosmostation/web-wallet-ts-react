@@ -1,0 +1,17 @@
+@import '~/styles/index';
+
+.container {
+  width: 100vw;
+  height: 100vh;
+
+  font-size: large;
+
+  display: flex;
+  flex-direction: column;
+
+  color: $gray300;
+}
+
+.marginTop10 {
+  margin-top: 1rem;
+}

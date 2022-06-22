@@ -90,7 +90,9 @@
     "sort-keys": "^5.0.0",
     "swr": "^1.0.1",
     "typescript": "^4.1.2",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "web3": "^1.7.4",
+    "web3-eth-contract": "^1.7.4"
   },
   "browserslist": {
     "production": [
