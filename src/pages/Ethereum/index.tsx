@@ -93,6 +93,8 @@ export default function Ethereum() {
       // nonce: 11,
     });
 
+  const requestAccounts = async (web3: React.MutableRefObject<Web3 | null>) => web3.current?.eth.requestAccounts();
+
   const sign = async (web3: React.MutableRefObject<Web3 | null>) => {
     const result = web3.current?.eth.sign(
       '0x3132333435363738393071776572747975696f706173646667686a6b6c7a7863',
@@ -195,9 +197,6 @@ export default function Ethereum() {
       // web3.current = new Web3(window.xfi.ethereum);
       // web3.current = new Web3(window.ethereum);
 
-      void window.cosmostation.ethereum.request({ method: 'eth_requestAccounts' });
-      void window.ethereum.request({ method: 'eth_requestAccounts' });
-
       window.ethereum.on('accountsChanged', (data) => setMetamaskAccounts(data as string[]));
       window.cosmostation.ethereum.on('accountsChanged', (data) => setCosmostationAccounts(data as string[]));
 
@@ -210,6 +209,14 @@ export default function Ethereum() {
       <div style={{ border: '0.1rem solid yellow' }}>
         <div>Metamask</div>
         <div>
+          <button
+            type="button"
+            onClick={async () => {
+              setMetamaskResult(await requestAccounts(metamaskWeb3));
+            }}
+          >
+            requestAccounts
+          </button>
           <button
             type="button"
             onClick={async () => {
@@ -327,6 +334,14 @@ export default function Ethereum() {
       <div className={styles.marginTop10} style={{ border: '0.1rem solid red' }}>
         <div>Cosmostation</div>
         <div>
+          <button
+            type="button"
+            onClick={async () => {
+              setCosmostationResult(await requestAccounts(cosmostationWeb3));
+            }}
+          >
+            requestAccounts
+          </button>
           <button
             type="button"
             onClick={async () => {
