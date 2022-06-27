@@ -19,7 +19,7 @@
     "i18next-scanner": "i18next-scanner"
   },
   "dependencies": {
-    "@cosmostation/extension-client": "^0.0.2",
+    "@cosmostation/extension-client": "^0.1.0",
     "@craco/craco": "^6.3.0",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
@@ -65,6 +65,7 @@
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
+    "ethers": "^5.6.9",
     "google-protobuf": "^3.19.1",
     "i18next": "^21.3.0",
     "i18next-browser-languagedetector": "^6.1.2",

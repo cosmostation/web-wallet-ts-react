@@ -1,11 +1,14 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useEffect, useRef, useState } from 'react';
+import { ethers } from 'ethers';
 import Web3 from 'web3';
 import type { Contract, ContractSendMethod } from 'web3-eth-contract';
+import { ethereum, InstallError } from '@cosmostation/extension-client';
 
 import { erc20 } from './erc20';
 import { item } from './item';
@@ -30,6 +33,7 @@ export type erc20ContractMethods = {
 export default function Ethereum() {
   const metamaskWeb3 = useRef<Web3 | null>(null);
   const cosmostationWeb3 = useRef<Web3 | null>(null);
+  const cosmostationEthers = useRef<ethers.providers.Web3Provider | null>(null);
 
   const [metamaskResult, setMetamaskResult] = useState<unknown>();
   const [cosmostationResult, setCosmostationResult] = useState<unknown>();
@@ -94,6 +98,8 @@ export default function Ethereum() {
     });
 
   const requestAccounts = async (web3: React.MutableRefObject<Web3 | null>) => web3.current?.eth.requestAccounts();
+
+  const requestAccountsEthers = async () => cosmostationEthers.current?.send('eth_requestAccounts', []);
 
   const sign = async (web3: React.MutableRefObject<Web3 | null>) => {
     const result = web3.current?.eth.sign(
@@ -191,17 +197,30 @@ export default function Ethereum() {
   useEffect(() => {
     // console.log('ethereum', window.keplr);
     // console.log('ethereum', window.cosmostation);
+
+    void (async () => {
+      try {
+        const provider = await ethereum();
+
+        cosmostationWeb3.current = new Web3(provider);
+        cosmostationEthers.current = new ethers.providers.Web3Provider(provider);
+
+        provider.on('accountsChanged', (data) => setCosmostationAccounts(data as string[]));
+        provider.on('chainChanged', (data) => setCosmostationChainId(data as string));
+      } catch (e) {
+        if (e instanceof InstallError) {
+          console.log('not installed');
+        }
+      }
+    })();
     setTimeout(() => {
-      cosmostationWeb3.current = new Web3(window.cosmostation.ethereum);
       metamaskWeb3.current = new Web3(window.ethereum);
       // web3.current = new Web3(window.xfi.ethereum);
       // web3.current = new Web3(window.ethereum);
 
       window.ethereum.on('accountsChanged', (data) => setMetamaskAccounts(data as string[]));
-      window.cosmostation.ethereum.on('accountsChanged', (data) => setCosmostationAccounts(data as string[]));
 
       window.ethereum.on('chainChanged', (data) => setMetamaskChainId(data as string));
-      window.cosmostation.ethereum.on('chainChanged', (data) => setCosmostationChainId(data as string));
     }, 1000);
   }, []);
   return (
@@ -337,7 +356,7 @@ export default function Ethereum() {
           <button
             type="button"
             onClick={async () => {
-              setCosmostationResult(await requestAccounts(cosmostationWeb3));
+              setCosmostationResult(await requestAccountsEthers());
             }}
           >
             requestAccounts
