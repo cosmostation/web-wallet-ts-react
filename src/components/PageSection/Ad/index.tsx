@@ -19,15 +19,6 @@ export default function Ad() {
       >
         <div className={styles.aditem}>
           <div>Sponsored: </div>
-          <div className={styles.trustednodeImage} />
-          <div>
-            <a href="https://trustednode.io/" target="_blank" rel="noreferrer">
-              Earn the rewards you deserve on the coins you love
-            </a>
-          </div>
-        </div>
-        <div className={styles.aditem}>
-          <div>Sponsored: </div>
           <div className={styles.crescentImage} />
           <div>
             Swap, Liquid Stake and Farm on{' '}
