@@ -12,7 +12,7 @@ export function useCreateTx() {
 
   return {
     getSendTxMsg: (toAddress: string, amount: string, memo?: string) => {
-      const msgType = currentChain.path === CHAIN.CERTIK ? 'bank/MsgSend' : 'cosmos-sdk/MsgSend';
+      const msgType = currentChain.path === CHAIN.SHENTU ? 'bank/MsgSend' : 'cosmos-sdk/MsgSend';
 
       const txMsg = {
         msg: [

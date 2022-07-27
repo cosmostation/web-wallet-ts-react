@@ -7,7 +7,7 @@ export const CHAIN = {
   BAND: 'band',
   KAVA: 'kava',
   AKASH: 'akash',
-  CERTIK: 'certik',
+  SHENTU: 'shentu',
   SENTINEL: 'sentinel',
   PERSISTENCE: 'persistence',
   FETCH_AI: 'fetch-ai',
@@ -251,13 +251,13 @@ export const chains = {
       modifyWithdrawAddress: '200000',
     },
   },
-  [CHAIN.CERTIK]: {
+  [CHAIN.SHENTU]: {
     chainId: 'shentu-2.2',
-    name: 'certik',
-    extensionId: 'certik',
+    name: 'shentu',
+    extensionId: 'shentu',
     extensionCoinType: '118',
-    path: CHAIN.CERTIK,
-    imgURL: `${baseURL}/certik.png`,
+    path: CHAIN.SHENTU,
+    imgURL: `${baseURL}/shentu.png`,
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'certik',
