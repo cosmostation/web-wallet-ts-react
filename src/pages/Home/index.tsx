@@ -40,10 +40,43 @@ export default function Home() {
     }
   };
 
-  const handleOnDeleteAutoSign = async () => {
+  const handleOnAddTokens = async () => {
     try {
       const provider = await cosmos();
-      console.log('deleteAutoSign', await provider.autoSign.delete('cosmos'));
+      console.log(
+        'deleteAutoSign',
+        await provider.addCW20Tokens('juno', [
+          { contractAddress: 'juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr' },
+        ]),
+      );
+    } catch {
+      console.log('error');
+    }
+  };
+
+  const handleOnGetTokenBalance = async () => {
+    try {
+      const provider = await cosmos();
+      console.log(
+        'deleteAutoSign',
+        await provider.getCW20TokenBalance(
+          'juno',
+          'juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr',
+          'juno1gr0e3pj3y6fqvzyfm0qxyw9h5dwfrvh857jaza',
+        ),
+      );
+    } catch {
+      console.log('error');
+    }
+  };
+
+  const handleOnGetTokenInfo = async () => {
+    try {
+      const provider = await cosmos();
+      console.log(
+        'deleteAutoSign',
+        await provider.getCW20TokenInfo('juno', 'juno168ctmpyppk90d34p3jjy658zf5a5l3w8wk35wht6ccqj4mr0yv8s4j5awr'),
+      );
     } catch {
       console.log('error');
     }
@@ -58,8 +91,17 @@ export default function Home() {
         <button type="button" onClick={handleOnGetAutoSign}>
           get
         </button>
-        <button type="button" onClick={handleOnDeleteAutoSign}>
-          delete
+
+        <button type="button" onClick={handleOnAddTokens}>
+          add Tokens
+        </button>
+
+        <button type="button" onClick={handleOnGetTokenBalance}>
+          get token balance
+        </button>
+
+        <button type="button" onClick={handleOnGetTokenInfo}>
+          get token info
         </button>
         <div className={styles.container}>
           <div className={styles.mainImg} />
