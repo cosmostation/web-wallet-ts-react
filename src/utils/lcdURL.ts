@@ -9,7 +9,7 @@ export default function LcdURL(chain: ChainPath) {
       const exceptionChains = [CHAIN.KAVA, CHAIN.KICHAIN] as string[];
       const path = exceptionChains.includes(chainInfo.path) ? '/bank/balances/' : '/cosmos/bank/v1beta1/balances/';
 
-      return `${chainInfo.lcdURL}${path}${address}`;
+      return `${chainInfo.lcdURL}${path}${address}?pagination.limit=10000`;
     },
     getDelegations: (address: string) => `${chainInfo.lcdURL}/staking/delegators/${address}/delegations`,
     getRewards: (address: string) => `${chainInfo.lcdURL}/distribution/delegators/${address}/rewards`,
