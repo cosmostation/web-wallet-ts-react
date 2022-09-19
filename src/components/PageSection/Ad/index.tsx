@@ -18,6 +18,14 @@ export default function Ad() {
         swipeable={false}
       >
         <div className={styles.aditem}>
+          <div>
+            Save the Cosmos, Learn CosmWasm & Rust Smart Contracts With{' '}
+            <a href="https://area-52.io" target="_blank" rel="noreferrer">
+              Area-52
+            </a>
+          </div>
+        </div>
+        <div className={styles.aditem}>
           <div>Sponsored: </div>
           <div className={styles.crescentImage} />
           <div>
