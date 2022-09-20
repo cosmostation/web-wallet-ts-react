@@ -172,6 +172,51 @@ export const cosmosValidatorSet: ValidatorSet[] = [
     address: 'inj1rvqzf9u2uxttmshn302anlknfgsatrh5mcu6la',
     operatorAddress: 'injvaloper1rvqzf9u2uxttmshn302anlknfgsatrh5v7fl7e',
   },
+  // umee
+  {
+    address: 'umee1hn8mjjvgzd07tfhcl8jvux5k72hheg3t2z3c39',
+    operatorAddress: 'umeevaloper1hn8mjjvgzd07tfhcl8jvux5k72hheg3t2xkhq0',
+  },
+  // omniflix
+  {
+    address: 'omniflix1xskpp827c569nxd0w20uvrx39szdjf7uxdvtg2',
+    operatorAddress: 'omniflixvaloper1xskpp827c569nxd0w20uvrx39szdjf7utl72fz',
+  },
+  // provenance
+  {
+    address: 'pb13905qnf0mc8f8h3dawsq0894ded0ct83xdk04q',
+    operatorAddress: 'pbvaloper13905qnf0mc8f8h3dawsq0894ded0ct83f66l56',
+  },
+  // cerberus
+  {
+    address: 'cerberus1d02vjcs0xx5auss85swzp59m33hw5yertlk8rq',
+    operatorAddress: 'cerberusvaloper1d02vjcs0xx5auss85swzp59m33hw5yer7wuqe7',
+  },
+  // crescent
+  {
+    address: 'cre1zuucyy5v49lwnrdupqqafqdu29qy6wgnlewe3k',
+    operatorAddress: 'crevaloper1zuucyy5v49lwnrdupqqafqdu29qy6wgnadwkuu',
+  },
+  // cudos
+  {
+    address: 'cudos16guyt456l9wd7lnem8fq7xzmyrl62wfhgmq2sx',
+    operatorAddress: 'cudosvaloper16guyt456l9wd7lnem8fq7xzmyrl62wfh4gwt3m',
+  },
+  // likeCoin
+  {
+    address: 'like1reztw0ac2l0scjsty6dg6jj5pnrckxw37rs88u',
+    operatorAddress: 'likevaloper1reztw0ac2l0scjsty6dg6jj5pnrckxw3gvxeh0',
+  },
+  // likeCoin
+  {
+    address: 'stride1jj9z2xwxesuy65n90dujsak554eqkrr2ygyan2',
+    operatorAddress: 'stridevaloper1jj9z2xwxesuy65n90dujsak554eqkrr28aqpl0',
+  },
+  // sommelier
+  {
+    address: 'somm16zlu8yrmccwssv7tywc74jsh6nen4t5uk2h5a3',
+    operatorAddress: 'sommvaloper16zlu8yrmccwssv7tywc74jsh6nen4t5ur5ef67',
+  },
 ];
 
 export const etcValidatorSet: ValidatorSet[] = [
