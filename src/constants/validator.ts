@@ -162,6 +162,16 @@ export const cosmosValidatorSet: ValidatorSet[] = [
     address: 'evmos1f35jtt5m68zlxkpxn75403vv82cchahqp8lnau',
     operatorAddress: 'evmosvaloper1f35jtt5m68zlxkpxn75403vv82cchahqvfsrup',
   },
+  // assetmantle
+  {
+    address: 'mantle1cw3dwtw5h49vh83uayzda5l7jyu7k83wq3nl5n',
+    operatorAddress: 'mantlevaloper1cw3dwtw5h49vh83uayzda5l7jyu7k83wqwht0x',
+  },
+  // injective
+  {
+    address: 'inj1rvqzf9u2uxttmshn302anlknfgsatrh5mcu6la',
+    operatorAddress: 'injvaloper1rvqzf9u2uxttmshn302anlknfgsatrh5v7fl7e',
+  },
 ];
 
 export const etcValidatorSet: ValidatorSet[] = [
