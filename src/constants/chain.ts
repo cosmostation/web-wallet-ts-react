@@ -636,7 +636,7 @@ export const chains = {
       hdPath: '44/118/0/0/0',
       prefix: 'panacea',
       support: { ledger: true, keystation: true, extension: true },
-      isProto: false,
+      isProto: true,
     },
     lcdURL: 'https://lcd-medibloc.cosmostation.io',
     symbolName: 'MED',
