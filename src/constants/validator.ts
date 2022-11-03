@@ -217,6 +217,31 @@ export const cosmosValidatorSet: ValidatorSet[] = [
     address: 'somm16zlu8yrmccwssv7tywc74jsh6nen4t5uk2h5a3',
     operatorAddress: 'sommvaloper16zlu8yrmccwssv7tywc74jsh6nen4t5ur5ef67',
   },
+  // ixo
+  {
+    address: 'ixo100uugasruk47akrux22klj25h7r77c7pww4vg3',
+    operatorAddress: 'ixovaloper100uugasruk47akrux22klj25h7r77c7py09as5',
+  },
+  // stafihub
+  {
+    address: 'stafi1acevwl8z4qllae7hzepq6y0medl7expqa009f0',
+    operatorAddress: 'stafivaloper1acevwl8z4qllae7hzepq6y0medl7expq95svxx',
+  },
+  // kujira
+  {
+    address: 'kujira1x3ufd7gm3lpdjtggusgp0jynyppf0prvh9askx',
+    operatorAddress: 'kujiravaloper1x3ufd7gm3lpdjtggusgp0jynyppf0prvsswr2f',
+  },
+  // teritori
+  {
+    address: 'tori1fk6ypywxnlnvlfnnx3kz93fq0rqzc0m3pdg2sk',
+    operatorAddress: 'torivaloper1fk6ypywxnlnvlfnnx3kz93fq0rqzc0m3ylt4zm',
+  },
+  // xpla
+  {
+    address: 'xpla1qvpc0ysp0lflngg7c6vy5wpyjln0yfc5favnep',
+    operatorAddress: 'xplavaloper1qvpc0ysp0lflngg7c6vy5wpyjln0yfc5cq0fku',
+  },
 ];
 
 export const etcValidatorSet: ValidatorSet[] = [
