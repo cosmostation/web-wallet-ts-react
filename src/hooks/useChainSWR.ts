@@ -265,7 +265,6 @@ export function useAccountSWR() {
     payload: AuthAccountValue | AuthBaseVestingAccount | AuthBaseWithStartAndPeriod,
   ): payload is AuthBaseWithStartAndPeriod =>
     (payload as AuthBaseWithStartAndPeriod).base_vesting_account !== undefined &&
-    (payload as AuthBaseWithStartAndPeriod).start_time !== undefined &&
     (payload as AuthBaseWithStartAndPeriod).vesting_periods !== undefined;
 
   const result = useMemo(() => {
