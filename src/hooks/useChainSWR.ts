@@ -14,12 +14,20 @@ import { useCurrentLanguage } from '~/hooks/useCurrentLanguage';
 import { useCurrentWallet } from '~/hooks/useCurrentWallet';
 import type {
   AuthAccount,
+  AuthAccountPubKey,
   AuthAccountsPayload,
   AuthAccountValue,
   AuthBaseVestingAccount,
   AuthBaseWithStartAndPeriod,
   BalancePayload,
-  DelegationsPayload,
+  Delegation,
+  DelegationPayload,
+  DesmosAccount,
+  DesmosAuthAccount,
+  DesmosAuthAccountsPayload,
+  DesmosBaseAccount,
+  DesmosModuleAccount,
+  KavaDelegationPayload,
   RewardPayload,
   UnbondingPayload,
   ValidatorPayload,
@@ -75,28 +83,57 @@ export function useDelegationsSWR() {
 
   const requestURL = lcdURL.getDelegations(currentWallet.address!);
 
-  const fetcher = (fetchUrl: string) => get<DelegationsPayload>(fetchUrl);
+  const fetcher = (fetchUrl: string) => get<DelegationPayload | KavaDelegationPayload>(fetchUrl);
 
-  const { data, error, mutate } = useSWR<DelegationsPayload, AxiosError>(requestURL, fetcher, {
+  const { data, error, mutate } = useSWR<DelegationPayload | KavaDelegationPayload, AxiosError>(requestURL, fetcher, {
     refreshInterval: 0,
     revalidateOnFocus: false,
     isPaused: () => !currentWallet.address?.startsWith(currentChain.wallet.prefix),
   });
 
-  const returnData = data?.result.map((item) => {
-    if (item.delegator_address && item.validator_address && item.shares) {
-      return {
-        balance: item.balance,
-        delegation: {
-          delegator_address: item.delegator_address,
-          validator_address: item.validator_address,
-          shares: item.shares,
-        },
-      };
-    }
+  const isKavaPayload = (payload: DelegationPayload | KavaDelegationPayload): payload is KavaDelegationPayload =>
+    (payload as KavaDelegationPayload).result?.[0]?.delegation?.delegator_address !== undefined;
 
-    return { balance: item.balance || undefined, delegation: item.delegation || undefined };
-  });
+  const returnData: Delegation[] = useMemo(() => {
+    if (data) {
+      if (isKavaPayload(data)) {
+        if (data.result) {
+          return data.result.map((delegation) => ({
+            delegatorAddress: delegation.delegation?.delegator_address || '',
+            validatorAddress: delegation.delegation?.validator_address || '',
+            amount: delegation.balance,
+          }));
+        }
+
+        return [];
+      }
+
+      if (data.delegation_responses) {
+        return data.delegation_responses.map((delegation) => ({
+          delegatorAddress: delegation.delegation.delegator_address,
+          validatorAddress: delegation.delegation.validator_address,
+          amount: delegation.balance,
+        }));
+      }
+
+      if (data.result) {
+        return data.result.map((delegation) => {
+          const amount = typeof delegation.balance === 'string' ? delegation.balance : delegation.balance.amount;
+          const denom = typeof delegation.balance === 'string' ? currentChain.denom : delegation.balance.denom;
+
+          return {
+            delegatorAddress: delegation.delegator_address,
+            validatorAddress: delegation.validator_address,
+            amount: {
+              amount,
+              denom,
+            },
+          };
+        });
+      }
+    }
+    return [];
+  }, [currentChain.denom, data]);
 
   return {
     data: returnData,
@@ -121,8 +158,20 @@ export function useRewardsSWR() {
     isPaused: () => !currentWallet.address?.startsWith(currentChain.wallet.prefix),
   });
 
+  const returnData = useMemo(() => {
+    if (data?.result) {
+      return { ...data.result };
+    }
+
+    if (data?.rewards && data?.total) {
+      return { rewards: data.rewards, total: data.total };
+    }
+
+    return undefined;
+  }, [data]);
+
   return {
-    data,
+    data: returnData,
     error,
     mutate,
   };
@@ -144,8 +193,35 @@ export function useUnbondingDelegationsSWR() {
     isPaused: () => !currentWallet.address?.startsWith(currentChain.wallet.prefix),
   });
 
+  const returnData = useMemo(() => {
+    if (data) {
+      if (data.unbonding_responses) {
+        return data.unbonding_responses?.map((item) =>
+          item.entries.map((entry) => ({
+            delegator_address: item.delegator_address,
+            validator_address: item.validator_address,
+            entries: entry,
+          })),
+        );
+      }
+
+      if (data.result) {
+        return data.result.map((item) =>
+          item.entries.map((entry) => ({
+            delegator_address: item.delegator_address,
+            validator_address: item.validator_address,
+            entries: entry,
+          })),
+        );
+      }
+    }
+    return [];
+  }, [data]);
+
+  const flattenData = useMemo(() => returnData?.flat() || [], [returnData]);
+
   return {
-    data,
+    data: flattenData,
     error,
     mutate,
   };
@@ -265,10 +341,108 @@ export function useAccountSWR() {
     payload: AuthAccountValue | AuthBaseVestingAccount | AuthBaseWithStartAndPeriod,
   ): payload is AuthBaseWithStartAndPeriod =>
     (payload as AuthBaseWithStartAndPeriod).base_vesting_account !== undefined &&
+    (payload as AuthBaseWithStartAndPeriod).start_time !== undefined &&
     (payload as AuthBaseWithStartAndPeriod).vesting_periods !== undefined;
+
+  const isDesmosPayload = (
+    payload: DesmosAuthAccountsPayload | AuthAccountsPayload,
+  ): payload is DesmosAuthAccountsPayload =>
+    (payload as DesmosAuthAccountsPayload).account !== undefined &&
+    (payload as DesmosAuthAccountsPayload).account['@type'] !== undefined;
+
+  const isDesmosBasePayload = (
+    payload: DesmosAuthAccount | DesmosAccount | DesmosModuleAccount,
+  ): payload is DesmosAccount =>
+    (payload as DesmosAccount)['@type'] !== '/desmos.profiles.v1beta1.Profile' &&
+    (payload as DesmosAccount).base_vesting_account !== undefined;
+
+  const isDesmosModulePayload = (
+    payload: DesmosAuthAccount | DesmosAccount | DesmosModuleAccount,
+  ): payload is DesmosModuleAccount =>
+    (payload as DesmosModuleAccount)['@type'] !== '/cosmos.auth.v1beta1.ModuleAccount' &&
+    (payload as DesmosModuleAccount).base_account !== undefined;
+
+  const isDesmosBaseAccount = (
+    account: DesmosAccount | DesmosBaseAccount | DesmosModuleAccount,
+  ): account is DesmosBaseAccount =>
+    (account as DesmosBaseAccount).address !== undefined && (account as DesmosBaseAccount).pub_key !== undefined;
+
+  const isDesmosModuleAccount = (account: DesmosAccount | DesmosModuleAccount): account is DesmosModuleAccount =>
+    (account as DesmosAccount).base_vesting_account === undefined &&
+    (account as DesmosModuleAccount).base_account !== undefined;
 
   const result = useMemo(() => {
     if (data) {
+      if (isDesmosPayload(data)) {
+        const account =
+          isDesmosBasePayload(data.account) || isDesmosModulePayload(data.account)
+            ? data.account
+            : data.account.account || data.account;
+
+        if (isDesmosBaseAccount(account)) {
+          const basePubKey = {
+            type: account.pub_key?.['@type'],
+            value: account.pub_key?.key,
+          } as AuthAccountPubKey;
+
+          const typeArray = account['@type'].split('.');
+
+          return {
+            type: typeArray[typeArray.length - 1],
+            value: {
+              address: account.address,
+              public_key: basePubKey,
+              account_number: account.account_number,
+              sequence: account.sequence,
+            },
+          } as AuthAccount;
+        }
+
+        if (isDesmosModuleAccount(account)) {
+          const basePubKey = {
+            type: account.base_account.pub_key?.['@type'],
+            value: account.base_account?.pub_key?.key,
+          } as AuthAccountPubKey;
+
+          const typeArray = account['@type'].split('.');
+
+          return {
+            type: typeArray[typeArray.length - 1],
+            value: {
+              address: account.base_account.address,
+              public_key: basePubKey,
+              account_number: account.base_account.account_number,
+              sequence: account.base_account.sequence,
+            },
+          } as AuthAccount;
+        }
+
+        const baseVestingAccount = account.base_vesting_account;
+
+        const pubKey = {
+          type: baseVestingAccount?.base_account.pub_key?.['@type'],
+          value: baseVestingAccount?.base_account.pub_key?.key,
+        } as AuthAccountPubKey;
+
+        const typeArray = account['@type'].split('.');
+
+        return {
+          type: typeArray[typeArray.length - 1],
+          value: {
+            address: baseVestingAccount?.base_account.address,
+            public_key: pubKey,
+            account_number: baseVestingAccount?.base_account.account_number,
+            sequence: baseVestingAccount?.base_account.sequence,
+            original_vesting: baseVestingAccount?.original_vesting,
+            delegated_free: baseVestingAccount?.delegated_free,
+            delegated_vesting: baseVestingAccount?.delegated_vesting,
+            start_time: account.start_time,
+            vesting_periods: account.vesting_periods,
+            end_time: baseVestingAccount?.end_time,
+          },
+        } as AuthAccount;
+      }
+
       const value = data.result.value || data.result;
 
       if (isBaseWithStartAndPeriod(value)) {
@@ -310,19 +484,19 @@ export function useAccountSWR() {
         } as AuthAccount;
       }
 
+      if (data.result.account_number) {
+        return {
+          value: data.result,
+          type: data.result.type?.split('/')[1],
+        } as AuthAccount;
+      }
+
       if (data.result.base_account) {
         return {
           value: {
             ...data.result.base_account,
             code_hash: data.result.code_hash,
           },
-          type: data.result.type?.split('/')[1],
-        } as AuthAccount;
-      }
-
-      if (data.result.account_number) {
-        return {
-          value: data.result,
           type: data.result.type?.split('/')[1],
         } as AuthAccount;
       }
@@ -418,17 +592,17 @@ export function useChainSWR() {
 
   const delegationAmount =
     delegations.data
-      ?.filter((item) => item.balance?.denom === currentChain.denom)
-      ?.reduce((ac, cu) => ac.plus(cu.balance.amount), new Big('0'))
+      ?.filter((item) => item.amount.denom === currentChain.denom)
+      ?.reduce((ac, cu) => ac.plus(cu.amount.amount), new Big('0'))
       .toString() || '0';
 
   const unbondingAmount =
-    unbondingDelegation.data?.result
-      ?.map((item) => item.entries.reduce((ac, cu) => ac.plus(cu.balance), new Big('0')))
+    unbondingDelegation.data
+      ?.map((item) => item.entries.balance || '0')
       ?.reduce((ac, cu) => ac.plus(cu), new Big('0'))
       .toString() || '0';
 
-  const rewardAmount = rewards.data?.result?.total?.find((item) => item.denom === currentChain.denom)?.amount || '0';
+  const rewardAmount = rewards.data?.total?.find((item) => item.denom === currentChain.denom)?.amount || '0';
 
   const validators = useMemo(() => validator?.data?.validators || [], [validator]);
 
@@ -448,10 +622,7 @@ export function useChainSWR() {
 
   const validValidatorsTotalToken = validValidators.reduce((ac, cu) => plus(cu.tokens, ac, 0), '0');
 
-  const myValidators = useMemo(
-    () => delegations?.data?.map((item) => item.delegation.validator_address) || [],
-    [delegations],
-  );
+  const myValidators = useMemo(() => delegations?.data?.map((item) => item.validatorAddress) || [], [delegations]);
 
   const accountInfo = useMemo(
     () =>
@@ -521,7 +692,7 @@ export function useChainSWR() {
         validValidators,
         validValidatorsTotalToken,
         myValidators,
-        withdrawAddress: withdrawAddress?.data?.result || '',
+        withdrawAddress: withdrawAddress?.data?.withdraw_address || '',
       },
     }),
     [

@@ -16,20 +16,53 @@ export type BalancePayload = {
   pagination: Pagination;
 };
 
-export type Delegation = {
+export type LcdValidatorDelegator = {
+  amount: string;
+  delegator_address: string;
+  shares: string;
+  validator_address: string;
+};
+
+export type LcdDelegationResponse = {
+  balance: Amount;
+  delegation: LcdValidatorDelegator;
+};
+
+export type DelegationResult = {
+  balance: Amount | string;
   delegator_address: string;
   validator_address: string;
   shares: string;
 };
 
-export type DelegationsPayload = {
-  result: {
-    delegation: Delegation;
-    balance: Amount;
-    delegator_address: string;
-    validator_address: string;
-    shares: string;
-  }[];
+export type Delegation = {
+  delegatorAddress: string;
+  validatorAddress: string;
+  amount: Amount;
+  reward?: Amount;
+  moniker?: string;
+};
+
+export type DelegationPayload = {
+  delegation_responses?: LcdDelegationResponse[];
+  result?: DelegationResult[];
+  pagination: Pagination;
+};
+
+export type KavaValidatorDelegator = {
+  delegator_address: string;
+  validator_address: string;
+  shares: string;
+};
+
+export type KavaDelegationResult = {
+  balance: Amount;
+  delegation?: KavaValidatorDelegator;
+};
+
+export type KavaDelegationPayload = {
+  height: string;
+  result: KavaDelegationResult[];
 };
 
 export type Account = {
@@ -170,15 +203,16 @@ export type Reward = {
 };
 
 export type RewardPayload = {
-  result: {
+  rewards?: Reward[];
+  total?: Amount[];
+  result?: {
     rewards: Reward[];
     total: Amount[];
   };
 };
 
 export type WithdrawAddressPayload = {
-  height: string;
-  result: string;
+  withdraw_address: string;
 };
 
 export type VestingType =
@@ -189,7 +223,7 @@ export type VestingType =
   | 'PeriodicVestingAccount'
   | 'PermanentLockedAccount';
 
-type AuthAccountPubKey = {
+export type AuthAccountPubKey = {
   type: string;
   value: string;
 };
@@ -269,4 +303,53 @@ export type AuthAccountsPayload = {
 export type AuthAccount = {
   type: VestingType;
   value: AuthAccountValue;
+};
+
+type DesmosAuthAccountPubKey = {
+  '@type': string;
+  key: string;
+};
+
+export type DesmosBaseAccount = {
+  '@type': string;
+  address: string;
+  pub_key: DesmosAuthAccountPubKey;
+  account_number: string;
+  sequence: string;
+};
+
+export type DesmosAccount = {
+  '@type': string;
+  base_vesting_account: {
+    base_account: DesmosBaseAccount;
+    original_vesting: Amount[];
+    delegated_free: Amount[];
+    delegated_vesting: Amount[];
+    end_time: string;
+  };
+  start_time: string;
+  vesting_periods: VestingPeriod[];
+};
+
+export type DesmosAuthAccount = {
+  '@type': string;
+  account: DesmosAccount | DesmosBaseAccount;
+  dtag: string;
+  nickname: string;
+  bio: string;
+  pictures: {
+    profile: string;
+    cover: string;
+  };
+  creation_date: string;
+};
+
+export type DesmosModuleAccount = {
+  '@type': string;
+  base_account: DesmosBaseAccount;
+  name: string;
+};
+
+export type DesmosAuthAccountsPayload = {
+  account: DesmosAuthAccount | DesmosAccount | DesmosModuleAccount;
 };

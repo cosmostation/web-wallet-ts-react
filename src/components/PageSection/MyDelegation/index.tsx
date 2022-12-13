@@ -64,12 +64,12 @@ export default function MyDelegation({ className }: MyDelegationProps) {
 
   const { validators, validValidatorsTotalToken, availableAmount } = data;
 
-  if (!delegation?.length || !reward?.result || !validators.length) {
+  if (!delegation?.length || !reward || !validators.length) {
     return null;
   }
 
   const rewardList =
-    swr.rewards.data?.result?.rewards?.map((item) => ({
+    swr.rewards.data?.rewards?.map((item) => ({
       validatorAddress: item.validator_address,
       reward:
         item?.reward
@@ -91,10 +91,8 @@ export default function MyDelegation({ className }: MyDelegationProps) {
 
   const delegateList =
     delegation
-      ?.filter?.((item) =>
-        validators.find((validatorItem) => validatorItem.operator_address === item.delegation.validator_address),
-      )
-      ?.sort((a, b) => (gt(b.balance.amount, a.balance.amount) ? 1 : -1)) || [];
+      ?.filter?.((item) => validators.find((validatorItem) => validatorItem.operator_address === item.validatorAddress))
+      ?.sort((a, b) => (gt(b.amount.amount, a.amount.amount) ? 1 : -1)) || [];
 
   return (
     <div className={className}>
@@ -183,11 +181,11 @@ export default function MyDelegation({ className }: MyDelegationProps) {
           <TableBody>
             {delegateList.map((item, idx) => {
               const validatorInfo = validators.find(
-                (validatorItem) => validatorItem.operator_address === item.delegation.validator_address,
+                (validatorItem) => validatorItem.operator_address === item.validatorAddress,
               );
 
-              const rewardInfo = reward.result?.rewards?.find(
-                (rewardItem) => rewardItem.validator_address === item.delegation.validator_address,
+              const rewardInfo = reward.rewards?.find(
+                (rewardItem) => rewardItem.validator_address === item.validatorAddress,
               );
 
               if (!validatorInfo) {
@@ -233,7 +231,7 @@ export default function MyDelegation({ className }: MyDelegationProps) {
                     {times(validatorInfo.commission.commission_rates.rate, '100', 2)}%
                   </TableCell>
                   <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
-                    {times(item.balance.amount, pow(10, -currentChain.decimal), currentChain.decimal)}
+                    {times(item.amount.amount, pow(10, -currentChain.decimal), currentChain.decimal)}
                   </TableCell>
                   <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
                     {times(
