@@ -26,7 +26,7 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
 
   const { validators } = data;
 
-  if (!undelegation?.result?.length || !validators.length) {
+  if (!undelegation?.length || !validators.length) {
     return null;
   }
 
@@ -52,7 +52,7 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {undelegation.result.map((item) => {
+            {undelegation.map((item, idx) => {
               const validatorInfo = validators.find(
                 (validatorItem) => validatorItem.operator_address === item.validator_address,
               );
@@ -61,7 +61,7 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
                 return null;
               }
 
-              return item.entries.map((entryItem, idx) => (
+              return (
                 <TableRow
                   // eslint-disable-next-line react/no-array-index-key
                   key={`${validatorInfo.operator_address}_${idx}`}
@@ -94,22 +94,22 @@ export default function MyUndelegation({ className }: MyUndelegationProps) {
                   </TableCell>
                   <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
                     <a
-                      href={`https://www.mintscan.io/${currentChain.mintscanPath}/blocks/${entryItem.creation_height}`}
+                      href={`https://www.mintscan.io/${currentChain.mintscanPath}/blocks/${item.entries.creation_height}`}
                       target="_blank"
                       rel="noreferrer"
                       className={styles.aElementStyle}
                     >
-                      {entryItem.creation_height}
+                      {item.entries.creation_height}
                     </a>
                   </TableCell>
                   <TableCell align="right" sx={{ fontSize: '1.4rem' }}>
-                    {times(entryItem.balance, pow(10, -currentChain.decimal), currentChain.decimal)}
+                    {times(item.entries.balance, pow(10, -currentChain.decimal), currentChain.decimal)}
                   </TableCell>
                   <TableCell align="center" sx={{ fontSize: '1.4rem' }}>
-                    {new Date(entryItem.completion_time).toLocaleString()}
+                    {new Date(item.entries.completion_time).toLocaleString()}
                   </TableCell>
                 </TableRow>
-              ));
+              );
             })}
           </TableBody>
         </Table>

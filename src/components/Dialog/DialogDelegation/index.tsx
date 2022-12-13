@@ -79,8 +79,8 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
   const amount = (() => {
     if (inputData.type === 'redelegate') {
       return times(
-        swr.delegations?.data?.find((item) => item.delegation.validator_address === inputData.validatorSrcAddress)
-          ?.balance?.amount || '0',
+        swr.delegations?.data?.find((item) => item.validatorAddress === inputData.validatorSrcAddress)?.amount.amount ||
+          '0',
         pow(10, -currentChain.decimal),
         currentChain.decimal,
       );
@@ -88,8 +88,8 @@ export default function DialogDelegation({ inputData, open, onClose }: DialogDel
 
     if (inputData.type === 'undelegate') {
       return times(
-        swr.delegations?.data?.find((item) => item.delegation.validator_address === inputData.validatorAddress)?.balance
-          ?.amount || '0',
+        swr.delegations?.data?.find((item) => item.validatorAddress === inputData.validatorAddress)?.amount?.amount ||
+          '0',
         pow(10, -currentChain.decimal),
         currentChain.decimal,
       );
