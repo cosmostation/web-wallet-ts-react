@@ -2033,7 +2033,7 @@ export const chains = {
     extensionId: 'quicksilver',
     extensionCoinType: '118',
     path: CHAIN.QUICK_SILVER,
-    imgURL: `${baseURL}/onomy.png`,
+    imgURL: `${baseURL}/quick-silver.png`,
     wallet: {
       hdPath: '44/118/0/0/0',
       prefix: 'quick',
