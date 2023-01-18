@@ -640,7 +640,7 @@ export const chains = {
     path: CHAIN.MEDIBLOC,
     imgURL: `${baseURL}/medibloc.png`,
     wallet: {
-      hdPath: '44/118/0/0/0',
+      hdPath: '44/371/0/0/0',
       prefix: 'panacea',
       support: { ledger: true, keystation: true, extension: true },
       isProto: true,
