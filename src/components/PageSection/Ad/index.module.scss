@@ -54,3 +54,22 @@
   height: 3rem;
   margin-right: 1rem;
 }
+
+.icnsImage {
+  background-image: url('assets/icns.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top;
+  width: 10rem;
+  height: 3rem;
+  margin-left: -1rem;
+}
+
+.pstakeImage {
+  background-image: url('assets/pstake.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 8rem;
+  height: 2rem;
+  margin-right: 1.5rem;
+}
