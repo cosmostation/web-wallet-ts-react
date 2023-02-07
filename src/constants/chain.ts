@@ -2127,7 +2127,7 @@ export const chains = {
     symbolName: 'MARS',
     denom: 'umars',
     decimal: 6,
-    coingeckoId: 'tmp',
+    coingeckoId: 'mars-protocol-a7fcbcfb-fd61-4017-92f0-7ee9f9cc6da3',
     validatorIconDirectory: 'mars-protocol',
     mintscanPath: 'mars-protocol',
     fee: {
