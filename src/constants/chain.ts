@@ -2029,7 +2029,7 @@ export const chains = {
     },
   },
   [CHAIN.QUICK_SILVER]: {
-    chainId: 'quicksilver-1',
+    chainId: 'quicksilver-2',
     name: 'QuickSilver',
     extensionId: 'quicksilver',
     extensionCoinType: '118',
