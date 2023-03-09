@@ -22,7 +22,7 @@ export function useCreateProtoTx() {
   const recoveryDecimal = pow(10, currentChain.decimal);
 
   const typeURL = (() => {
-    if (currentChain.name === 'evmos' || currentChain.name === 'XPLA') {
+    if (currentChain.name === 'evmos' || currentChain.name === 'XPLA' || currentChain.name === 'Canto') {
       return '/ethermint.crypto.v1.ethsecp256k1.PubKey';
     }
 
