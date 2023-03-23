@@ -1826,7 +1826,7 @@ export const chains = {
     },
   },
   [CHAIN.IXO]: {
-    chainId: 'ixo-4',
+    chainId: 'ixo-5',
     name: 'Ixo',
     extensionId: 'ixo',
     extensionCoinType: '118',
