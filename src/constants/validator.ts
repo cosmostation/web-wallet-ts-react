@@ -242,6 +242,11 @@ export const cosmosValidatorSet: ValidatorSet[] = [
     address: 'xpla1qvpc0ysp0lflngg7c6vy5wpyjln0yfc5favnep',
     operatorAddress: 'xplavaloper1qvpc0ysp0lflngg7c6vy5wpyjln0yfc5cq0fku',
   },
+  // onomy
+  {
+    address: 'onomy1fewecfptznhtdvxe5sqw2m6axyes6kstdqhgtw',
+    operatorAddress: 'onomyvaloper1fewecfptznhtdvxe5sqw2m6axyes6kst384lhc',
+  },
 ];
 
 export const etcValidatorSet: ValidatorSet[] = [
