@@ -780,24 +780,24 @@ export const chains = {
     validatorIconDirectory: 'juno',
     mintscanPath: 'juno',
     fee: {
-      default: '0.005',
-      delegate: '0.005',
-      undelegate: '0.005',
-      redelegate: '0.005',
-      withdraw: '0.005',
-      withdrawReward: '0.005',
-      withdrawCommission: '0.005',
-      modifyWithdrawAddress: '0.005',
+      default: '0.01',
+      delegate: '0.01',
+      undelegate: '0.01',
+      redelegate: '0.01',
+      withdraw: '0.01',
+      withdrawReward: '0.01',
+      withdrawCommission: '0.01',
+      modifyWithdrawAddress: '0.01',
     },
     gas: {
-      default: '200000',
-      delegate: '200000',
-      undelegate: '200000',
-      redelegate: '300000',
-      withdraw: '200000',
-      withdrawReward: '200000',
-      withdrawCommission: '200000',
-      modifyWithdrawAddress: '200000',
+      default: '400000',
+      delegate: '400000',
+      undelegate: '400000',
+      redelegate: '600000',
+      withdraw: '400000',
+      withdrawReward: '400000',
+      withdrawCommission: '400000',
+      modifyWithdrawAddress: '400000',
     },
   },
   [CHAIN.BITCANNA]: {
@@ -1037,14 +1037,14 @@ export const chains = {
       modifyWithdrawAddress: '0',
     },
     gas: {
-      default: '300000',
-      delegate: '300000',
-      undelegate: '300000',
-      redelegate: '400000',
-      withdraw: '300000',
-      withdrawReward: '300000',
-      withdrawCommission: '500000',
-      modifyWithdrawAddress: '300000',
+      default: '2000000',
+      delegate: '2000000',
+      undelegate: '2000000',
+      redelegate: '4000000',
+      withdraw: '2000000',
+      withdrawReward: '3000000',
+      withdrawCommission: '3000000',
+      modifyWithdrawAddress: '2000000',
     },
   },
   [CHAIN.LUM]: {
@@ -2290,6 +2290,6 @@ export const chainGeckoIds = chainValues.map((chain) => chain.coingeckoId);
 
 export const chainPaths = Object.values(CHAIN);
 
-export type ChainPath = typeof chainPaths[number];
-export type ChainGeckoId = typeof chainGeckoIds[number];
-export type ChainValue = typeof chainValues[number];
+export type ChainPath = (typeof chainPaths)[number];
+export type ChainGeckoId = (typeof chainGeckoIds)[number];
+export type ChainValue = (typeof chainValues)[number];
