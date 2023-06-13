@@ -239,10 +239,12 @@ export const getVestingRelatedBalances = (
   bankBalance: string,
   vestingRemained: string,
   delegatedVestingTotal: string,
+  unbondingBalance: string,
 ): string[] => {
   let available = bankBalance;
 
-  const delegatableVesting = Math.max(0, toNumber(minus(vestingRemained, delegatedVestingTotal, 0)));
+  const notLockVestingValue = minus(vestingRemained, unbondingBalance, 0);
+  const delegatableVesting = Math.max(0, Number(minus(notLockVestingValue, delegatedVestingTotal, 0)));
 
   if (gt(delegatableVesting, '0')) {
     available = Math.max(0, toNumber(minus(bankBalance, delegatableVesting, 0))).toString();

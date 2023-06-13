@@ -6,7 +6,7 @@ export default function LcdURL(chain: ChainPath) {
 
   return {
     getBalance: (address: string) => {
-      const exceptionChains = [CHAIN.KAVA, CHAIN.KICHAIN] as string[];
+      const exceptionChains = [CHAIN.KICHAIN] as string[];
       const path = exceptionChains.includes(chainInfo.path) ? '/bank/balances/' : '/cosmos/bank/v1beta1/balances/';
 
       return `${chainInfo.lcdURL}${path}${address}?pagination.limit=10000`;

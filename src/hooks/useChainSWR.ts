@@ -647,7 +647,7 @@ export function useChainSWR() {
         return getPersistenceVestingRelatedBalances(availableAmount, vestingRemained);
       }
 
-      return getVestingRelatedBalances(availableAmount, vestingRemained, delegatedVestingTotal);
+      return getVestingRelatedBalances(availableAmount, vestingRemained, delegatedVestingTotal, unbondingAmount);
     }
 
     return [availableAmount, '0'];
