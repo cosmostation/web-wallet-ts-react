@@ -103,7 +103,7 @@ export const chains = {
     },
   },
   [CHAIN.PASSAGE]: {
-    chainId: 'passage-1',
+    chainId: 'passage-2',
     name: 'passage',
     extensionId: 'passage',
     extensionCoinType: '118',
