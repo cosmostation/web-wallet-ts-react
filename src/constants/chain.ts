@@ -328,7 +328,7 @@ export const chains = {
     decimal: 6,
     coingeckoId: 'certik',
     validatorIconDirectory: 'certik',
-    mintscanPath: 'certik',
+    mintscanPath: 'shentu',
     fee: {
       default: '0.02',
       delegate: '0.02',
