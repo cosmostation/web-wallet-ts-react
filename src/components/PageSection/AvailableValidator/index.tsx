@@ -85,7 +85,7 @@ export default function AvailableValidator({ className }: AvailableValidatorProp
                         src={`https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/${currentChain.validatorIconDirectory}/${item.operator_address}.png`}
                         alt=""
                         onError={(e) => {
-                          e.currentTarget.src = 'https://www.mintscan.io/static/media/validator_none.f01f85a0.svg';
+                          e.currentTarget.src = 'https://www.mintscan.io/assets/defaults/no-image.png';
                         }}
                       />
                     </div>
