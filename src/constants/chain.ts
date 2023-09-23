@@ -318,7 +318,7 @@ export const chains = {
     imgURL: `${baseURL}/shentu.png`,
     wallet: {
       hdPath: '44/118/0/0/0',
-      prefix: 'certik',
+      prefix: 'shentu',
       support: { ledger: true, keystation: true, extension: true },
       isProto: true,
     },
